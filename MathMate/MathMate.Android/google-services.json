@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "961521874280",
+    "project_id": "mathmate-ee4f2",
+    "storage_bucket": "mathmate-ee4f2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:961521874280:android:1c43fe1c2c0d0f332f92dd",
+        "android_client_info": {
+          "package_name": "com.dacer.mathmate"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAnvTDqXibrOtkqxkUpF3ibC-tsffg2dFQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

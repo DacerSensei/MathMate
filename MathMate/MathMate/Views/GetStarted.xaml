@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MathMate.Views.GetStarted"
+             Background="White"
+             xmlns:lottie="clr-namespace:Lottie.Forms;assembly=Lottie.Forms" 
+             xmlns:ViewModel="clr-namespace:MathMate.ViewModels"
+             NavigationPage.HasNavigationBar="False">
+    <ContentPage.BindingContext>
+        <ViewModel:GetStartedViewModel />
+    </ContentPage.BindingContext>
+    <ContentPage.Content>
+        <Grid RowDefinitions="Auto,*">
+            <Grid.Background>
+                <LinearGradientBrush  StartPoint="0,0" EndPoint="0,1">
+                    <GradientStop Color="#85182a" Offset="0.0"/>
+                    <GradientStop Color="#e01e37" Offset=".5"/>
+                </LinearGradientBrush>
+            </Grid.Background>
+            <StackLayout BackgroundColor="Transparent">
+                <lottie:AnimationView HeightRequest="400" WidthRequest="400" AnimationSource="AssetOrBundle" Animation="GetStarted.json" RepeatMode="Infinite" AutoPlay="True" />
+            </StackLayout>
+            <StackLayout Grid.Row="1" Padding="35,0,35,40" Spacing="0">
+                <Label Text="Welcome to Math Mate" FontSize="28" FontFamily="PoppinsBold" TextColor="#f0f3bd" Margin="0,0,0,0">
+                    <Label.FormattedText>
+                        <FormattedString>
+                            <FormattedString.Spans>
+                                <Span TextColor="white"  FontFamily="PoppinsRegular" FontSize="24" Text="Welcome to "/>
+                                <Span TextColor="#f0f3bd" FontAttributes="Bold"  FontFamily="PoppinsBold" FontSize="24" Text="Math Mate"/>
+                            </FormattedString.Spans>
+                        </FormattedString>
+                    </Label.FormattedText>
+                </Label>
+                <Label Text="Arrelano Elementary School" FontSize="20" FontFamily="PoppinsBold" TextColor="#f0f3bd" FontAttributes="Bold" Margin="0,0,0,30"/>
+
+                <Label Text="Easily manage your studies, tackle quizzes, and sharpen your skills with our interactive flashcards. Let's make learning math a breeze together!" FontSize="18" FontFamily="PoppinsRegular" TextColor="White"/>
+
+                <Button Text="Get Started" Command="{Binding LoginCommand}" CornerRadius="10" Margin="5,5" BackgroundColor="White" TextColor="#e01e37" FontFamily="PoppinsBold" VerticalOptions="EndAndExpand"/>
+            </StackLayout>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>
