@@ -1,12 +1,68 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="MathMate.Views.Login">
+             x:Class="MathMate.Views.Login"
+             Background="White"
+             xmlns:xct="http://xamarin.com/schemas/2020/toolkit" 
+             xmlns:local="clr-namespace:MathMate"
+             xmlns:lottie="clr-namespace:Lottie.Forms;assembly=Lottie.Forms" 
+             xmlns:ViewModel="clr-namespace:MathMate.ViewModels"
+             NavigationPage.HasNavigationBar="False">
+    <ContentPage.BindingContext>
+        <ViewModel:LoginViewModel />
+    </ContentPage.BindingContext>
     <ContentPage.Content>
-        <StackLayout>
-            <Label Text="Welcome to Xamarin.Forms!"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
-        </StackLayout>
+        <ScrollView>
+            <Grid RowDefinitions="Auto,*">
+                <Grid.Background>
+                    <LinearGradientBrush  StartPoint="0,0" EndPoint="0,1">
+                        <GradientStop Color="#85182a" Offset="0.0"/>
+                        <GradientStop Color="#e01e37" Offset=".5"/>
+                    </LinearGradientBrush>
+                </Grid.Background>
+                <StackLayout>
+                    <Image Source="Logo.png" HeightRequest="140" WidthRequest="140" Margin="0,20,0,0"/>
+                    <Label Text="Login" FontSize="28" FontFamily="PoppinsBold" Margin="20,0" VerticalOptions="EndAndExpand" TextColor="White" FontAttributes="Bold"/>
+                    <Label Text="Hello there sign in to continue" FontSize="18" Margin="20,0" FontFamily="PoppinsRegular" TextColor="White"/>
+                </StackLayout>
+                <local:CustomFrame CornerRadius="25,25,0,0" Grid.Row="1">
+                    <StackLayout Spacing="0">
+                        <lottie:AnimationView HeightRequest="175" WidthRequest="175" AnimationSource="AssetOrBundle" Animation="Login.json" RepeatMode="Infinite" AutoPlay="True" />
+
+                        <Label Text="Email" FontSize="18" FontFamily="PoppinsRegular" TextColor="#999" Margin="5,0"/>
+                        <Frame Padding="20,0" BackgroundColor="#f6f7f9" CornerRadius="10" Margin="5,0,5,5">
+                            <Entry FontFamily="PoppinsRegular" Text="{Binding Email}" Placeholder="Enter your email address" TextColor="Black" PlaceholderColor="#999">
+                                <Entry.Behaviors>
+                                    <xct:EmailValidationBehavior IsValid="{Binding IsValidEmail}" />
+                                </Entry.Behaviors>
+                            </Entry>
+                        </Frame>
+                        <Label Text="Password" FontSize="18" FontFamily="PoppinsRegular" TextColor="#999" Margin="5,0"/>
+                        <Frame Padding="20,0" BackgroundColor="#f6f7f9" CornerRadius="10" Margin="5,0,5,5">
+                            <Entry FontFamily="PoppinsRegular" IsPassword="True" Text="{Binding Password}" Placeholder="Enter your password" TextColor="Black" PlaceholderColor="#999"/>
+                        </Frame>
+                        <StackLayout Orientation="Horizontal" Margin="0,10" Spacing="0">
+                            <CheckBox Color="#e01e37"/>
+                            <Label Text="I'm Teacher" FontSize="16" FontFamily="PoppinsRegular" TextColor="#e01e37" VerticalOptions="Center"/>
+                            <Label Text="Forgot Password?" FontSize="16" FontFamily="PoppinsRegular" TextColor="#e01e37" TextDecorations="Underline" HorizontalOptions="EndAndExpand">
+                                <Label.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding ForgotPasswordCommand}" />
+                                </Label.GestureRecognizers>
+                            </Label>
+                        </StackLayout>
+                        
+
+                        <Button Text="Login" Command="{Binding LoginCommand}" CornerRadius="10" Margin="5,5" TextColor="White" FontFamily="PoppinsBold">
+                            <Button.Background>
+                                <LinearGradientBrush  StartPoint="0,.5" EndPoint="1,.5">
+                                    <GradientStop Color="#85182a" Offset="0.0"/>
+                                    <GradientStop Color="#e01e37" Offset="1.0"/>
+                                </LinearGradientBrush>
+                            </Button.Background>
+                        </Button>
+                    </StackLayout>
+                </local:CustomFrame>
+            </Grid>
+        </ScrollView>
     </ContentPage.Content>
 </ContentPage>

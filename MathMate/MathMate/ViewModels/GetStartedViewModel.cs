@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MathMate.Views;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,7 +19,7 @@ namespace MathMate.ViewModels
         public ICommand LoginCommand { get; }
         private async Task LoginExecute()
         {
-            //await Application.Current.MainPage.Navigation.PushAsync(new Login());
+            await Application.Current.MainPage.Navigation.PushAsync(new Login());
         }
     }
 }

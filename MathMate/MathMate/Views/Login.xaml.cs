@@ -16,5 +16,10 @@ namespace MathMate.Views
         {
             InitializeComponent();
         }
+
+        protected override bool OnBackButtonPressed()
+        {
+            return true;
+        }
     }
 }

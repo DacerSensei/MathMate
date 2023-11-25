@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+             xmlns:lottie="clr-namespace:Lottie.Forms;assembly=Lottie.Forms"
+             x:Class="MathMate.Views.ErrorPage"
+             Background="White"
+             xmlns:xct="http://xamarin.com/schemas/2020/toolkit" 
+             xmlns:local="clr-namespace:MathMate"
+             xmlns:ViewModel="clr-namespace:MathMate.ViewModels"
+             NavigationPage.HasNavigationBar="False">
+    <ContentPage.Content>
+        <StackLayout BackgroundColor="White" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand">
+            <lottie:AnimationView HeightRequest="400" WidthRequest="400" AnimationSource="AssetOrBundle" Animation="Maintenance.json" RepeatMode="Infinite" AutoPlay="True" />
+            <Label Text="Home page is under maintenance please come back later" TextColor="Black" FontSize="25" HorizontalTextAlignment="Center" />
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

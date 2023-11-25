@@ -1,4 +1,4 @@
-﻿using Firebase.Auth;
+﻿using MathMate.Models;
 using Xamarin.Forms.Xaml;
 
 namespace MathMate.Services

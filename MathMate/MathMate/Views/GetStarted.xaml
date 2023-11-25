@@ -31,7 +31,7 @@
                         </FormattedString>
                     </Label.FormattedText>
                 </Label>
-                <Label Text="Arrelano Elementary School" FontSize="20" FontFamily="PoppinsBold" TextColor="#f0f3bd" FontAttributes="Bold" Margin="0,0,0,30"/>
+                <Label Text="Arellano Elementary School" FontSize="20" FontFamily="PoppinsBold" TextColor="#f0f3bd" FontAttributes="Bold" Margin="0,0,0,30"/>
 
                 <Label Text="Easily manage your studies, tackle quizzes, and sharpen your skills with our interactive flashcards. Let's make learning math a breeze together!" FontSize="18" FontFamily="PoppinsRegular" TextColor="White"/>
 

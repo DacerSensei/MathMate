@@ -4,7 +4,10 @@ C:\Users\Dave Orijuela\source\repos\MathMateApp\MathMate\MathMate\bin\Debug\nets
 C:\Users\Dave Orijuela\source\repos\MathMateApp\MathMate\MathMate\obj\Debug\netstandard2.0\MathMate.csproj.AssemblyReference.cache
 C:\Users\Dave Orijuela\source\repos\MathMateApp\MathMate\MathMate\obj\Debug\netstandard2.0\MathMate.GeneratedMSBuildEditorConfig.editorconfig
 C:\Users\Dave Orijuela\source\repos\MathMateApp\MathMate\MathMate\obj\Debug\netstandard2.0\App.xaml.g.cs
+C:\Users\Dave Orijuela\source\repos\MathMateApp\MathMate\MathMate\obj\Debug\netstandard2.0\Views\ErrorPage.xaml.g.cs
+C:\Users\Dave Orijuela\source\repos\MathMateApp\MathMate\MathMate\obj\Debug\netstandard2.0\Views\ForgotPassword.xaml.g.cs
 C:\Users\Dave Orijuela\source\repos\MathMateApp\MathMate\MathMate\obj\Debug\netstandard2.0\Views\GetStarted.xaml.g.cs
+C:\Users\Dave Orijuela\source\repos\MathMateApp\MathMate\MathMate\obj\Debug\netstandard2.0\Views\Login.xaml.g.cs
 C:\Users\Dave Orijuela\source\repos\MathMateApp\MathMate\MathMate\obj\Debug\netstandard2.0\MathMate.AssemblyInfoInputs.cache
 C:\Users\Dave Orijuela\source\repos\MathMateApp\MathMate\MathMate\obj\Debug\netstandard2.0\MathMate.AssemblyInfo.cs
 C:\Users\Dave Orijuela\source\repos\MathMateApp\MathMate\MathMate\obj\Debug\netstandard2.0\MathMate.csproj.CoreCompileInputs.cache
@@ -13,4 +16,3 @@ C:\Users\Dave Orijuela\source\repos\MathMateApp\MathMate\MathMate\obj\Debug\nets
 C:\Users\Dave Orijuela\source\repos\MathMateApp\MathMate\MathMate\obj\Debug\netstandard2.0\refint\MathMate.dll
 C:\Users\Dave Orijuela\source\repos\MathMateApp\MathMate\MathMate\obj\Debug\netstandard2.0\MathMate.pdb
 C:\Users\Dave Orijuela\source\repos\MathMateApp\MathMate\MathMate\obj\Debug\netstandard2.0\ref\MathMate.dll
-C:\Users\Dave Orijuela\source\repos\MathMateApp\MathMate\MathMate\obj\Debug\netstandard2.0\Views\Login.xaml.g.cs

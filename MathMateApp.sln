@@ -5,7 +5,7 @@ VisualStudioVersion = 17.4.33110.190
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MathMate.Android", "MathMate\MathMate.Android\MathMate.Android.csproj", "{8281699C-3A59-4019-931D-50AF5CA8634B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MathMate", "MathMate\MathMate\MathMate.csproj", "{6087CF56-E35E-4555-923B-43C492BDB1B7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MathMate", "MathMate\MathMate\MathMate.csproj", "{6087CF56-E35E-4555-923B-43C492BDB1B7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
