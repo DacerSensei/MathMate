@@ -18,6 +18,10 @@ main section {
     border-radius: 4px;
 }
 
+main section > h1 {
+    text-align: center;
+}
+
 main section>a {
     color: #d1272c;
     text-decoration: underline;

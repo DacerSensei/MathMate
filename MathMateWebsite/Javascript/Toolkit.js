@@ -18,14 +18,16 @@ const PopupType = {
 }
 
 function ShowNotification(text, backgroundColor, textColor = Colors.White) {
-    var notificationBar = document.getElementById("Notification-Bar");
-    notificationBar.textContent = text;
-    notificationBar.style.color = textColor;
-    notificationBar.style.display = "block";
-    notificationBar.style.backgroundColor = backgroundColor;
-    setTimeout(() => {
-        notificationBar.style.display = "none";
-    }, 3000);
+    const notificationBar = document.getElementById("Notification-Bar");
+    if (notificationBar) {
+        notificationBar.textContent = text;
+        notificationBar.style.color = textColor;
+        notificationBar.style.display = "block";
+        notificationBar.style.backgroundColor = backgroundColor;
+        setTimeout(() => {
+            notificationBar.style.display = "none";
+        }, 3000);
+    }
 }
 
 function SetErrorFocus(object) {
@@ -155,14 +157,14 @@ function ShowBlockElement(id) {
 var modalButtons = document.querySelectorAll('.modal-trigger');
 var modals = document.querySelectorAll('.modal-container');
 for (var i = 0; i < modalButtons.length; i++) {
-    modalButtons[i].addEventListener('click', function() {
+    modalButtons[i].addEventListener('click', function () {
         var modalId = this.dataset.target;
         var modal = document.getElementById(modalId);
         modal.style.display = 'flex';
 
         // When the user clicks on the close button, close the modal
         var closeBtn = modal.querySelector('.modal-close');
-        closeBtn.addEventListener('click', function() {
+        closeBtn.addEventListener('click', function () {
             modal.style.display = 'none';
         });
 
