@@ -47,7 +47,8 @@ main>section>.table-section>table th {
     background-color: var(--color-purple);
 }
 
-#admin-form section {
+#admin-form section, 
+#teacher-form section {
     width: 40rem;
     margin: 0 auto;
     background-color: white;

@@ -17,18 +17,33 @@
     <div id="Add-Modal" class="modal-container">
         <div class="modal-content" style="width: -webkit-fill-available; height: -webkit-fill-available;">
             <div class="modal-header">
-                <h4>Add Admin Account</h4>
+                <h4>Create Teacher Account</h4>
                 <span class="modal-close">&times;</span>
             </div>
             <div class="modal-body" style="padding: 1rem; box-sizing: border-box;">
                 <!-- Content Below Here -->
-                <form method="post" id="admin-form">
+                <form method="post" id="teacher-form">
                     <section>
-                        <h2>Admin Account</h2>
-                        <p>Create a new Admin</p>
+                        <h2>Techer Account</h2>
+                        <p>Create a new Teacher</p>
                         <div class="Solid-Textbox-Red">
                             <i class="fa-solid fa-signature"></i>
                             <input id="name" type="text" placeholder="Complete Name" required>
+                        </div>
+                        <div class="Solid-Textbox-Red">
+                            <i class="fa-solid fa-cake-candles"></i>
+                            <input id="birthday" type="date" required title="Birthday">
+                        </div>
+                        <div class="Solid-Picker-Red">
+                            <i class="fa-solid fa-venus-mars"></i>
+                            <picker-component id="gender">
+                                <picker-pick-component></picker-pick-component>
+                                <picker-item-container-component>
+                                    <picker-item-component value="None">Select Gender</picker-item-component>
+                                    <picker-item-component value="Male">Male</picker-item-component>
+                                    <picker-item-component value="Female">Female</picker-item-component>
+                                </picker-item-container-component>
+                            </picker-component>
                         </div>
                         <div class="Solid-Textbox-Red">
                             <i class="fa-solid fa-user"></i>
@@ -43,7 +58,7 @@
                             <input id="confirm-password" type="password" placeholder="Re-type your password" required>
                         </div>
                         <button type="submit" class="Solid-Button-Red" style="font-size: 1.125rem"
-                            id="CreateAdminButton">Create Admin</button>
+                            id="CreateAdminButton">Create Teacher</button>
                     </section>
                 </form>
             </div>
@@ -66,7 +81,7 @@
                 </form>
                 <div>
                     <button class="Button-Green modal-trigger" data-target="Add-Modal" style="max-width: 400px;">Create
-                        Admin Account</button>
+                        Teacher Account</button>
                 </div>
             </div>
             <div class="table-section" style="padding: 1.25rem">
@@ -86,7 +101,7 @@
     </main>
     <script src="Javascript/Toolkit.js"></script>
     <script type="module" src="Javascript/main.js"></script>
-    <script type="module" src="Javascript/admin-accounts.js"></script>
+    <script type="module" src="Javascript/teacher-accounts.js"></script>
 </body>
 
 </html>

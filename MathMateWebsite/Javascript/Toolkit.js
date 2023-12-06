@@ -192,3 +192,104 @@ function HideLoading() {
         document.body.classList.remove('loading');
     }
 }
+
+class PickerItem extends HTMLElement {
+    constructor() {
+        super();
+        this.value = this.getAttribute("value");
+    }
+    connectedCallback() {
+        this.addEventListener('click', () => {
+            const picker = this.closest("picker-component");
+            picker.removeAttribute("open");
+            picker.selectItem(this);
+        });
+    }
+}
+customElements.define("picker-item-component", PickerItem);
+
+class PickedItem extends HTMLElement {
+    constructor() {
+        super();
+        this.Picked = "";
+    }
+    connectedCallback() {
+        this.textContent = this.Picked;
+    }
+}
+customElements.define("picker-pick-component", PickedItem);
+
+
+class PickerItemContainer extends HTMLElement {
+    constructor() {
+        super();
+    }
+}
+customElements.define("picker-item-container-component", PickerItemContainer);
+
+class Picker extends HTMLElement {
+    constructor() {
+        super();
+        this.Items = [];
+        this.SelectedItem = null;
+        this.IsOpen = false;
+    }
+
+    togglePicker() {
+        this.IsOpen ? this.closePicker() : this.openPicker();
+    }
+
+    openPicker() {
+        this.IsOpen = true;
+        this.setAttribute("open", "");
+        document.addEventListener('click', this.clickOutsideHandler);
+    }
+
+    closePicker() {
+        this.IsOpen = false;
+        this.removeAttribute("open");
+        document.removeEventListener('click', this.clickOutsideHandler);
+    }
+
+    clickOutsideHandler = (event) => {
+        if (!this.contains(event.target)) {
+            this.closePicker();
+        }
+    };
+
+    connectedCallback() {
+        this.addEventListener("click", () => {
+            this.togglePicker();
+        })
+
+        this.Items = Array.from(this.querySelectorAll("picker-item-component"));
+        if (this.Items.length > 0) {
+            this.selectItem(this.Items[0]);
+        }
+    }
+
+    selectItem(item) {
+        if (this.SelectedItem) {
+            this.SelectedItem.removeAttribute("selected");
+        }
+
+        this.SelectedItem = item;
+        console.log(this.SelectedItem.getAttribute("value"));
+        if (this.SelectedItem.getAttribute("value").toLowerCase() == "None".toLowerCase()) {
+            this.querySelector("picker-pick-component").style.color = "#757575";
+        } else {
+            this.querySelector("picker-pick-component").style.color = "black";
+        }
+        this.querySelector("picker-pick-component").textContent = this.SelectedItem.textContent
+        this.SelectedItem.setAttribute("selected", "");
+
+        this.dispatchEvent(new CustomEvent("change", {
+            bubbles: true,
+            detail: {
+                value: this.SelectedItem.getAttribute("value"),
+                text: this.SelectedItem.textContent
+            }
+        }));
+    }
+}
+customElements.define("picker-component", Picker);
