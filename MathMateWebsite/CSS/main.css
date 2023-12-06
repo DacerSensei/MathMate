@@ -407,7 +407,7 @@ aside>nav {
 /* Scrollbar design */
 ::-webkit-scrollbar {
     width: 5px;
-    background-color: var(--bg-color-secondary);
+    /* background-color: #d1272c; */
 }
 
 ::-webkit-scrollbar-track {
@@ -416,12 +416,12 @@ aside>nav {
 }
 
 ::-webkit-scrollbar-thumb {
-    background: var(--color-secondary);
+    background: #d1272c;
     border-radius: 5px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: var(--color-secondary);
+    background: #d1272c;
 }
 
 input[type='number']::-webkit-inner-spin-button {

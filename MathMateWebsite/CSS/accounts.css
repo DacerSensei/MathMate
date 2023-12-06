@@ -6,7 +6,7 @@ main>section {
 
 main>section>.header-section {
     position: relative;
-    padding: var(--grid-gap-default);
+    padding: 1rem;
     background-color: #d1272c;
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -45,6 +45,18 @@ main>section>.table-section>table th {
 
 .pagination>a.pagination-Active {
     background-color: var(--color-purple);
+}
+
+#admin-form section {
+    width: 40rem;
+    margin: 0 auto;
+    background-color: white;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    box-shadow: 0 0 48px rgba(0, 0, 0, .08);
+    border-radius: 4px;
 }
 
 @media (max-width: 62.5rem){

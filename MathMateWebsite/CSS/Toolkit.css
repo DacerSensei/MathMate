@@ -1407,7 +1407,7 @@ header #SearchButton>svg {
     justify-content: space-between;
     position: sticky;
     top: 0;
-    background-color: var(--color-blue);
+    background-color: #d1272c;
     padding: 10px;
     font-family: 'Poppins';
     color: white;

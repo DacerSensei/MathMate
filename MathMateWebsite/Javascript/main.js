@@ -23,11 +23,6 @@ const App = initializeApp(FirebaseConfig);
 const Auth = getAuth(App);
 const Database = getDatabase(App);
 
-export {
-    Auth,
-    Database,
-};
-
 
 async function RenderElementInBody(link, elementType, isAppend = true) {
     const response = await fetch(link);
@@ -340,3 +335,11 @@ function SetContentByQuerySelector(querySelector, textContent) {
     }
     return;
 }
+
+export {
+    Auth,
+    Database,
+    FirebaseConfig,
+    GetElementValue,
+    AdminAccount
+};

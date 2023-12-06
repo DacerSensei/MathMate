@@ -14,6 +14,41 @@
 </head>
 
 <body>
+    <div id="Add-Modal" class="modal-container">
+        <div class="modal-content" style="width: -webkit-fill-available; height: -webkit-fill-available;">
+            <div class="modal-header">
+                <h4>Add Admin Account</h4>
+                <span class="modal-close">&times;</span>
+            </div>
+            <div class="modal-body" style="padding: 1rem; box-sizing: border-box;">
+                <!-- Content Below Here -->
+                <form method="post" id="admin-form">
+                    <section>
+                        <h2>Admin Account</h2>
+                        <p>Create a new Admin</p>
+                        <div class="Solid-Textbox-Red">
+                            <i class="fa-solid fa-signature"></i>
+                            <input id="name" type="text" placeholder="Complete Name" required>
+                        </div>
+                        <div class="Solid-Textbox-Red">
+                            <i class="fa-solid fa-user"></i>
+                            <input id="email" type="email" placeholder="Enter your email address" required>
+                        </div>
+                        <div class="Solid-Textbox-Red">
+                            <i class="fa-solid fa-key"></i>
+                            <input id="password" type="password" placeholder="Enter your password" required>
+                        </div>
+                        <div class="Solid-Textbox-Red">
+                            <i class="fa-solid fa-key"></i>
+                            <input id="confirm-password" type="password" placeholder="Re-type your password" required>
+                        </div>
+                        <button type="submit" class="Solid-Button-Red" style="font-size: 1.125rem"
+                            id="CreateAdminButton">Create Admin</button>
+                    </section>
+                </form>
+            </div>
+        </div>
+    </div>
     <main id="main">
         <section id="main-section">
             <div class="header-section">
@@ -29,6 +64,10 @@
                         </button>
                     </div>
                 </form>
+                <div>
+                    <button class="Button-Green modal-trigger" data-target="Add-Modal" style="max-width: 400px;">Add
+                        Admin Account</button>
+                </div>
             </div>
             <div class="table-section" style="padding: 1.25rem">
                 <table class="ListView-Yellow" id="myTable">
@@ -47,6 +86,7 @@
     </main>
     <script src="Javascript/Toolkit.js"></script>
     <script type="module" src="Javascript/main.js"></script>
+    <script type="module" src="Javascript/admin-accounts.js"></script>
 </body>
 
 </html>
