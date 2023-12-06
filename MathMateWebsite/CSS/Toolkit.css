@@ -994,7 +994,7 @@ header #SearchButton>svg {
 
 /* Table Default */
 
-.ListView-Default {
+.ListView-Yellow {
     width: 100%;
     border-collapse: collapse;
     border-spacing: 0 0.2rem;
@@ -1040,6 +1040,53 @@ header #SearchButton>svg {
     background-color: var(--bg-color-frame);
 }
 
+/* End Default List */
+
+.ListView-Yellow {
+    width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0 0.2rem;
+    font-family: 'Poppins';
+    overflow: auto;
+    font-size: 1rem;
+    background-color: var(--bg-color-secondary);
+    border-radius: 0.25rem;
+}
+
+.ListView-Yellow thead th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+.ListView-Yellow th,
+.ListView-Yellow td {
+    padding: 6px;
+    text-align: left;
+    border-bottom: 1px solid var(--color-border);
+    border-right: 1px solid var(--color-border);
+    border-left: 1px solid var(--color-border);
+}
+
+.ListView-Yellow th {
+    border-top: 1px solid var(--color-border);
+    background-color: #feaf39;
+    padding: 12px;
+}
+
+.ListView-Yellow th {
+    position: relative;
+    color: black;
+    font-weight: bold;
+}
+
+.ListView-Yellow td {
+    color: white;
+}
+
+.ListView-Yellow>tbody tr:hover {
+    background-color: var(--bg-color-frame);
+}
 
 /* Version Control */
 
@@ -1261,6 +1308,10 @@ header #SearchButton>svg {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+}
+
+.horizontal-center-margin {
+    margin: 0 auto;
 }
 
 
