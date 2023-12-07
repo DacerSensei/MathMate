@@ -117,7 +117,10 @@ async function RenderElementById(link, elementType, id, isAppend = true) {
             AttachSideMenuEvent();
         }
         ShowLoading();
-        if (window.location.pathname.includes("/admin-accounts.html")) {
+        if(window.location.pathname.includes("/dashboard.html")){
+            await DashboardLoaded();
+        }
+        else if (window.location.pathname.includes("/admin-accounts.html")) {
             await AdminAccount();
         }
         else if (window.location.pathname.includes("/teacher-accounts.html")) {
@@ -187,6 +190,49 @@ function SideBarMenuToggleEvent() {
                 }
             });
         }, 300);
+    }
+}
+
+async function DashboardLoaded() {
+    try {
+        await get(child(ref(Database), 'admins')).then(async (adminSnapshot) => {
+            if (await adminSnapshot.exists()) {
+                const data = adminSnapshot.val();
+                if (data) {
+                    SetContentById("AdminAccounts", Object.entries(data).length);
+                }
+            } else {
+                ShowNotification("Something went wrong", Colors.Red);
+            }
+        }).catch((error) => {
+            console.log(error);
+        });
+        await get(child(ref(Database), 'teachers')).then(async (teacherSnapshot) => {
+            if (await teacherSnapshot.exists()) {
+                const data = teacherSnapshot.val();
+                if (data) {
+                    SetContentById("TeacherAccounts", Object.entries(data).length);
+                }
+            } else {
+                ShowNotification("Something went wrong", Colors.Red);
+            }
+        }).catch((error) => {
+            console.log(error);
+        });
+        await get(child(ref(Database), 'users')).then(async (studentSnapshot) => {
+            if (await studentSnapshot.exists()) {
+                const data = studentSnapshot.val();
+                if (data) {
+                    SetContentById("StudentAccounts", Object.entries(data).length);
+                }
+            } else {
+                ShowNotification("Something went wrong", Colors.Red);
+            }
+        }).catch((error) => {
+            console.log(error);
+        });
+    } catch (error) {
+        console.log(error);
     }
 }
 
