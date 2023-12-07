@@ -231,8 +231,39 @@ class Picker extends HTMLElement {
     constructor() {
         super();
         this.Items = [];
-        this.SelectedItem = null;
+        this._selectedItem = null;
         this.IsOpen = false;
+    }
+
+    get SelectedItem() {
+        return this._selectedItem;
+    }
+
+    set SelectedItem(Item) {
+        if (this._selectedItem !== Item) {
+            this._selectedItem = Item;
+            this.SelectedItemChanged();
+        }
+    }
+
+    SelectedItemChanged() {
+        if (this._selectedItem) {
+            if (this._selectedItem.getAttribute("value").toLowerCase() == "None".toLowerCase()) {
+                this.querySelector("picker-pick-component").style.color = "#757575";
+            } else {
+                this.querySelector("picker-pick-component").style.color = "black";
+            }
+            this.querySelector("picker-pick-component").textContent = this._selectedItem.textContent
+            this._selectedItem.setAttribute("selected", "");
+
+            this.dispatchEvent(new CustomEvent("change", {
+                bubbles: true,
+                detail: {
+                    value: this._selectedItem.getAttribute("value"),
+                    text: this._selectedItem.textContent
+                }
+            }));
+        }
     }
 
     togglePicker() {
@@ -274,21 +305,6 @@ class Picker extends HTMLElement {
         }
 
         this.SelectedItem = item;
-        if (this.SelectedItem.getAttribute("value").toLowerCase() == "None".toLowerCase()) {
-            this.querySelector("picker-pick-component").style.color = "#757575";
-        } else {
-            this.querySelector("picker-pick-component").style.color = "black";
-        }
-        this.querySelector("picker-pick-component").textContent = this.SelectedItem.textContent
-        this.SelectedItem.setAttribute("selected", "");
-
-        this.dispatchEvent(new CustomEvent("change", {
-            bubbles: true,
-            detail: {
-                value: this.SelectedItem.getAttribute("value"),
-                text: this.SelectedItem.textContent
-            }
-        }));
     }
 }
 customElements.define("picker-component", Picker);

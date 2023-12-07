@@ -7,19 +7,22 @@ import {
 import {
     getDatabase, ref, set, onValue, get, child
 } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-database.js";
-import { Database, GetElementValue, FirebaseConfig, AdminAccount, IsNullOrEmpty} from "./main.js";
+import { Database, GetElementValue, FirebaseConfig, TeacherAccount, IsNullOrEmpty } from "./main.js";
 
 const SecondaryApp = initializeApp(FirebaseConfig, "SecondaryApp");
 const SecondaryAuth = getAuth(SecondaryApp);
 
 document.getElementById("teacher-form").addEventListener("submit", async (e) => {
     e.preventDefault();
+    const gradeElement = document.getElementById("grade-level");
+    const genderElement = document.getElementById("gender");
+    
     const name = GetElementValue("name") ?? "";
     const email = GetElementValue("email") ?? "";
     const password = GetElementValue("password") ?? "";
     const birthday = GetElementValue("birthday") ?? "";
-    const gradeLevel = (document.getElementById("grade-level") === null) ? "None" : document.getElementById("grade-level").SelectedItem.value;
-    const gender = (document.getElementById("gender") === null) ? "None" : document.getElementById("gender").SelectedItem.value;
+    const gradeLevel = (gradeElement === null) ? "None" : gradeElement.SelectedItem.value;
+    const gender = (genderElement === null) ? "None" : genderElement.SelectedItem.value;
     if (IsNullOrEmpty(name) || IsNullOrEmpty(email) || IsNullOrEmpty(password) || IsNullOrEmpty(birthday) || gradeLevel == "None" || gender == "None") {
         ShowNotification("Please fill up all the required data", Colors.Red);
         return;
@@ -48,8 +51,10 @@ document.getElementById("teacher-form").addEventListener("submit", async (e) => 
         ShowPopup("You just created a new account");
         document.getElementById("teacher-form").reset();
         document.querySelector('.modal-close').click();
+        gradeElement.SelectedItem = gradeElement.Items[0];
+        genderElement.SelectedItem = genderElement.Items[0];
         document.getElementById("table-body").innerHTML = "";
-        await AdminAccount();
+        await TeacherAccount();
     }).catch((error) => {
         HideLoading();
         if (error.code == "auth/email-already-in-use") {

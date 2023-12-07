@@ -462,5 +462,6 @@ export {
     FirebaseConfig,
     GetElementValue,
     AdminAccount,
+    TeacherAccount,
     IsNullOrEmpty
 };
