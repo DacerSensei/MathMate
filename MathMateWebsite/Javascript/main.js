@@ -298,7 +298,7 @@ async function TeacherAccount() {
                             genderDiv.className = "Status-Pink";
                         }
 
-                        
+
 
                         const actionsCell = document.createElement("td");
                         const editButton = document.createElement("button");
@@ -388,11 +388,33 @@ function Login() {
                 return;
             }
             ShowLoading();
-            await signInWithEmailAndPassword(Auth, email, password).then(async (userCredential) => {
+            let isAdmin = false;
+            await get(child(ref(Database), 'admins')).then(async (userSnapshot) => {
+                if (await userSnapshot.exists()) {
+                    const data = userSnapshot.val();
+                    if (data) {
+                        for (const [key, values] of Object.entries(data)) {
+                            if (values.Email == email) {
+                                isAdmin = true;
+                                break;
+                            }
+                        }
+                    }
+                }
             }).catch((error) => {
-                console.log(error.message);
-                ShowNotification("Your email or password is incorrect.", Colors.Red);
+                console.log(error);
             });
+            if (isAdmin) {
+                await signInWithEmailAndPassword(Auth, email, password).then(async (userCredential) => {
+                }).catch((error) => {
+                    console.log(error.message);
+                    ShowNotification("Your email or password is incorrect.", Colors.Red);
+                    HideLoading();
+                });
+            }else {
+                ShowNotification("Your account is not admin", Colors.Red);
+                HideLoading();
+            }
         });
     }
 }
