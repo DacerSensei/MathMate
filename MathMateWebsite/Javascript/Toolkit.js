@@ -274,7 +274,6 @@ class Picker extends HTMLElement {
         }
 
         this.SelectedItem = item;
-        console.log(this.SelectedItem.getAttribute("value"));
         if (this.SelectedItem.getAttribute("value").toLowerCase() == "None".toLowerCase()) {
             this.querySelector("picker-pick-component").style.color = "#757575";
         } else {

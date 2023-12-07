@@ -7,20 +7,20 @@ import {
 import {
     getDatabase, ref, set, onValue, get, child
 } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-database.js";
-import { Database, GetElementValue, FirebaseConfig, AdminAccount } from "./main.js";
+import { Database, GetElementValue, FirebaseConfig, AdminAccount, IsNullOrEmpty} from "./main.js";
 
 const SecondaryApp = initializeApp(FirebaseConfig, "SecondaryApp");
 const SecondaryAuth = getAuth(SecondaryApp);
 
 document.getElementById("teacher-form").addEventListener("submit", async (e) => {
     e.preventDefault();
-    var gender = (document.getElementById("gender") === null) ? "None" : document.getElementById("gender").SelectedItem.value;
-    console.log(gender);
-    return;
     const name = GetElementValue("name") ?? "";
     const email = GetElementValue("email") ?? "";
     const password = GetElementValue("password") ?? "";
-    if (name == "" || email == "" || password == "") {
+    const birthday = GetElementValue("birthday") ?? "";
+    const gradeLevel = (document.getElementById("grade-level") === null) ? "None" : document.getElementById("grade-level").SelectedItem.value;
+    const gender = (document.getElementById("gender") === null) ? "None" : document.getElementById("gender").SelectedItem.value;
+    if (IsNullOrEmpty(name) || IsNullOrEmpty(email) || IsNullOrEmpty(password) || IsNullOrEmpty(birthday) || gradeLevel == "None" || gender == "None") {
         ShowNotification("Please fill up all the required data", Colors.Red);
         return;
     }
@@ -32,9 +32,12 @@ document.getElementById("teacher-form").addEventListener("submit", async (e) => 
     ShowLoading();
     await createUserWithEmailAndPassword(SecondaryAuth, email, password).then(async (userCredential) => {
         console.log(userCredential.uid);
-        await set(ref(Database, "admins/" + userCredential.user.uid), {
+        await set(ref(Database, "teachers/" + userCredential.user.uid), {
             'Email': email,
             'Name': name,
+            'Gender': gender,
+            'GradeLevel': gradeLevel,
+            'Birthday': birthday,
             'Status': "active"
         });
         signOut(SecondaryAuth).then(() => {
@@ -43,7 +46,7 @@ document.getElementById("teacher-form").addEventListener("submit", async (e) => 
         });
         HideLoading();
         ShowPopup("You just created a new account");
-        document.getElementById("admin-form").reset();
+        document.getElementById("teacher-form").reset();
         document.querySelector('.modal-close').click();
         document.getElementById("table-body").innerHTML = "";
         await AdminAccount();

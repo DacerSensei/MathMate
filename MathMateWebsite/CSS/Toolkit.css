@@ -1422,7 +1422,7 @@ header #SearchButton>svg {
     /* 15% from the top and centered */
     border: 1px solid #888;
     max-width: 80%;
-    max-height: 80vh;
+    max-height: 90vh;
     border-radius: 6px;
     overflow: hidden;
 }
