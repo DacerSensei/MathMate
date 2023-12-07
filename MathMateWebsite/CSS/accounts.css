@@ -48,7 +48,8 @@ main>section>.table-section>table th {
 }
 
 #admin-form section, 
-#teacher-form section {
+#teacher-form section,
+#student-form section  {
     width: 40rem;
     margin: 0 auto;
     background-color: white;

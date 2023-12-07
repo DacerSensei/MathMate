@@ -193,6 +193,26 @@ function HideLoading() {
     }
 }
 
+// Custom Picker || Selected
+/* Example of how to use the custom picker
+<picker-component id="gender">
+    <picker-pick-component></picker-pick-component>
+    <picker-item-container-component>
+        <picker-item-component value="None">Select Gender</picker-item-component>
+        <picker-item-component value="Male">Male</picker-item-component>
+        <picker-item-component value="Female">Female</picker-item-component>
+    </picker-item-container-component>
+</picker-component> 
+
+// To get the value of selected
+document.getElementById("gender").Value 
+
+// To set the selected item programmatically
+document.getElementById("gender").SelectedItem = document.getElementById("gender").Items[1] 
+
+// To get the SelectedElement of picker
+document.getElementById("gender").SelectedItem
+*/
 class PickerItem extends HTMLElement {
     constructor() {
         super();
@@ -244,6 +264,10 @@ class Picker extends HTMLElement {
             this._selectedItem = Item;
             this.SelectedItemChanged();
         }
+    }
+
+    get Value(){
+        return this._selectedItem ? this._selectedItem.getAttribute("value") : null;
     }
 
     SelectedItemChanged() {
@@ -308,3 +332,4 @@ class Picker extends HTMLElement {
     }
 }
 customElements.define("picker-component", Picker);
+// End Custom Picker

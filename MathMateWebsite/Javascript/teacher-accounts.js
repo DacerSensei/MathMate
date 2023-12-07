@@ -21,8 +21,8 @@ document.getElementById("teacher-form").addEventListener("submit", async (e) => 
     const email = GetElementValue("email") ?? "";
     const password = GetElementValue("password") ?? "";
     const birthday = GetElementValue("birthday") ?? "";
-    const gradeLevel = (gradeElement === null) ? "None" : gradeElement.SelectedItem.value;
-    const gender = (genderElement === null) ? "None" : genderElement.SelectedItem.value;
+    const gradeLevel = (gradeElement === null) ? "None" : gradeElement.Value;
+    const gender = (genderElement === null) ? "None" : genderElement.Value;
     if (IsNullOrEmpty(name) || IsNullOrEmpty(email) || IsNullOrEmpty(password) || IsNullOrEmpty(birthday) || gradeLevel == "None" || gender == "None") {
         ShowNotification("Please fill up all the required data", Colors.Red);
         return;
