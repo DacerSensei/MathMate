@@ -1,4 +1,5 @@
-﻿using Xamarin.CommunityToolkit.ObjectModel;
+﻿using System;
+using Xamarin.CommunityToolkit.ObjectModel;
 
 namespace MathMate.Models
 {
@@ -37,6 +38,36 @@ namespace MathMate.Models
             }
         }
 
+        private string status;
+        public string Status
+        {
+            get => status;
+            set
+            {
+                SetProperty(ref status, value);
+            }
+        }
+
+        private Teacher adviser;
+        public Teacher Adviser
+        {
+            get => adviser;
+            set
+            {
+                SetProperty(ref adviser, value);
+            }
+        }
+
+        private string teacher;
+        public string Teacher
+        {
+            get => teacher;
+            set
+            {
+                SetProperty(ref teacher, value);
+            }
+        }
+
         private string birthday;
         public string Birthday
         {
@@ -71,6 +102,8 @@ namespace MathMate.Models
 
             }
         }
+
+
 
         public string CompleteName
         {

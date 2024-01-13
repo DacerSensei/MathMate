@@ -1,0 +1,83 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MathMate.Views.Profile"
+             Background="White"
+             xmlns:xct="http://xamarin.com/schemas/2020/toolkit" 
+             xmlns:local="clr-namespace:MathMate"
+             xmlns:lottie="clr-namespace:Lottie.Forms;assembly=Lottie.Forms" 
+             xmlns:ViewModel="clr-namespace:MathMate.ViewModels"
+             xmlns:UserManager="clr-namespace:MathMate.Services"
+             NavigationPage.HasNavigationBar="False">
+    <ContentPage.BindingContext>
+        <ViewModel:ProfileViewModel />
+    </ContentPage.BindingContext>
+    <ContentPage.Content>
+        <ScrollView>
+            <Grid BackgroundColor="#ffb702" RowDefinitions="Auto,*">
+                <local:CustomFrame MinimumHeightRequest="250" CornerRadius="0,0,25,25" xct:CornerRadiusEffect.CornerRadius="0,0,25,25">
+                    <local:CustomFrame.Background>
+                        <LinearGradientBrush  StartPoint="0,0" EndPoint="0,1">
+                            <GradientStop Color="#85182a" Offset="0.0"/>
+                            <GradientStop Color="#e01e37" Offset=".5"/>
+                        </LinearGradientBrush>
+                    </local:CustomFrame.Background>
+                    <StackLayout>
+                        <Frame CornerRadius="6" Margin="4,0">
+                            <StackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" BindingContext="{Binding Source={x:Static UserManager:UserManager.User}}">
+                                <xct:AvatarView Size="100" HorizontalOptions="CenterAndExpand" Text="{Binding InitialName}"/>
+                                <Label Text="{Binding CompleteName}" HorizontalTextAlignment="Center" TextColor="Black" FontSize="Title" FontAttributes="Bold" FontFamily="PoppinsBold" />
+                                <!--<Button Command="{Binding UploadCommand}" Text="Change Picture" CornerRadius="6" BackgroundColor="LightGoldenrodYellow"/>-->
+                            </StackLayout>
+                        </Frame>
+                    </StackLayout>
+                </local:CustomFrame>
+                <StackLayout Grid.Row="1" Padding="10" Spacing="1" BindingContext="{Binding Source={x:Static UserManager:UserManager.User}}">
+                    <Label Text="User Information" TextColor="Black" FontSize="Title" FontAttributes="Bold" Margin="0,0,0,10"/>
+                    <Frame Padding="10">
+                        <StackLayout Orientation="Horizontal">
+                            <Label FontFamily="PoppinsRegular" TextColor="#999" Text="First Name"/>
+                            <Label FontFamily="PoppinsRegular" TextColor="black"  HorizontalOptions="EndAndExpand" Text="{Binding FirstName}"/>
+                        </StackLayout>
+                    </Frame>
+                    <Frame Padding="10">
+                        <StackLayout Orientation="Horizontal">
+                            <Label FontFamily="PoppinsRegular" TextColor="#999" Text="Last Name"/>
+                            <Label FontFamily="PoppinsRegular" TextColor="black"  HorizontalOptions="EndAndExpand" Text="{Binding LastName}"/>
+                        </StackLayout>
+                    </Frame>
+                    <Frame Padding="10">
+                        <StackLayout Orientation="Horizontal">
+                            <Label FontFamily="PoppinsRegular" TextColor="#999" Text="Email"/>
+                            <Label FontFamily="PoppinsRegular" TextColor="black"  HorizontalOptions="EndAndExpand" Text="{Binding Email}"/>
+                        </StackLayout>
+                    </Frame>
+                    <Frame Padding="10">
+                        <StackLayout Orientation="Horizontal">
+                            <Label FontFamily="PoppinsRegular" TextColor="#999" Text="Contact Number"/>
+                            <Label FontFamily="PoppinsRegular" TextColor="black"  HorizontalOptions="EndAndExpand" Text="{Binding Contact}"/>
+                        </StackLayout>
+                    </Frame>
+                    <Frame Padding="10">
+                        <StackLayout Orientation="Horizontal">
+                            <Label FontFamily="PoppinsRegular" TextColor="#999" Text="Gender"/>
+                            <Label FontFamily="PoppinsRegular" HorizontalOptions="EndAndExpand" Text="{Binding Gender}" TextColor="{Binding GenderColor}"/>
+                        </StackLayout>
+                    </Frame>
+                    <Frame Padding="10">
+                        <StackLayout Orientation="Horizontal">
+                            <Label FontFamily="PoppinsRegular" TextColor="#999" Text="Grade Level"/>
+                            <Label FontFamily="PoppinsRegular" TextColor="black"  HorizontalOptions="EndAndExpand" Text="{Binding Adviser.GradeLevel}"/>
+                        </StackLayout>
+                    </Frame>
+                    <Frame Padding="10">
+                        <StackLayout Orientation="Horizontal">
+                            <Label FontFamily="PoppinsRegular" TextColor="#999" Text="Teacher"/>
+                            <Label FontFamily="PoppinsRegular" TextColor="black"  HorizontalOptions="EndAndExpand" Text="{Binding Adviser.Name}"/>
+                        </StackLayout>
+                    </Frame>
+                </StackLayout>
+            </Grid>
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage>

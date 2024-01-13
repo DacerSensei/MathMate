@@ -33,35 +33,43 @@ namespace MathMate.ViewModels
         public ICommand LoginCommand { get; }
         private async Task LoginExecute()
         {
-            if (string.IsNullOrWhiteSpace(Email))
-            {
-                await ToastManager.ShowToast("Email cannot be empty", Color.FromHex("#FF605C"));
-                return;
-            }
-            if (!IsValidEmail)
-            {
-                await ToastManager.ShowToast("Email is not valid", Color.FromHex("#FF605C"));
-                return;
-            }
-            if (string.IsNullOrWhiteSpace(Password))
-            {
-                await ToastManager.ShowToast("Password cannot be empty", Color.FromHex("#FF605C"));
-                return;
-            }
-            if (Password.Length < 6)
-            {
-                await ToastManager.ShowToast("Password must be at least 6 characters", Color.FromHex("#FF605C"));
-                return;
-            }
+            //if (string.IsNullOrWhiteSpace(Email))
+            //{
+            //    await ToastManager.ShowToast("Email cannot be empty", Color.FromHex("#FF605C"));
+            //    return;
+            //}
+            //if (!IsValidEmail)
+            //{
+            //    await ToastManager.ShowToast("Email is not valid", Color.FromHex("#FF605C"));
+            //    return;
+            //}
+            //if (string.IsNullOrWhiteSpace(Password))
+            //{
+            //    await ToastManager.ShowToast("Password cannot be empty", Color.FromHex("#FF605C"));
+            //    return;
+            //}
+            //if (Password.Length < 6)
+            //{
+            //    await ToastManager.ShowToast("Password must be at least 6 characters", Color.FromHex("#FF605C"));
+            //    return;
+            //}
             try
             {
-                UserCredential userCredential = await Database.FirebaseAuthClient.SignInWithEmailAndPasswordAsync(Email, Password);
+                UserCredential userCredential = await Database.FirebaseAuthClient.SignInWithEmailAndPasswordAsync("c@yahoo.com", "123456");
 
-                IReadOnlyCollection<FirebaseObject<Models.User>> users = await Database.FirebaseClient.Child("users").OnceAsync<Models.User>();
-                Services.UserManager.User = users.Where(user => user.Object.Uid == userCredential.User.Uid).FirstOrDefault().Object;
-                Services.UserManager.User.Email = userCredential.User.Info.Email;
+                Models.User user = await Database.FirebaseClient.Child($"users/{userCredential.User.Uid}").OnceSingleAsync<Models.User>();
 
-                await Application.Current.MainPage.Navigation.PushAsync(new ErrorPage());
+                if (user != null)
+                {
+                    Services.UserManager.User = user;
+                    Services.UserManager.User.Uid = userCredential.User.Info.Uid;
+                    if (!string.IsNullOrEmpty(user.Teacher))
+                    {
+                        Teacher teacher = await Database.FirebaseClient.Child($"teachers/{user.Teacher}").OnceSingleAsync<Teacher>();
+                        Services.UserManager.User.Adviser = teacher;
+                    }
+                    await Application.Current.MainPage.Navigation.PushAsync(new MainMenu());
+                }
             }
             catch (FirebaseAuthException ex)
             {
