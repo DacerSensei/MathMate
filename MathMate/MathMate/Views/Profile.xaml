@@ -64,16 +64,16 @@
                             <Label FontFamily="PoppinsRegular" HorizontalOptions="EndAndExpand" Text="{Binding Gender}" TextColor="{Binding GenderColor}"/>
                         </StackLayout>
                     </Frame>
-                    <Frame Padding="10">
+                    <Frame Padding="10" IsVisible="{Binding IsTeacher}">
                         <StackLayout Orientation="Horizontal">
                             <Label FontFamily="PoppinsRegular" TextColor="#999" Text="Grade Level"/>
                             <Label FontFamily="PoppinsRegular" TextColor="black"  HorizontalOptions="EndAndExpand" Text="{Binding Adviser.GradeLevel}"/>
                         </StackLayout>
                     </Frame>
-                    <Frame Padding="10">
+                    <Frame Padding="10" IsVisible="{Binding IsTeacher}">
                         <StackLayout Orientation="Horizontal">
                             <Label FontFamily="PoppinsRegular" TextColor="#999" Text="Teacher"/>
-                            <Label FontFamily="PoppinsRegular" TextColor="black"  HorizontalOptions="EndAndExpand" Text="{Binding Adviser.Name}"/>
+                            <Label FontFamily="PoppinsRegular" TextColor="black"  HorizontalOptions="EndAndExpand" Text="{Binding Adviser.CompleteName}"/>
                         </StackLayout>
                     </Frame>
                 </StackLayout>

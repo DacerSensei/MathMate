@@ -36,7 +36,7 @@ document.getElementById("grade-level").addEventListener("change", async () => {
                         if (values.GradeLevel == gradeLevel) {
                             const pickerItem = document.createElement("picker-item-component");
                             pickerItem.setAttribute("value", key);
-                            pickerItem.textContent = values.Name;
+                            pickerItem.textContent = values.LastName + ", " + values.FirstName;
                             teacherItems.appendChild(pickerItem);
                         }
                     }

@@ -1,0 +1,69 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+             xmlns:ViewModel="clr-namespace:MathMate.ViewModels" 
+             xmlns:local="http://xamarin.com/schemas/2020/toolkit" 
+             xmlns:converter="clr-namespace:MathMate.Services"
+             x:Class="MathMate.Views.FlashCardQuiz"
+             Background="White"
+             NavigationPage.HasNavigationBar="False">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converter:BooleanToInverseBooleanConverter x:Key="BooleanToInverseBooleanConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <ContentPage.BindingContext>
+        <ViewModel:FlashCardQuizViewModel />
+    </ContentPage.BindingContext>
+    <ContentPage.Behaviors>
+        <local:EventToCommandBehavior EventName="Appearing" Command="{Binding LoadedCommand}" />
+    </ContentPage.Behaviors>
+    <ContentPage.Content>
+        <Grid RowDefinitions="Auto,*">
+            <StackLayout Orientation="Horizontal">
+                <Button Text="Back" Command="{Binding BackCommand}" TextColor="White" Margin="10" CornerRadius="4" Padding="5" Background="#d83c3e" HorizontalOptions="Start"/>
+                <Button Text="Add" Command="{Binding AddCommand}" TextColor="White" Margin="10" CornerRadius="4" Padding="5" Background="#1eb980" HorizontalOptions="EndAndExpand" IsVisible="{Binding IsTeacher, Converter={StaticResource BooleanToInverseBooleanConverter}}"/>
+            </StackLayout>
+            <RefreshView Grid.Row="1" IsRefreshing="{Binding IsRefreshing}" Command="{Binding RefreshCommand}">
+                <CollectionView ItemsSource="{Binding QuizList}" x:Name="MyList">
+                    <CollectionView.EmptyView>
+                        <Label Text="No Quizes" TextColor="Black" FontAttributes="Bold" FontSize="Subtitle" VerticalTextAlignment="Center" HorizontalTextAlignment="Center"/>
+                    </CollectionView.EmptyView>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <StackLayout Padding="4">
+                                <Frame>
+                                    <local:Expander>
+                                        <local:Expander.Header>
+                                            <StackLayout Orientation="Horizontal">
+                                                <Label TextColor="black" FontFamily="PoppinsBold" FontSize="Subtitle" >
+                                                    <Label.FormattedText>
+                                                        <FormattedString>
+                                                            <FormattedString.Spans>
+                                                                <Span Text="{Binding Key}"/>
+                                                            </FormattedString.Spans>
+                                                        </FormattedString>
+                                                    </Label.FormattedText>
+                                                </Label>
+                                            </StackLayout>
+                                        </local:Expander.Header>
+                                        <StackLayout>
+                                            <StackLayout BindableLayout.ItemsSource="{Binding FlashCardsList}">
+                                                <BindableLayout.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <Label Text="{Binding Key}" TextColor="Black" />
+                                                    </DataTemplate>
+                                                </BindableLayout.ItemTemplate>
+                                            </StackLayout>
+                                            <Button Text="Take Quiz" TextColor="White" IsVisible="{Binding IsTeacher}" BackgroundColor="DarkGreen"/>
+                                        </StackLayout>
+                                    </local:Expander>
+                                </Frame>
+                            </StackLayout>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </RefreshView>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

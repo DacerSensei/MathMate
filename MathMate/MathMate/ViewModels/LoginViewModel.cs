@@ -33,42 +33,57 @@ namespace MathMate.ViewModels
         public ICommand LoginCommand { get; }
         private async Task LoginExecute()
         {
-            //if (string.IsNullOrWhiteSpace(Email))
-            //{
-            //    await ToastManager.ShowToast("Email cannot be empty", Color.FromHex("#FF605C"));
-            //    return;
-            //}
-            //if (!IsValidEmail)
-            //{
-            //    await ToastManager.ShowToast("Email is not valid", Color.FromHex("#FF605C"));
-            //    return;
-            //}
-            //if (string.IsNullOrWhiteSpace(Password))
-            //{
-            //    await ToastManager.ShowToast("Password cannot be empty", Color.FromHex("#FF605C"));
-            //    return;
-            //}
-            //if (Password.Length < 6)
-            //{
-            //    await ToastManager.ShowToast("Password must be at least 6 characters", Color.FromHex("#FF605C"));
-            //    return;
-            //}
+            if (string.IsNullOrWhiteSpace(Email))
+            {
+                await ToastManager.ShowToast("Email cannot be empty", Color.FromHex("#FF605C"));
+                return;
+            }
+            if (!IsValidEmail)
+            {
+                await ToastManager.ShowToast("Email is not valid", Color.FromHex("#FF605C"));
+                return;
+            }
+            if (string.IsNullOrWhiteSpace(Password))
+            {
+                await ToastManager.ShowToast("Password cannot be empty", Color.FromHex("#FF605C"));
+                return;
+            }
+            if (Password.Length < 6)
+            {
+                await ToastManager.ShowToast("Password must be at least 6 characters", Color.FromHex("#FF605C"));
+                return;
+            }
             try
             {
-                UserCredential userCredential = await Database.FirebaseAuthClient.SignInWithEmailAndPasswordAsync("c@yahoo.com", "123456");
-
-                Models.User user = await Database.FirebaseClient.Child($"users/{userCredential.User.Uid}").OnceSingleAsync<Models.User>();
-
-                if (user != null)
+                UserCredential userCredential = await Database.FirebaseAuthClient.SignInWithEmailAndPasswordAsync(Email, Password);
+                if (!IsTeacher)
                 {
-                    Services.UserManager.User = user;
-                    Services.UserManager.User.Uid = userCredential.User.Info.Uid;
-                    if (!string.IsNullOrEmpty(user.Teacher))
+                    Models.User user = await Database.FirebaseClient.Child($"users/{userCredential.User.Uid}").OnceSingleAsync<Models.User>();
+
+                    if (user != null)
                     {
-                        Teacher teacher = await Database.FirebaseClient.Child($"teachers/{user.Teacher}").OnceSingleAsync<Teacher>();
-                        Services.UserManager.User.Adviser = teacher;
+                        Services.UserManager.User = user;
+                        Services.UserManager.User.Uid = userCredential.User.Info.Uid;
+                        if (!string.IsNullOrEmpty(user.Teacher))
+                        {
+                            Teacher teacher = await Database.FirebaseClient.Child($"teachers/{user.Teacher}").OnceSingleAsync<Teacher>();
+                            Services.UserManager.User.Adviser = teacher;
+                        }
+                        await Application.Current.MainPage.Navigation.PushAsync(new MainMenu());
                     }
-                    await Application.Current.MainPage.Navigation.PushAsync(new MainMenu());
+                }
+                else
+                {
+
+                    Models.User user = await Database.FirebaseClient.Child($"teachers/{userCredential.User.Uid}").OnceSingleAsync<Models.User>();
+
+                    if (user != null)
+                    {
+                        Services.UserManager.User = user;
+                        Services.UserManager.User.Uid = userCredential.User.Info.Uid;
+
+                        await Application.Current.MainPage.Navigation.PushAsync(new MainMenu());
+                    }
                 }
             }
             catch (FirebaseAuthException ex)
@@ -108,6 +123,14 @@ namespace MathMate.ViewModels
         {
             get => isValidEmail;
             set => SetProperty(ref isValidEmail, value);
+        }
+
+        private bool isTeacher;
+
+        public bool IsTeacher
+        {
+            get => isTeacher;
+            set => SetProperty(ref isTeacher, value);
         }
 
         private string email;

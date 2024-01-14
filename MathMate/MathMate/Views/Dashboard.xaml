@@ -6,13 +6,30 @@
              xmlns:xct="http://xamarin.com/schemas/2020/toolkit" 
              xmlns:local="clr-namespace:MathMate"
              xmlns:lottie="clr-namespace:Lottie.Forms;assembly=Lottie.Forms" 
-             xmlns:UserManager="clr-namespace:MathMate.Services"
+             xmlns:UserManager="clr-namespace:MathMate.Services" 
+             xmlns:ViewModel="clr-namespace:MathMate.ViewModels"
              NavigationPage.HasNavigationBar="False">
+    <ContentPage.BindingContext>
+        <ViewModel:DashboardViewModel />
+    </ContentPage.BindingContext>
     <ContentPage.Content>
         <StackLayout>
-            <Label Text="Welcome to Xamarin.Forms!"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
+            <Button Text="Flash Card Quizes" Command="{Binding ViewFlashCardCommand}" TextColor="White" Margin="10,10,10,0" FontFamily="PoppinsBold">
+                <Button.Background>
+                    <LinearGradientBrush  StartPoint="0,.5" EndPoint="1,.5">
+                        <GradientStop Color="#ff4c15" Offset="0.0"/>
+                        <GradientStop Color="#ffb702" Offset="1.0"/>
+                    </LinearGradientBrush>
+                </Button.Background>
+            </Button>
+            <Button Text="Student Performances" TextColor="White" Margin="10,10,10,0" FontFamily="PoppinsBold">
+                <Button.Background>
+                    <LinearGradientBrush  StartPoint="0,.5" EndPoint="1,.5">
+                        <GradientStop Color="#ff4c15" Offset="0.0"/>
+                        <GradientStop Color="#ffb702" Offset="1.0"/>
+                    </LinearGradientBrush>
+                </Button.Background>
+            </Button>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

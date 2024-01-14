@@ -68,6 +68,18 @@ namespace MathMate.Models
             }
         }
 
+        public bool IsTeacher
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(Teacher))
+                {
+                    return false;
+                }
+                return true;
+            }
+        }
+
         private string birthday;
         public string Birthday
         {
@@ -102,8 +114,6 @@ namespace MathMate.Models
 
             }
         }
-
-
 
         public string CompleteName
         {

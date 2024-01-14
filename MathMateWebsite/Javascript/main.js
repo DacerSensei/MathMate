@@ -291,8 +291,6 @@ async function AdminAccount() {
                         tableBody.appendChild(row);
                     }
                 }
-            } else {
-                ShowNotification("Your account is not admin", Colors.Red);
             }
         }).catch((error) => {
             console.log(error);
@@ -316,7 +314,7 @@ async function TeacherAccount() {
                         hiddenInput.value = key;
 
                         const nameCell = document.createElement("td");
-                        nameCell.textContent = values.Name;
+                        nameCell.textContent = values.LastName + ", " + values.FirstName;
 
                         const emailCell = document.createElement("td");
                         emailCell.textContent = values.Email;
@@ -379,8 +377,6 @@ async function TeacherAccount() {
                         tableBody.appendChild(row);
                     }
                 }
-            } else {
-                ShowNotification("Your account is not admin", Colors.Red);
             }
         }).catch((error) => {
             console.log(error);
@@ -415,7 +411,7 @@ async function StudentAccount() {
                                 emailCell.textContent = values.Email;
 
                                 const teacherCell = document.createElement("td");
-                                teacherCell.textContent = teacher.Name;
+                                teacherCell.textContent = teacher.LastName + ", " + teacher.FirstName;
 
                                 const gradeCell = document.createElement("td");
                                 const gradeDiv = document.createElement("div");
@@ -470,8 +466,6 @@ async function StudentAccount() {
                                 tableBody.appendChild(row);
                             }
                         }
-                    } else {
-                        ShowNotification("Your account is not admin", Colors.Red);
                     }
                 }).catch((error) => {
                     console.log(error);

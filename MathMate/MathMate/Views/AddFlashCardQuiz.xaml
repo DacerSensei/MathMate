@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+             xmlns:ViewModel="clr-namespace:MathMate.ViewModels" 
+             xmlns:local="clr-namespace:MathMate"
+             x:Class="MathMate.Views.AddFlashCardQuiz">
+    <ContentPage.BindingContext>
+        <ViewModel:AddFlashCardQuizViewModel />
+    </ContentPage.BindingContext>
+    <ContentPage.Content>
+        <ScrollView>
+            <Grid RowDefinitions="Auto,*">
+                <Grid.Background>
+                    <LinearGradientBrush  StartPoint="0,0" EndPoint="0,1">
+                        <GradientStop Color="#85182a" Offset="0.0"/>
+                        <GradientStop Color="#e01e37" Offset=".5"/>
+                    </LinearGradientBrush>
+                </Grid.Background>
+                <StackLayout HeightRequest="80">
+                    <Label Text="Add Flash Cards" FontSize="28" FontFamily="PoppinsBold" Margin="20,0" VerticalOptions="EndAndExpand" TextColor="White" FontAttributes="Bold"/>
+                </StackLayout>
+                <local:CustomFrame CornerRadius="25,25,0,0" Grid.Row="1">
+                    <StackLayout Spacing="0">
+                        <Button Text="Add Card" HorizontalOptions="End" BackgroundColor="DarkGreen" Command="{Binding AddCommand}"></Button>
+                        <Label Text="Title" FontSize="18" FontFamily="PoppinsRegular" TextColor="#999" Margin="5,0"/>
+                        <Frame Padding="20,0" BackgroundColor="#f6f7f9" CornerRadius="10" Margin="5,0,5,5">
+                            <Entry FontFamily="PoppinsRegular" Text="{Binding Title}" Placeholder="Set your title (Must be unique)" TextColor="Black" PlaceholderColor="#999">
+
+                            </Entry>
+                        </Frame>
+                        <StackLayout BindableLayout.ItemsSource="{Binding FlashCards}">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate>
+                                    <Frame>
+                                        <StackLayout>
+                                            <Label Text="Problem" FontSize="18" FontFamily="PoppinsRegular" TextColor="#999" Margin="5,0"/>
+                                            <Frame Padding="20,0" BackgroundColor="#f6f7f9" CornerRadius="10" Margin="5,0,5,5">
+                                                <Entry FontFamily="PoppinsRegular" Text="{Binding problem}" Placeholder="Set your problem" TextColor="Black" PlaceholderColor="#999">
+
+                                                </Entry>
+                                            </Frame>
+                                            <Label Text="Solution" FontSize="18" FontFamily="PoppinsRegular" TextColor="#999" Margin="5,0"/>
+                                            <Frame Padding="20,0" BackgroundColor="#f6f7f9" CornerRadius="10" Margin="5,0,5,5">
+                                                <Entry FontFamily="PoppinsRegular" Text="{Binding solution}" Placeholder="Set your solution" TextColor="Black" PlaceholderColor="#999">
+
+                                                </Entry>
+                                            </Frame>
+                                        </StackLayout>
+                                    </Frame>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </StackLayout>
+                        <Button Text="Save" Command="{Binding SaveCommand}" CornerRadius="10" Margin="5,5" TextColor="White" FontFamily="PoppinsRegular">
+                            <Button.Background>
+                                <LinearGradientBrush  StartPoint="0,.5" EndPoint="1,.5">
+                                    <GradientStop Color="#028090" Offset="0.0"/>
+                                    <GradientStop Color="#02c39a" Offset="1.0"/>
+                                </LinearGradientBrush>
+                            </Button.Background>
+                        </Button>
+                        <Button Text="Back" Command="{Binding BackCommand}" CornerRadius="10" Margin="5,5" TextColor="White" FontFamily="PoppinsRegular">
+                            <Button.Background>
+                                <LinearGradientBrush  StartPoint="0,.5" EndPoint="1,.5">
+                                    <GradientStop Color="#028090" Offset="0.0"/>
+                                    <GradientStop Color="#02c39a" Offset="1.0"/>
+                                </LinearGradientBrush>
+                            </Button.Background>
+                        </Button>
+                    </StackLayout>
+                </local:CustomFrame>
+            </Grid>
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage>
