@@ -45,6 +45,7 @@
                                                         </FormattedString>
                                                     </Label.FormattedText>
                                                 </Label>
+                                                <Label HorizontalOptions="EndAndExpand" Text="{Binding status}" TextColor="{Binding statusColor}" FontSize="Subtitle" FontFamily="PoppinsBold"/>
                                             </StackLayout>
                                         </local:Expander.Header>
                                         <StackLayout>
@@ -55,7 +56,7 @@
                                                     </DataTemplate>
                                                 </BindableLayout.ItemTemplate>
                                             </StackLayout>
-                                            <Button Text="Take Quiz" TextColor="White" IsVisible="{Binding IsTeacher}" BackgroundColor="DarkGreen"/>
+                                            <Button Text="Take Quiz" TextColor="White" IsVisible="{Binding Source={x:Reference MyList}, Path=BindingContext.IsTeacher}" BackgroundColor="DarkGreen"/>
                                         </StackLayout>
                                     </local:Expander>
                                 </Frame>

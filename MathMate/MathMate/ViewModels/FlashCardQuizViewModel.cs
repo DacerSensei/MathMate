@@ -102,6 +102,29 @@ namespace MathMate.ViewModels
                                 item.Object.FlashCardsList.Add(cards.Object);
                             }
                         }
+                        var finishedQuiz = await Database.FirebaseClient.Child($"users/{UserManager.User.Uid}/Quiz").OnceAsync<Quiz>();
+                        if (finishedQuiz != null)
+                        {
+                            foreach (var quiz in finishedQuiz)
+                            {
+                                if (item.Key == quiz.Key)
+                                {
+                                    item.Object.isCompleted = true;
+                                }
+                            }
+                        }
+                        if (item.Object.isCompleted)
+                        {
+                            item.Object.status = "Completed";
+                            item.Object.statusColor = "#1eb980";
+                            item.Object.canTake = true;
+                        }
+                        else
+                        {
+                            item.Object.status = "Incomplete";
+                            item.Object.statusColor = "#ff2a04";
+                            item.Object.canTake = false;
+                        }
                         item.Object.Key = item.Key;
                         QuizList.Add(item.Object);
                     }

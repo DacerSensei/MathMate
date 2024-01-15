@@ -1,7 +1,18 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="MathMate.Views.TakeFlashCard">
+             x:Class="MathMate.Views.TakeFlashCard"
+             xmlns:local="http://xamarin.com/schemas/2020/toolkit" 
+             xmlns:converter="clr-namespace:MathMate.Services" 
+             xmlns:ViewModel="clr-namespace:MathMate.ViewModels"
+             Background="White"
+             NavigationPage.HasNavigationBar="False">
+    <ContentPage.BindingContext>
+        <ViewModel:TakeFlashCardViewModel />
+    </ContentPage.BindingContext>
+    <ContentPage.Behaviors>
+        <local:EventToCommandBehavior EventName="Appearing" Command="{Binding LoadedCommand}" />
+    </ContentPage.Behaviors>
     <ContentPage.Content>
         <StackLayout>
             <Label Text="Welcome to Xamarin.Forms!"
