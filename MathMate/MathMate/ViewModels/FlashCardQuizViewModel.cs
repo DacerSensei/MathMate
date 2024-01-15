@@ -48,7 +48,7 @@ namespace MathMate.ViewModels
                 }
                 else
                 {
-                    await Application.Current.MainPage.Navigation.PushAsync(new TakeFlashCard()
+                    await Application.Current.MainPage.Navigation.PushModalAsync(new TakeFlashCard()
                     {
                         BindingContext = new TakeFlashCardViewModel(quiz)
                     });

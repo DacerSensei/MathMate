@@ -77,7 +77,7 @@ namespace MathMate.ViewModels
                             {
                                 Debug.WriteLine("Your total score is: " + Score);
                                 await Database.FirebaseClient.Child($"users/{UserManager.User.Uid}/Quiz/{CurrentQuiz.Key}").PutAsync(JsonConvert.SerializeObject(new { Score = Score }));
-                                await Application.Current.MainPage.Navigation.PopAsync();
+                                await Application.Current.MainPage.Navigation.PopModalAsync();
                             }
                         }
                         else
@@ -99,7 +99,7 @@ namespace MathMate.ViewModels
                                 {
                                     Debug.WriteLine("Your total score is: " + Score);
                                     await Database.FirebaseClient.Child($"users/{UserManager.User.Uid}/Quiz/{CurrentQuiz.Key}").PutAsync(JsonConvert.SerializeObject(new { Score = Score }));
-                                    await Application.Current.MainPage.Navigation.PopAsync();
+                                    await Application.Current.MainPage.Navigation.PopModalAsync();
                                 }
                             }
                             else

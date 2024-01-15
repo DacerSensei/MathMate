@@ -73,6 +73,9 @@ namespace MathMate.ViewModels
                             Services.UserManager.User.Adviser = teacher;
                         }
                         await Application.Current.MainPage.Navigation.PushAsync(new MainMenu());
+
+                        Email = string.Empty; 
+                        Password = string.Empty;
                     }else
                     {
                         await ToastManager.ShowToast("You're not student", Color.FromHex("#FF605C"));
@@ -89,7 +92,11 @@ namespace MathMate.ViewModels
                         Services.UserManager.User.Uid = userCredential.User.Info.Uid;
 
                         await Application.Current.MainPage.Navigation.PushAsync(new MainMenu());
-                    }else
+
+                        Email = string.Empty;
+                        Password = string.Empty;
+                    }
+                    else
                     {
                         await ToastManager.ShowToast("You're not teacher", Color.FromHex("#FF605C"));
                     }

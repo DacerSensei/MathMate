@@ -24,10 +24,16 @@
                     </local:CustomFrame.Background>
                     <StackLayout>
                         <Frame CornerRadius="6" Margin="4,0">
-                            <StackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" BindingContext="{Binding Source={x:Static UserManager:UserManager.User}}">
-                                <xct:AvatarView Size="100" HorizontalOptions="CenterAndExpand" Text="{Binding InitialName}"/>
-                                <Label Text="{Binding CompleteName}" HorizontalTextAlignment="Center" TextColor="Black" FontSize="Title" FontAttributes="Bold" FontFamily="PoppinsBold" />
-                                <!--<Button Command="{Binding UploadCommand}" Text="Change Picture" CornerRadius="6" BackgroundColor="LightGoldenrodYellow"/>-->
+                            <StackLayout>
+                                <StackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" BindingContext="{Binding Source={x:Static UserManager:UserManager.User}}">
+                                    <xct:AvatarView Size="100" HorizontalOptions="CenterAndExpand" Text="{Binding InitialName}"/>
+                                    <Label Text="{Binding CompleteName}" HorizontalTextAlignment="Center" TextColor="Black" FontSize="Title" FontAttributes="Bold" FontFamily="PoppinsBold" />
+                                    <!--<Button Command="{Binding UploadCommand}" Text="Change Picture" CornerRadius="6" BackgroundColor="LightGoldenrodYellow"/>-->
+                                </StackLayout>
+                                <StackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
+                                    <Label Text="{Binding Role}" HorizontalTextAlignment="Center" TextColor="Black" FontSize="Title" FontAttributes="Bold" FontFamily="PoppinsBold" />
+                                    <!--<Button Command="{Binding UploadCommand}" Text="Change Picture" CornerRadius="6" BackgroundColor="LightGoldenrodYellow"/>-->
+                                </StackLayout>
                             </StackLayout>
                         </Frame>
                     </StackLayout>
