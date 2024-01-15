@@ -24,7 +24,10 @@ namespace MathMate.ViewModels
             BackCommand = new AsyncCommand(BackExecute);
             DeleteCommand = new Command(DeleteExecute);
             RefreshCommand = new AsyncCommand(RefreshExecute);
+            TakeQuizCommand = new Command(TakeQuizExecute);
         }
+
+
 
         public ObservableCollection<Quiz> QuizList { get; set; } = new ObservableCollection<Quiz>();
 
@@ -32,6 +35,26 @@ namespace MathMate.ViewModels
         public ICommand BackCommand { get; set; }
         public ICommand LoadedCommand { get; set; }
         public ICommand DeleteCommand { get; set; }
+        public ICommand TakeQuizCommand { get; set; }
+
+        private async void TakeQuizExecute(object parameter)
+        {
+            Quiz quiz = parameter as Quiz;
+            if (quiz != null)
+            {
+                if (quiz.isCompleted)
+                {
+                    await ToastManager.ShowToast("You cannot take completed quiz", Color.FromHex("#FF605C"));
+                }
+                else
+                {
+                    await Application.Current.MainPage.Navigation.PushAsync(new TakeFlashCard()
+                    {
+                        BindingContext = new TakeFlashCardViewModel(quiz)
+                    });
+                }
+            }
+        }
 
         private async void DeleteExecute(object parameter)
         {
@@ -117,13 +140,11 @@ namespace MathMate.ViewModels
                         {
                             item.Object.status = "Completed";
                             item.Object.statusColor = "#1eb980";
-                            item.Object.canTake = true;
                         }
                         else
                         {
                             item.Object.status = "Incomplete";
                             item.Object.statusColor = "#ff2a04";
-                            item.Object.canTake = false;
                         }
                         item.Object.Key = item.Key;
                         QuizList.Add(item.Object);

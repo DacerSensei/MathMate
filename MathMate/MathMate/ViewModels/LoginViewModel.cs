@@ -20,9 +20,11 @@ namespace MathMate.ViewModels
     {
         public LoginViewModel()
         {
+            //LoadedCommand = new AsyncCommand(LoginExecute);
             LoginCommand = new AsyncCommand(LoginExecute);
             ForgotPasswordCommand = new AsyncCommand(ForgotPasswordExecute);
         }
+        public ICommand LoadedCommand { get; }
 
         public ICommand ForgotPasswordCommand { get; }
         private async Task ForgotPasswordExecute()
@@ -56,6 +58,7 @@ namespace MathMate.ViewModels
             try
             {
                 UserCredential userCredential = await Database.FirebaseAuthClient.SignInWithEmailAndPasswordAsync(Email, Password);
+                //UserCredential userCredential = await Database.FirebaseAuthClient.SignInWithEmailAndPasswordAsync("dacerz14@gmail.com", "123456");
                 if (!IsTeacher)
                 {
                     Models.User user = await Database.FirebaseClient.Child($"users/{userCredential.User.Uid}").OnceSingleAsync<Models.User>();

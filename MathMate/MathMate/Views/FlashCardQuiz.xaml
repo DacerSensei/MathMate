@@ -56,7 +56,7 @@
                                                     </DataTemplate>
                                                 </BindableLayout.ItemTemplate>
                                             </StackLayout>
-                                            <Button Text="Take Quiz" TextColor="White" IsVisible="{Binding Source={x:Reference MyList}, Path=BindingContext.IsTeacher}" BackgroundColor="DarkGreen"/>
+                                            <Button Text="Take Quiz" TextColor="White" IsVisible="{Binding Source={x:Reference MyList}, Path=BindingContext.IsTeacher}" Command="{Binding Source={x:Reference MyList}, Path=BindingContext.TakeQuizCommand}" CommandParameter="{Binding .}" BackgroundColor="DarkGreen"/>
                                         </StackLayout>
                                     </local:Expander>
                                 </Frame>

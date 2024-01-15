@@ -20,12 +20,13 @@ document.getElementById("teacher-form").addEventListener("submit", async (e) => 
     const firstname = GetElementValue("first-name") ?? "";
     const lastname = GetElementValue("last-name") ?? "";
     const contact = GetElementValue("contact") ?? "";
+    const section = GetElementValue("section") ?? "";
     const email = GetElementValue("email") ?? "";
     const password = GetElementValue("password") ?? "";
     const birthday = GetElementValue("birthday") ?? "";
     const gradeLevel = (gradeElement === null) ? "None" : gradeElement.Value;
     const gender = (genderElement === null) ? "None" : genderElement.Value;
-    if (IsNullOrEmpty(firstname) || IsNullOrEmpty(lastname) || IsNullOrEmpty(contact) || IsNullOrEmpty(email) || IsNullOrEmpty(password) || IsNullOrEmpty(birthday) || gradeLevel == "None" || gender == "None") {
+    if (IsNullOrEmpty(firstname) || IsNullOrEmpty(lastname) || IsNullOrEmpty(section) || IsNullOrEmpty(contact) || IsNullOrEmpty(email) || IsNullOrEmpty(password) || IsNullOrEmpty(birthday) || gradeLevel == "None" || gender == "None") {
         ShowNotification("Please fill up all the required data", Colors.Red);
         return;
     }
@@ -44,6 +45,7 @@ document.getElementById("teacher-form").addEventListener("submit", async (e) => 
             'Contact': contact,
             'Gender': gender,
             'GradeLevel': gradeLevel,
+            'Section': section,
             'Birthday': birthday,
             'Status': "active"
         });

@@ -39,6 +39,16 @@ namespace MathMate.Models
             }
         }
 
+        private string section;
+        public string Section
+        {
+            get => section;
+            set
+            {
+                SetProperty(ref section, value);
+            }
+        }
+
         private string firstName;
         public string FirstName
         {

@@ -7,17 +7,28 @@
              xmlns:ViewModel="clr-namespace:MathMate.ViewModels"
              Background="White"
              NavigationPage.HasNavigationBar="False">
-    <ContentPage.BindingContext>
-        <ViewModel:TakeFlashCardViewModel />
-    </ContentPage.BindingContext>
     <ContentPage.Behaviors>
         <local:EventToCommandBehavior EventName="Appearing" Command="{Binding LoadedCommand}" />
     </ContentPage.Behaviors>
     <ContentPage.Content>
-        <StackLayout>
-            <Label Text="Welcome to Xamarin.Forms!"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
-        </StackLayout>
+        <Grid RowDefinitions="*,Auto">
+            <StackLayout BindableLayout.ItemsSource="{Binding FlashCards}" x:Name="MyList">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate>
+                        <StackLayout IsVisible="{Binding IsCurrentQuestion}" HeightRequest="400">
+                            <Frame  VerticalOptions="EndAndExpand" Margin="10,0" CornerRadius="10">
+                                <StackLayout>
+                                    <Label Text="Problem:" TextColor="Black" FontSize="Title" FontFamily="PoppinsRegular" HorizontalTextAlignment="Center"/>
+                                    <Label Text="{Binding problem}" TextColor="Black" FontSize="80" FontFamily="PoppinsRegular" HorizontalTextAlignment="Center"/>
+                                </StackLayout>
+                            </Frame>
+                            <StackLayout>
+                                <Button Text="Answer the problem" Command="{Binding Source={x:Reference MyList}, Path=BindingContext.AnswerCommand}" CommandParameter="{Binding .}" TextColor="White" FontSize="Subtitle" BackgroundColor="red"/>
+                            </StackLayout>
+                        </StackLayout>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </StackLayout>
+        </Grid>
     </ContentPage.Content>
 </ContentPage>

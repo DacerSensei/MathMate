@@ -11,7 +11,6 @@ namespace MathMate.Models
         public string status { get; set; }
         public string statusColor { get; set; }
         public bool isCompleted { get; set; } = false;
-        public bool canTake { get; set; }
 
     }
 }

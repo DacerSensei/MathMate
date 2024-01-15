@@ -72,6 +72,12 @@
                     </Frame>
                     <Frame Padding="10" IsVisible="{Binding IsTeacher}">
                         <StackLayout Orientation="Horizontal">
+                            <Label FontFamily="PoppinsRegular" TextColor="#999" Text="Section"/>
+                            <Label FontFamily="PoppinsRegular" TextColor="black"  HorizontalOptions="EndAndExpand" Text="{Binding Adviser.Section}"/>
+                        </StackLayout>
+                    </Frame>
+                    <Frame Padding="10" IsVisible="{Binding IsTeacher}">
+                        <StackLayout Orientation="Horizontal">
                             <Label FontFamily="PoppinsRegular" TextColor="#999" Text="Teacher"/>
                             <Label FontFamily="PoppinsRegular" TextColor="black"  HorizontalOptions="EndAndExpand" Text="{Binding Adviser.CompleteName}"/>
                         </StackLayout>

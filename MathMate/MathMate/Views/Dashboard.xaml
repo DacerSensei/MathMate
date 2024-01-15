@@ -14,7 +14,7 @@
     </ContentPage.BindingContext>
     <ContentPage.Content>
         <StackLayout>
-            <Button Text="Flash Card Quizes" Command="{Binding ViewFlashCardCommand}" TextColor="White" Margin="10,10,10,0" FontFamily="PoppinsBold">
+            <Button Text="Flash Card Quizzes" Command="{Binding ViewFlashCardCommand}" TextColor="White" Margin="10,10,10,0" FontFamily="PoppinsBold">
                 <Button.Background>
                     <LinearGradientBrush  StartPoint="0,.5" EndPoint="1,.5">
                         <GradientStop Color="#ff4c15" Offset="0.0"/>

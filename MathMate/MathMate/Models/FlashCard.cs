@@ -29,5 +29,15 @@ namespace MathMate.Models
                 SetProperty(ref sol, value);
             }
         }
+
+        private bool isCurrentQuestion = false;
+        public bool IsCurrentQuestion
+        {
+            get => isCurrentQuestion;
+            set
+            {
+                SetProperty(ref isCurrentQuestion, value);
+            }
+        }
     }
 }
