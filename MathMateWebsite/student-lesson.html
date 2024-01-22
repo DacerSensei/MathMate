@@ -17,56 +17,26 @@
     <div id="Add-Modal" class="modal-container">
         <div class="modal-content" style="width: -webkit-fill-available; height: -webkit-fill-available;">
             <div class="modal-header">
-                <h4>Create Student Account</h4>
+                <h4>Create Lesson</h4>
                 <span class="modal-close">&times;</span>
             </div>
             <div class="modal-body" style="padding: 1rem; box-sizing: border-box;">
                 <!-- Content Below Here -->
-                <form method="post" id="student-form">
+                <form method="post" id="lesson-form">
                     <section>
-                        <h2>Student Account</h2>
-                        <p>Create a new Student</p>
+                        <h2>Student Lesson</h2>
+                        <p>Create a new lesson</p>
+
                         <div class="Solid-Textbox-Red">
                             <i class="fa-solid fa-signature"></i>
-                            <input id="first-name" type="text" placeholder="Enter your first name" required>
+                            <input id="lesson-title" type="text" placeholder="Enter your title" required>
                         </div>
                         <div class="Solid-Textbox-Red">
                             <i class="fa-solid fa-signature"></i>
-                            <input id="last-name" type="text" placeholder="Enter your last name" required>
-                        </div>
-                        <div class="Solid-Textbox-Red">
-                            <i class="fa-solid fa-cake-candles"></i>
-                            <input id="birthday" type="date" required title="Birthday">
-                        </div>
-                        <div class="Solid-Picker-Red">
-                            <i class="fa-solid fa-venus-mars"></i>
-                            <picker-component id="gender">
-                                <picker-pick-component></picker-pick-component>
-                                <picker-item-container-component>
-                                    <picker-item-component value="None">Select Gender</picker-item-component>
-                                    <picker-item-component value="Male">Male</picker-item-component>
-                                    <picker-item-component value="Female">Female</picker-item-component>
-                                </picker-item-container-component>
-                            </picker-component>
-                        </div>
-                        <div class="Solid-Textbox-Red">
-                            <i class="fa-solid fa-phone"></i>
-                            <input id="contact" type="text" placeholder="Enter your contact number" required>
-                        </div>
-                        <div class="Solid-Textbox-Red">
-                            <i class="fa-solid fa-at"></i>
-                            <input id="email" type="email" placeholder="Enter your email address" required>
-                        </div>
-                        <div class="Solid-Textbox-Red">
-                            <i class="fa-solid fa-key"></i>
-                            <input id="password" type="password" placeholder="Enter your password" required>
-                        </div>
-                        <div class="Solid-Textbox-Red">
-                            <i class="fa-solid fa-key"></i>
-                            <input id="confirm-password" type="password" placeholder="Re-type your password" required>
+                            <input id="lesson-description" type="text" placeholder="Enter your description" required>
                         </div>
                         <button type="submit" class="Solid-Button-Red" style="font-size: 1.125rem"
-                            id="CreateAdminButton">Create Student</button>
+                            id="CreateLesson">Create Lesson</button>
                     </section>
                 </form>
             </div>
@@ -75,7 +45,7 @@
     <main id="main">
         <section id="main-section">
             <div class="header-section">
-                <h2>Accounts</h2>
+                <h2>Lessons</h2>
                 <form id="ContentSearchForm">
                     <div class="Textbox-Icon-Container">
                         <input type="text" placeholder="Search" id="ContentSearch" name="search">
@@ -89,17 +59,14 @@
                 </form>
                 <div>
                     <button class="Button-Green modal-trigger" data-target="Add-Modal" style="max-width: 400px;">Create
-                        Student Account</button>
+                        Student Lesson</button>
                 </div>
             </div>
             <div class="table-section" style="padding: 1.25rem">
                 <table class="ListView-Yellow" id="myTable">
                     <thead>
-                        <th>Name</th>
-                        <th>E-mail</th>
-                        <th>Grade</th>
-                        <th>Gender</th>
-                        <th>Teacher</th>
+                        <th>Title</th>
+                        <th>Description</th>
                         <th>Actions</th>
                     </thead>
                     <tbody id="table-body">
@@ -111,7 +78,7 @@
     </main>
     <script src="Javascript/Toolkit.js"></script>
     <script type="module" src="Javascript/main.js"></script>
-    <script type="module" src="Javascript/student-accounts.js"></script>
+    <script type="module" src="Javascript/student-lesson.js"></script>
 </body>
 
 </html>
