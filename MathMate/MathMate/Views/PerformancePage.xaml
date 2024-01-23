@@ -66,12 +66,12 @@
                                         <StackLayout Grid.Row="2" Grid.ColumnSpan="2" HorizontalOptions="CenterAndExpand">
                                             <Label Text="{Binding Title}" HorizontalTextAlignment="Center" FontSize="16" FontFamily="PoppinsRegular" TextColor="#258657"/>
                                             <Label Text="Scores" HorizontalTextAlignment="Center" FontSize="16" FontFamily="PoppinsRegular" TextColor="Black"/>
-                                            <Label FontSize="16" HorizontalTextAlignment="Center" FontFamily="PoppinsBold">
+                                            <Label FontSize="16" HorizontalTextAlignment="Center" FontFamily="PoppinsBold" TextColor="#258657">
                                                 <Label.FormattedText>
                                                     <FormattedString>
-                                                        <Span Text="{Binding Score}" TextColor="#258657"/>
-                                                        <Span Text="/" TextColor="Black"/>
-                                                        <Span Text="{Binding Total}" TextColor="#258657"/>
+                                                        <Span Text="{Binding Score}" />
+                                                        <Span Text="/"/>
+                                                        <Span Text="{Binding Total}"/>
                                                     </FormattedString>
                                                 </Label.FormattedText>
                                             </Label>
