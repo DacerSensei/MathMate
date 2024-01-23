@@ -15,22 +15,20 @@ using Xamarin.Forms;
 
 namespace MathMate.ViewModels
 {
-    public class FlashCardQuizViewModel : ObservableObject
+    public class LessonPageViewModel : ObservableObject
     {
-        public FlashCardQuizViewModel()
+        public LessonPageViewModel()
         {
             LoadedCommand = new AsyncCommand(LoadedExecute);
             BackCommand = new AsyncCommand(BackExecute);
-            DeleteCommand = new Command(DeleteExecute);
             RefreshCommand = new AsyncCommand(RefreshExecute);
             TakeQuizCommand = new Command(TakeQuizExecute);
         }
 
 
 
-        public ObservableCollection<Quiz> QuizList { get; set; } = new ObservableCollection<Quiz>();
+        public ObservableCollection<Lesson> LessonList { get; set; } = new ObservableCollection<Lesson>();
 
-        public ICommand AddCommand { get; set; }
         public ICommand BackCommand { get; set; }
         public ICommand LoadedCommand { get; set; }
         public ICommand DeleteCommand { get; set; }
@@ -55,28 +53,6 @@ namespace MathMate.ViewModels
             }
         }
 
-        private async void DeleteExecute(object parameter)
-        {
-            Quiz quiz = parameter as Quiz;
-            if (quiz != null)
-            {
-                if (await Application.Current.MainPage.DisplayAlert("Notice", "Are you sure you want to delete?", "Yes", "No"))
-                {
-                    var deleteGoalTask = Database.FirebaseClient.Child($"users/{UserManager.User.Uid}/Quiz/{quiz.Key}").DeleteAsync();
-                    try
-                    {
-                        await Task.WhenAll(deleteGoalTask);
-                        await LoadedExecute();
-                        await ToastManager.ShowToast("Quiz has been deleted", Color.FromHex("#1eb980"));
-                    }
-                    catch (Exception)
-                    {
-                        await ToastManager.ShowToast("Something went wrong", Color.FromHex("#FF605C"));
-                    }
-                }
-            }
-        }
-
         private async Task BackExecute()
         {
             await Application.Current.MainPage.Navigation.PopModalAsync();
@@ -86,21 +62,12 @@ namespace MathMate.ViewModels
         {
             try
             {
-                QuizList.Clear();
+                LessonList.Clear();
 
-                var result = await Database.FirebaseClient.Child($"teachers/{UserManager.User.Teacher}/Quiz").OnceAsync<Quiz>();
+                var result = await Database.FirebaseClient.Child($"teachers/{UserManager.User.Teacher}/Lesson").OnceAsync<Lesson>();
                 foreach (var item in result.Reverse())
                 {
-                    var flashCards = await Database.FirebaseClient.Child($"teachers/{UserManager.User.Teacher}/Quiz/{item.Key}").OnceAsync<FlashCard>();
-                    if (flashCards != null)
-                    {
-                        foreach (var cards in flashCards)
-                        {
-                            cards.Object.Key = cards.Key;
-                            item.Object.FlashCardsList.Add(cards.Object);
-                        }
-                    }
-                    var finishedQuiz = await Database.FirebaseClient.Child($"users/{UserManager.User.Uid}/Quiz").OnceAsync<Quiz>();
+                    var finishedQuiz = await Database.FirebaseClient.Child($"users/{UserManager.User.Uid}/Lesson").OnceAsync<Lesson>();
                     if (finishedQuiz != null)
                     {
                         foreach (var quiz in finishedQuiz)
@@ -122,7 +89,7 @@ namespace MathMate.ViewModels
                         item.Object.statusColor = "#ff2a04";
                     }
                     item.Object.Key = item.Key;
-                    QuizList.Add(item.Object);
+                    LessonList.Add(item.Object);
                 }
             }
             catch (Exception ex)

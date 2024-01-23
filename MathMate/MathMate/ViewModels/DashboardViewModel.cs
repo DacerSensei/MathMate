@@ -11,13 +11,29 @@ namespace MathMate.ViewModels
         public DashboardViewModel()
         {
             ViewFlashCardCommand = new AsyncCommand(ViewFlashCardExecute);
+            ViewLessonCommand = new AsyncCommand(ViewLessonExecute);
+            ViewPerformanceCommand = new AsyncCommand(ViewPerformanceExecute);
         }
 
         public ICommand ViewFlashCardCommand { get; }
 
         private async Task ViewFlashCardExecute()
         {
-            await Application.Current.MainPage.Navigation.PushModalAsync(new FlashCardQuiz());
+            await Application.Current.MainPage.Navigation.PushAsync(new FlashCardQuiz());
+        }
+
+        public ICommand ViewLessonCommand { get; }
+
+        private async Task ViewLessonExecute()
+        {
+            await Application.Current.MainPage.Navigation.PushAsync(new LessonPage());
+        }
+
+        public ICommand ViewPerformanceCommand { get; }
+
+        private async Task ViewPerformanceExecute()
+        {
+            await Application.Current.MainPage.Navigation.PushAsync(new PerformancePage());
         }
     }
 }

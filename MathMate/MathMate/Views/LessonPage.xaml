@@ -1,0 +1,76 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MathMate.Views.LessonPage"
+             Background="White"
+             xmlns:xct="http://xamarin.com/schemas/2020/toolkit" 
+             xmlns:converter="clr-namespace:MathMate.Services" 
+             xmlns:ViewModel="clr-namespace:MathMate.ViewModels"
+             NavigationPage.HasNavigationBar="False">
+    <ContentPage.BindingContext>
+        <ViewModel:LessonPageViewModel />
+    </ContentPage.BindingContext>
+    <ContentPage.Behaviors>
+        <xct:EventToCommandBehavior EventName="Appearing" Command="{Binding LoadedCommand}" />
+    </ContentPage.Behaviors>
+    <ContentPage.Content>
+        <Grid RowDefinitions="Auto,*">
+            <Frame Padding="5,10,10,10" HasShadow="False" xct:ShadowEffect.Color="Black" xct:ShadowEffect.OffsetY="10" xct:ShadowEffect.Radius="15">
+                <StackLayout  Orientation="Horizontal">
+                    <Frame CornerRadius="50" Padding="5" HasShadow="False" xct:TouchEffect.NativeAnimationBorderless="True" xct:TouchEffect.NativeAnimation="True">
+                        <Frame.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding BackCommand}"/>
+                        </Frame.GestureRecognizers>
+                        <Image Source="BackButton.png" HeightRequest="25" Margin="5" HorizontalOptions="CenterAndExpand" VerticalOptions="StartAndExpand" TranslationX="-1.5"></Image>
+                    </Frame>
+                </StackLayout>
+            </Frame>
+            <RefreshView Grid.Row="1" IsRefreshing="{Binding IsRefreshing}" Command="{Binding RefreshCommand}">
+                <CollectionView ItemsSource="{Binding LessonList}" x:Name="MyList">
+                    <CollectionView.EmptyView>
+                        <Label Text="No Lessons" TextColor="Black" FontAttributes="Bold" FontSize="Subtitle" VerticalTextAlignment="Center" HorizontalTextAlignment="Center"/>
+                    </CollectionView.EmptyView>
+                    <CollectionView.Header>
+                        <StackLayout Padding="2">
+                            <Frame Margin="10,10,10,0" Padding="0" CornerRadius="6" HeightRequest="100">
+                                <Frame.Background>
+                                    <LinearGradientBrush  StartPoint="0,.5" EndPoint="1,.5">
+                                        <GradientStop Color="#0277bd" Offset="0.0"/>
+                                        <GradientStop Color="#004eb3" Offset="1.0"/>
+                                    </LinearGradientBrush>
+                                </Frame.Background>
+                                <Grid Margin="20" RowDefinitions="Auto,Auto,*" RowSpacing="0">
+                                    <Label Text="Lessons" FontSize="Title" FontFamily="PoppinsRegular" TextColor="White"/>
+                                    <Label Grid.Row="1" Text="Modules" FontSize="Subtitle" FontFamily="PoppinsRegular" TextColor="White"/>
+                                </Grid>
+                            </Frame>
+                        </StackLayout>
+                    </CollectionView.Header>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <StackLayout Padding="5">
+                                <Frame Margin="10" Padding="0" CornerRadius="6" xct:ShadowEffect.Color="Black" xct:ShadowEffect.Radius="6" xct:TouchEffect.NativeAnimation="True">
+                                    <Frame.Background>
+                                        <LinearGradientBrush  StartPoint="0,.5" EndPoint="1,.5">
+                                            <GradientStop Color="White" Offset="0.0"/>
+                                            <GradientStop Color="White" Offset="1.0"/>
+                                        </LinearGradientBrush>
+                                    </Frame.Background>
+                                    <Frame.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding ViewFlashCardCommand}"/>
+                                    </Frame.GestureRecognizers>
+                                    <Grid Margin="20" RowDefinitions="Auto,Auto,*" ColumnDefinitions="*,Auto" RowSpacing="0">
+                                        <Label Text="{Binding title}" FontSize="16" FontFamily="PoppinsBold" TextColor="Black"/>
+                                        <Label Grid.Column="1" Text="{Binding status}" FontSize="16" FontFamily="PoppinsBold" TextColor="{Binding statusColor}"/>
+                                        <Label Grid.Row="1" Grid.ColumnSpan="2" Text="{Binding created}" FontSize="14" FontFamily="PoppinsRegular" TextColor="#7c7c7c" Margin="0,0,0,10"/>
+                                        <Label Grid.Row="2" Grid.ColumnSpan="2" Text="{Binding description}" FontSize="16" FontFamily="PoppinsRegular" TextColor="Black"/>
+                                    </Grid>
+                                </Frame>
+                            </StackLayout>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </RefreshView>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

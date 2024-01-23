@@ -24,16 +24,10 @@
                     </local:CustomFrame.Background>
                     <StackLayout>
                         <Frame CornerRadius="6" Margin="4,0">
-                            <StackLayout>
-                                <StackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" BindingContext="{Binding Source={x:Static UserManager:UserManager.User}}">
-                                    <xct:AvatarView Size="100" HorizontalOptions="CenterAndExpand" Text="{Binding InitialName}"/>
-                                    <Label Text="{Binding CompleteName}" HorizontalTextAlignment="Center" TextColor="Black" FontSize="Title" FontAttributes="Bold" FontFamily="PoppinsBold" />
-                                    <!--<Button Command="{Binding UploadCommand}" Text="Change Picture" CornerRadius="6" BackgroundColor="LightGoldenrodYellow"/>-->
-                                </StackLayout>
-                                <StackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
-                                    <Label Text="{Binding Role}" HorizontalTextAlignment="Center" TextColor="Black" FontSize="Title" FontAttributes="Bold" FontFamily="PoppinsBold" />
-                                    <!--<Button Command="{Binding UploadCommand}" Text="Change Picture" CornerRadius="6" BackgroundColor="LightGoldenrodYellow"/>-->
-                                </StackLayout>
+                            <StackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" BindingContext="{Binding Source={x:Static UserManager:UserManager.User}}">
+                                <xct:AvatarView Size="100" HorizontalOptions="CenterAndExpand" Text="{Binding InitialName}"/>
+                                <Label Text="{Binding CompleteName}" HorizontalTextAlignment="Center" TextColor="Black" FontSize="Title" FontAttributes="Bold" FontFamily="PoppinsBold" />
+                                <!--<Button Command="{Binding UploadCommand}" Text="Change Picture" CornerRadius="6" BackgroundColor="LightGoldenrodYellow"/>-->
                             </StackLayout>
                         </Frame>
                     </StackLayout>
@@ -70,19 +64,19 @@
                             <Label FontFamily="PoppinsRegular" HorizontalOptions="EndAndExpand" Text="{Binding Gender}" TextColor="{Binding GenderColor}"/>
                         </StackLayout>
                     </Frame>
-                    <Frame Padding="10" IsVisible="{Binding IsTeacher}">
+                    <Frame Padding="10">
                         <StackLayout Orientation="Horizontal">
                             <Label FontFamily="PoppinsRegular" TextColor="#999" Text="Grade Level"/>
                             <Label FontFamily="PoppinsRegular" TextColor="black"  HorizontalOptions="EndAndExpand" Text="{Binding Adviser.GradeLevel}"/>
                         </StackLayout>
                     </Frame>
-                    <Frame Padding="10" IsVisible="{Binding IsTeacher}">
+                    <Frame Padding="10">
                         <StackLayout Orientation="Horizontal">
                             <Label FontFamily="PoppinsRegular" TextColor="#999" Text="Section"/>
                             <Label FontFamily="PoppinsRegular" TextColor="black"  HorizontalOptions="EndAndExpand" Text="{Binding Adviser.Section}"/>
                         </StackLayout>
                     </Frame>
-                    <Frame Padding="10" IsVisible="{Binding IsTeacher}">
+                    <Frame Padding="10">
                         <StackLayout Orientation="Horizontal">
                             <Label FontFamily="PoppinsRegular" TextColor="#999" Text="Teacher"/>
                             <Label FontFamily="PoppinsRegular" TextColor="black"  HorizontalOptions="EndAndExpand" Text="{Binding Adviser.CompleteName}"/>

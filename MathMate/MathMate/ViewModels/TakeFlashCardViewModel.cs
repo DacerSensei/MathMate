@@ -25,7 +25,8 @@ namespace MathMate.ViewModels
             CurrentQuiz = quiz;
             FlashCards = new ObservableCollection<FlashCard>(quiz.FlashCardsList);
             FlashCards.FirstOrDefault().IsCurrentQuestion = true;
-            AnswerCommand = new Command(AnswerExecute);
+            AnswerMicCommand = new Command(AnswerMicExecute);
+            AnswerTextCommand = new Command(AnswerTextExecute);
         }
 
         Dictionary<string, int> WordToNumberMap = new Dictionary<string, int>
@@ -46,9 +47,12 @@ namespace MathMate.ViewModels
 
         public ObservableCollection<FlashCard> FlashCards { get; set; }
 
-        public ICommand AnswerCommand { get; set; }
+        public ICommand AnswerMicCommand { get; set; }
+        public ICommand AnswerTextCommand { get; set; }
 
-        private async void AnswerExecute(object parameter)
+
+
+        private async void AnswerMicExecute(object parameter)
         {
             FlashCard flashCard = parameter as FlashCard;
             if (flashCard != null)
@@ -76,7 +80,7 @@ namespace MathMate.ViewModels
                             else
                             {
                                 Debug.WriteLine("Your total score is: " + Score);
-                                await Database.FirebaseClient.Child($"users/{UserManager.User.Uid}/Quiz/{CurrentQuiz.Key}").PutAsync(JsonConvert.SerializeObject(new { Score = Score }));
+                                await Database.FirebaseClient.Child($"users/{UserManager.User.Uid}/Quiz/{CurrentQuiz.Key}").PutAsync(JsonConvert.SerializeObject(new { Score = Score, Date = DateTime.Now.ToShortDateString(), Total = FlashCards.Count, Title = "Flashcard" }));
                                 await Application.Current.MainPage.Navigation.PopModalAsync();
                             }
                         }
@@ -98,7 +102,7 @@ namespace MathMate.ViewModels
                                 else
                                 {
                                     Debug.WriteLine("Your total score is: " + Score);
-                                    await Database.FirebaseClient.Child($"users/{UserManager.User.Uid}/Quiz/{CurrentQuiz.Key}").PutAsync(JsonConvert.SerializeObject(new { Score = Score }));
+                                    await Database.FirebaseClient.Child($"users/{UserManager.User.Uid}/Quiz/{CurrentQuiz.Key}").PutAsync(JsonConvert.SerializeObject(new { Score = Score, Date = DateTime.Now.ToShortDateString(), Total = FlashCards.Count, Title = "Flashcard" }));
                                     await Application.Current.MainPage.Navigation.PopModalAsync();
                                 }
                             }
@@ -114,10 +118,55 @@ namespace MathMate.ViewModels
             }
         }
 
+        private async void AnswerTextExecute(object parameter)
+        {
+            FlashCard flashCard = parameter as FlashCard;
+            if (flashCard != null)
+            {
+                if (!string.IsNullOrEmpty(TextAnswer))
+                {
+                    FlashCard currentQuestion = FlashCards.FirstOrDefault(card => card.IsCurrentQuestion == true);
+                    int currentIndex = FlashCards.IndexOf(currentQuestion);
+                    if (currentQuestion != null)
+                    {
+                        if (int.TryParse(TextAnswer, out int numericConversion))
+                        {
+                            // Successfully converted the word to an integer
+                            if (currentQuestion.solution.ToLower() == numericConversion.ToString().ToLower())
+                            {
+                                Score++;
+                            }
+                            currentQuestion.IsCurrentQuestion = false;
+                            int nextIndex = (currentIndex + 1) % FlashCards.Count;
+                            if (nextIndex != 0 || currentIndex != FlashCards.Count - 1)
+                            {
+                                FlashCards[nextIndex].IsCurrentQuestion = true;
+                            }
+                            else
+                            {
+                                Debug.WriteLine("Your total score is: " + Score);
+                                await Database.FirebaseClient.Child($"users/{UserManager.User.Uid}/Quiz/{CurrentQuiz.Key}").PutAsync(JsonConvert.SerializeObject(new { Score = Score, Date = DateTime.Now.ToShortDateString(), Total = FlashCards.Count, Title = "Flashcard" }));
+                                await Application.Current.MainPage.Navigation.PopModalAsync();
+                            }
+                            TextAnswer = string.Empty;
+                        }
+                    }
+                }
+            }
+        }
+
         async Task<string> WaitForSpeechToText()
         {
             return await DependencyService.Get<Services.ISpeechToText>().SpeechToTextAsync();
         }
+
+        private string textAnswer;
+        public string TextAnswer
+        {
+            get => textAnswer;
+            set => SetProperty(ref textAnswer, value);
+        }
+
 
     }
 }

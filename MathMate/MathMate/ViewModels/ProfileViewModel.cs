@@ -10,14 +10,6 @@ namespace MathMate.ViewModels
     {
         public ProfileViewModel()
         {
-            if (UserManager.User.IsTeacher)
-            {
-                Role = "Student";
-            }
-            else
-            {
-                Role = "Teacher";
-            }
         }
 
         private string role;

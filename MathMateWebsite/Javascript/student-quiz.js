@@ -5,7 +5,7 @@ import {
     getAuth, createUserWithEmailAndPassword, signOut
 } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-auth.js";
 import {
-    getDatabase, ref, set, onValue, get, child
+    getDatabase, ref, set, onValue, get, child, remove
 } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-database.js";
 import { Database, GetElementValue, FirebaseConfig, StudentQuiz, IsNullOrEmpty } from "./main.js";
 
@@ -101,4 +101,22 @@ document.getElementById("quiz-form").addEventListener("submit", async (e) => {
     document.getElementById("table-body").innerHTML = "";
     await StudentQuiz();
     HideLoading();
+});
+
+const table = document.getElementById("myTable");
+table.addEventListener("click", async (event) => {
+    if (event.target && event.target.matches(".Button-Red-Icon")) {
+        const row = event.target.closest("tr");
+
+        const hiddenInput = row.querySelector("input[type='hidden']");
+        const id = hiddenInput.value;
+
+        const parsedData = JSON.parse(localStorage.getItem('userData'));
+        var result = await ShowPopup('Are you sure you want to delete?', PopupType.Prompt);
+        if (result) {
+            await remove(ref(Database, "teachers/" + parsedData.uid + '/Quiz/' + id));
+            row.remove();
+            ShowNotification('Deleted Successfully', Colors.Green);
+        }
+    }
 });

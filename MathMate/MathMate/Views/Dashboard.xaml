@@ -14,22 +14,51 @@
     </ContentPage.BindingContext>
     <ContentPage.Content>
         <StackLayout>
-            <Button Text="Flash Card Quizzes" Command="{Binding ViewFlashCardCommand}" TextColor="White" Margin="10,10,10,0" FontFamily="PoppinsBold">
-                <Button.Background>
+            <Frame Margin="10,10,10,0" Padding="0" CornerRadius="10" HeightRequest="150" xct:TouchEffect.NativeAnimation="True">
+                <Frame.Background>
                     <LinearGradientBrush  StartPoint="0,.5" EndPoint="1,.5">
                         <GradientStop Color="#ff4c15" Offset="0.0"/>
                         <GradientStop Color="#ffb702" Offset="1.0"/>
                     </LinearGradientBrush>
-                </Button.Background>
-            </Button>
-            <Button Text="Student Performances" TextColor="White" Margin="10,10,10,0" FontFamily="PoppinsBold">
-                <Button.Background>
+                </Frame.Background>
+                <Frame.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding ViewFlashCardCommand}"/>
+                </Frame.GestureRecognizers>
+                <Grid Margin="20" RowDefinitions="Auto,Auto,*" RowSpacing="0">
+                    <Label Text="Activities" FontSize="Title" FontFamily="PoppinsBold" TextColor="White"/>
+                    <Label Grid.Row="1" Text="Activities" FontSize="Subtitle" FontFamily="PoppinsRegular" TextColor="White"/>
+                </Grid>
+            </Frame>
+            <Frame Margin="10,10,10,0" Padding="0" CornerRadius="10" HeightRequest="150" xct:TouchEffect.NativeAnimation="True">
+                <Frame.Background>
                     <LinearGradientBrush  StartPoint="0,.5" EndPoint="1,.5">
-                        <GradientStop Color="#ff4c15" Offset="0.0"/>
-                        <GradientStop Color="#ffb702" Offset="1.0"/>
+                        <GradientStop Color="#0277bd" Offset="0.0"/>
+                        <GradientStop Color="#004eb3" Offset="1.0"/>
                     </LinearGradientBrush>
-                </Button.Background>
-            </Button>
+                </Frame.Background>
+                <Frame.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding ViewLessonCommand}"/>
+                </Frame.GestureRecognizers>
+                <Grid Margin="20" RowDefinitions="Auto,Auto,*" RowSpacing="0">
+                    <Label Text="Lessons" FontSize="Title" FontFamily="PoppinsBold" TextColor="White"/>
+                    <Label Grid.Row="1" Text="Modules" FontSize="Subtitle" FontFamily="PoppinsRegular" TextColor="White"/>
+                </Grid>
+            </Frame>
+            <Frame Margin="10,10,10,0" Padding="0" CornerRadius="10" HeightRequest="150" xct:TouchEffect.NativeAnimation="True">
+                <Frame.Background>
+                    <LinearGradientBrush  StartPoint="0,.5" EndPoint="1,.5">
+                        <GradientStop Color="#32ac71" Offset="0.0"/>
+                        <GradientStop Color="#1f744b" Offset="1.0"/>
+                    </LinearGradientBrush>
+                </Frame.Background>
+                <Frame.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding ViewPerformanceCommand}"/>
+                </Frame.GestureRecognizers>
+                <Grid Margin="20" RowDefinitions="Auto,Auto,*" RowSpacing="0">
+                    <Label Text="Performances" FontSize="Title" FontFamily="PoppinsBold" TextColor="White"/>
+                    <Label Grid.Row="1" Text="Student records" FontSize="Subtitle" FontFamily="PoppinsRegular" TextColor="White"/>
+                </Grid>
+            </Frame>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

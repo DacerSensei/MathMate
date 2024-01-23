@@ -15,15 +15,19 @@
             <StackLayout BindableLayout.ItemsSource="{Binding FlashCards}" x:Name="MyList">
                 <BindableLayout.ItemTemplate>
                     <DataTemplate>
-                        <StackLayout IsVisible="{Binding IsCurrentQuestion}" HeightRequest="400">
+                        <StackLayout IsVisible="{Binding IsCurrentQuestion}">
                             <Frame  VerticalOptions="EndAndExpand" Margin="10,0" CornerRadius="10">
                                 <StackLayout>
                                     <Label Text="Problem:" TextColor="Black" FontSize="Title" FontFamily="PoppinsRegular" HorizontalTextAlignment="Center"/>
-                                    <Label Text="{Binding problem}" TextColor="Black" FontSize="80" FontFamily="PoppinsRegular" HorizontalTextAlignment="Center"/>
+                                    <Label Text="{Binding problem}" TextColor="Black" FontSize="20" FontFamily="PoppinsRegular" HorizontalTextAlignment="Center"/>
+                                    <Frame Padding="20,0" BackgroundColor="#f6f7f9" CornerRadius="10" Margin="5,0,5,5">
+                                        <Entry FontFamily="PoppinsRegular" Text="{Binding Source={x:Reference MyList}, Path=BindingContext.TextAnswer}" Placeholder="Enter your answer as text" TextColor="Black" PlaceholderColor="#999"/>
+                                    </Frame>
+                                    <Button Text="Submit your answer" Command="{Binding Source={x:Reference MyList}, Path=BindingContext.AnswerTextCommand}" CommandParameter="{Binding .}" TextColor="White" FontSize="Subtitle" BackgroundColor="red"/>
                                 </StackLayout>
                             </Frame>
                             <StackLayout>
-                                <Button Text="Answer the problem" Command="{Binding Source={x:Reference MyList}, Path=BindingContext.AnswerCommand}" CommandParameter="{Binding .}" TextColor="White" FontSize="Subtitle" BackgroundColor="red"/>
+                                <Button Text="Answer using microphone" Command="{Binding Source={x:Reference MyList}, Path=BindingContext.AnswerMicCommand}" CommandParameter="{Binding .}" TextColor="White" FontSize="Subtitle" BackgroundColor="red"/>
                             </StackLayout>
                         </StackLayout>
                     </DataTemplate>

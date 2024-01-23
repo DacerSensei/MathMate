@@ -45,8 +45,6 @@
                             <Entry FontFamily="PoppinsRegular" IsPassword="True" Text="{Binding Password}" Placeholder="Enter your password" TextColor="Black" PlaceholderColor="#999"/>
                         </Frame>
                         <StackLayout Orientation="Horizontal" Margin="0,10" Spacing="0">
-                            <CheckBox Color="#e01e37" IsChecked="{Binding IsTeacher}"/>
-                            <Label Text="I'm Teacher" FontSize="16" FontFamily="PoppinsRegular" TextColor="#e01e37" VerticalOptions="Center"/>
                             <Label Text="Forgot Password?" FontSize="16" FontFamily="PoppinsRegular" TextColor="#e01e37" TextDecorations="Underline" HorizontalOptions="EndAndExpand">
                                 <Label.GestureRecognizers>
                                     <TapGestureRecognizer Command="{Binding ForgotPasswordCommand}" />
