@@ -19,21 +19,21 @@ namespace MathMate.ViewModels
 
         private async Task ViewFlashCardExecute()
         {
-            await Application.Current.MainPage.Navigation.PushAsync(new FlashCardQuiz());
+            await Application.Current.MainPage.Navigation.PushModalAsync(new FlashCardQuiz());
         }
 
         public ICommand ViewLessonCommand { get; }
 
         private async Task ViewLessonExecute()
         {
-            await Application.Current.MainPage.Navigation.PushAsync(new LessonPage());
+            await Application.Current.MainPage.Navigation.PushModalAsync(new LessonPage());
         }
 
         public ICommand ViewPerformanceCommand { get; }
 
         private async Task ViewPerformanceExecute()
         {
-            await Application.Current.MainPage.Navigation.PushAsync(new PerformancePage());
+            await Application.Current.MainPage.Navigation.PushModalAsync(new PerformancePage());
         }
     }
 }

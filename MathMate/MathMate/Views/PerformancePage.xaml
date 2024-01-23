@@ -6,6 +6,8 @@
              xmlns:xct="http://xamarin.com/schemas/2020/toolkit" 
              xmlns:converter="clr-namespace:MathMate.Services" 
              xmlns:ViewModel="clr-namespace:MathMate.ViewModels"
+             xmlns:microcharts="clr-namespace:Microcharts.Forms;assembly=Microcharts.Forms" 
+             xmlns:local="clr-namespace:MathMate"
              NavigationPage.HasNavigationBar="False">
     <ContentPage.BindingContext>
         <ViewModel:PerformancePageViewModel />
@@ -26,62 +28,64 @@
                 </StackLayout>
             </Frame>
             <RefreshView Grid.Row="1" IsRefreshing="{Binding IsRefreshing}" Command="{Binding RefreshCommand}">
-                <CollectionView ItemsSource="{Binding PerformanceList}" x:Name="MyList">
-                    <CollectionView.EmptyView>
-                        <Label Text="No Records" TextColor="Black" FontAttributes="Bold" FontSize="Subtitle" VerticalTextAlignment="Center" HorizontalTextAlignment="Center"/>
-                    </CollectionView.EmptyView>
-                    <CollectionView.Header>
-                        <StackLayout Padding="2">
-                            <Frame Margin="10,10,10,0" Padding="0" CornerRadius="6" HeightRequest="100">
-                                <Frame.Background>
-                                    <LinearGradientBrush  StartPoint="0,.5" EndPoint="1,.5">
-                                        <GradientStop Color="#32ac71" Offset="0.0"/>
-                                        <GradientStop Color="#1f744b" Offset="1.0"/>
-                                    </LinearGradientBrush>
-                                </Frame.Background>
-                                <Grid Margin="20" RowDefinitions="Auto,Auto,*" RowSpacing="0">
-                                    <Label Text="Performances" FontSize="Title" FontFamily="PoppinsRegular" TextColor="White"/>
-                                    <Label Grid.Row="1" Text="Student records" FontSize="Subtitle" FontFamily="PoppinsRegular" TextColor="White"/>
-                                </Grid>
-                            </Frame>
-                        </StackLayout>
-                    </CollectionView.Header>
-                    <CollectionView.ItemTemplate>
-                        <DataTemplate>
-                            <StackLayout Padding="5">
-                                <Frame Margin="10" Padding="0" CornerRadius="6" xct:ShadowEffect.Color="Black" xct:ShadowEffect.Radius="6" xct:TouchEffect.NativeAnimation="True">
-                                    <Frame.Background>
-                                        <LinearGradientBrush  StartPoint="0,.5" EndPoint="1,.5">
-                                            <GradientStop Color="White" Offset="0.0"/>
-                                            <GradientStop Color="White" Offset="1.0"/>
-                                        </LinearGradientBrush>
-                                    </Frame.Background>
-                                    <Frame.GestureRecognizers>
-                                        <TapGestureRecognizer />
-                                    </Frame.GestureRecognizers>
-                                    <Grid Margin="20" RowDefinitions="Auto,Auto,*" ColumnDefinitions="*,Auto" RowSpacing="0">
-                                        <Label Text="{Binding Key}" FontSize="16" FontFamily="PoppinsBold" TextColor="Black"/>
-                                        <Label Grid.Column="1" Text="{Binding status}" FontSize="16" FontFamily="PoppinsBold" TextColor="{Binding statusColor}"/>
-                                        <Label Grid.Row="1" Grid.ColumnSpan="2" Text="{Binding Date}" FontSize="14" FontFamily="PoppinsRegular" TextColor="#7c7c7c" Margin="0,0,0,10"/>
-                                        <StackLayout Grid.Row="2" Grid.ColumnSpan="2" HorizontalOptions="CenterAndExpand">
-                                            <Label Text="{Binding Title}" HorizontalTextAlignment="Center" FontSize="16" FontFamily="PoppinsRegular" TextColor="#258657"/>
-                                            <Label Text="Scores" HorizontalTextAlignment="Center" FontSize="16" FontFamily="PoppinsRegular" TextColor="Black"/>
-                                            <Label FontSize="16" HorizontalTextAlignment="Center" FontFamily="PoppinsBold" TextColor="#258657">
-                                                <Label.FormattedText>
-                                                    <FormattedString>
-                                                        <Span Text="{Binding Score}" />
-                                                        <Span Text="/"/>
-                                                        <Span Text="{Binding Total}"/>
-                                                    </FormattedString>
-                                                </Label.FormattedText>
-                                            </Label>
-                                        </StackLayout>
-                                    </Grid>
-                                </Frame>
-                            </StackLayout>
-                        </DataTemplate>
-                    </CollectionView.ItemTemplate>
-                </CollectionView>
+                <StackLayout Spacing="0">
+                    <StackLayout Padding="2">
+                        <Frame Margin="10,10,10,0" Padding="0" CornerRadius="6" HeightRequest="100">
+                            <Frame.Background>
+                                <LinearGradientBrush  StartPoint="0,.5" EndPoint="1,.5">
+                                    <GradientStop Color="#32ac71" Offset="0.0"/>
+                                    <GradientStop Color="#1f744b" Offset="1.0"/>
+                                </LinearGradientBrush>
+                            </Frame.Background>
+                            <Grid Margin="20" RowDefinitions="Auto,Auto,*" RowSpacing="0">
+                                <Label Text="Performances" FontSize="Title" FontFamily="PoppinsRegular" TextColor="White"/>
+                                <Label Grid.Row="1" Text="Student records" FontSize="Subtitle" FontFamily="PoppinsRegular" TextColor="White"/>
+                            </Grid>
+                        </Frame>
+                        <microcharts:ChartView Chart="{Binding Chart}" HeightRequest="300" Margin="10,10,10,0"/>
+                    </StackLayout>
+
+                    <CollectionView ItemsSource="{Binding PerformanceList}" x:Name="MyList">
+
+                        <CollectionView.EmptyView>
+                            <Label Text="No Records" TextColor="Black" FontAttributes="Bold" FontSize="Subtitle" VerticalTextAlignment="Center" HorizontalTextAlignment="Center"/>
+                        </CollectionView.EmptyView>
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <StackLayout Padding="5">
+                                    <Frame Margin="10" Padding="0" CornerRadius="6" xct:ShadowEffect.Color="Black" xct:ShadowEffect.Radius="6" xct:TouchEffect.NativeAnimation="True">
+                                        <Frame.Background>
+                                            <LinearGradientBrush  StartPoint="0,.5" EndPoint="1,.5">
+                                                <GradientStop Color="White" Offset="0.0"/>
+                                                <GradientStop Color="White" Offset="1.0"/>
+                                            </LinearGradientBrush>
+                                        </Frame.Background>
+                                        <Frame.GestureRecognizers>
+                                            <TapGestureRecognizer />
+                                        </Frame.GestureRecognizers>
+                                        <Grid Margin="20" RowDefinitions="Auto,Auto,*" ColumnDefinitions="*,Auto" RowSpacing="0">
+                                            <Label Text="{Binding Key}" FontSize="16" FontFamily="PoppinsBold" TextColor="Black"/>
+                                            <Label Grid.Row="1" Grid.ColumnSpan="2" Text="{Binding Date}" FontSize="14" FontFamily="PoppinsRegular" TextColor="#7c7c7c" Margin="0,0,0,10"/>
+                                            <StackLayout Grid.Row="2" Grid.ColumnSpan="2" HorizontalOptions="CenterAndExpand">
+                                                <Label Text="{Binding Title}" HorizontalTextAlignment="Center" FontSize="16" FontFamily="PoppinsRegular" TextColor="#258657"/>
+                                                <Label Text="Scores" HorizontalTextAlignment="Center" FontSize="16" FontFamily="PoppinsRegular" TextColor="Black"/>
+                                                <Label FontSize="16" HorizontalTextAlignment="Center" FontFamily="PoppinsBold" TextColor="#258657">
+                                                    <Label.FormattedText>
+                                                        <FormattedString>
+                                                            <Span Text="{Binding Score}" />
+                                                            <Span Text="/"/>
+                                                            <Span Text="{Binding Total}"/>
+                                                        </FormattedString>
+                                                    </Label.FormattedText>
+                                                </Label>
+                                            </StackLayout>
+                                        </Grid>
+                                    </Frame>
+                                </StackLayout>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </StackLayout>
             </RefreshView>
         </Grid>
     </ContentPage.Content>

@@ -21,7 +21,6 @@ namespace MathMate.ViewModels
         {
             LoadedCommand = new AsyncCommand(LoadedExecute);
             BackCommand = new AsyncCommand(BackExecute);
-            DeleteCommand = new Command(DeleteExecute);
             RefreshCommand = new AsyncCommand(RefreshExecute);
             TakeQuizCommand = new Command(TakeQuizExecute);
         }
@@ -55,28 +54,6 @@ namespace MathMate.ViewModels
             }
         }
 
-        private async void DeleteExecute(object parameter)
-        {
-            Quiz quiz = parameter as Quiz;
-            if (quiz != null)
-            {
-                if (await Application.Current.MainPage.DisplayAlert("Notice", "Are you sure you want to delete?", "Yes", "No"))
-                {
-                    var deleteGoalTask = Database.FirebaseClient.Child($"users/{UserManager.User.Uid}/Quiz/{quiz.Key}").DeleteAsync();
-                    try
-                    {
-                        await Task.WhenAll(deleteGoalTask);
-                        await LoadedExecute();
-                        await ToastManager.ShowToast("Quiz has been deleted", Color.FromHex("#1eb980"));
-                    }
-                    catch (Exception)
-                    {
-                        await ToastManager.ShowToast("Something went wrong", Color.FromHex("#FF605C"));
-                    }
-                }
-            }
-        }
-
         private async Task BackExecute()
         {
             await Application.Current.MainPage.Navigation.PopModalAsync();
@@ -87,7 +64,6 @@ namespace MathMate.ViewModels
             try
             {
                 QuizList.Clear();
-
                 var result = await Database.FirebaseClient.Child($"teachers/{UserManager.User.Teacher}/Quiz").OnceAsync<Quiz>();
                 foreach (var item in result.Reverse())
                 {
