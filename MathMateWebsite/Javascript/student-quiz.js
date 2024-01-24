@@ -25,11 +25,15 @@ document.getElementById("quiz-form").addEventListener("submit", async (e) => {
     const parsedData = JSON.parse(localStorage.getItem('userData'));
     const sectionElement = document.getElementById("quiz-form").querySelector("section");
     const title = document.getElementById("quiz-form").querySelector("section").children[2].querySelector("input").value;
+    const description = document.getElementById("quiz-form").querySelector("section").children[3].querySelector("input").value;
+    const dueDate = document.getElementById("quiz-form").querySelector("section").children[4].querySelector("input").value;
 
-    const firstIndex = 3;
+    const firstIndex = 5;
     const lastIndex = sectionElement.children.length - 2;
 
     let quizData = {};
+    quizData.description = description;
+    quizData.DueDate = dueDate;
     for (let i = firstIndex; i < lastIndex; i++) {
         const questionAndSolution = sectionElement.children[i].querySelectorAll("input");
         const questionParagraph = sectionElement.children[i].querySelector("p").textContent;
@@ -46,7 +50,7 @@ document.getElementById("quiz-form").addEventListener("submit", async (e) => {
 
     ShowPopup("You just created a new quiz");
     for (let i = firstIndex + 1; i < lastIndex; i++) {
-        sectionElement.children[4].remove();
+        sectionElement.children[6].remove();
     }
     document.getElementById("table-body").innerHTML = "";
 
@@ -59,11 +63,11 @@ table.addEventListener("click", async (event) => {
     if (event.target && event.target.matches(".Button-Yellow-Icon")) {
         const sectionElement = document.getElementById("quiz-form").querySelector("section");
 
-        const firstIndex = 3;
+        const firstIndex = 5;
         const lastIndex = sectionElement.children.length - 2;
 
         for (let i = firstIndex + 1; i < lastIndex; i++) {
-            sectionElement.children[4].remove();
+            sectionElement.children[6].remove();
         }
 
         const row = event.target.closest("tr");
@@ -75,13 +79,20 @@ table.addEventListener("click", async (event) => {
             await get(child(ref(Database), 'teachers/' + parsedData.uid + '/Quiz/' + id)).then(async (quizSnapshot) => {
                 const data = quizSnapshot.val();
                 if (data) {
-                    for (let i = 0; i < Object.keys(data).length - 1; i++) {
+                    for (let i = 0; i < Object.keys(data).length - (1 + 2); i++) {
                         CreateQuestion();
                     }
                     const sectionElement = document.getElementById("quiz-form").querySelector("section");
-                    let firstIndex = 3;
+                    let firstIndex = 5;
                     for (const [key, values] of Object.entries(data)) {
-                        const parsedData = JSON.parse(localStorage.getItem('userData'));
+                        if (key.toString().toLowerCase() == "description") {
+                            document.getElementById("quiz-form").querySelector("section").children[3].querySelector("input").value = values;
+                            continue;
+                        }
+                        if (key.toString().toLowerCase() == "duedate") {
+                            document.getElementById("quiz-form").querySelector("section").children[4].querySelector("input").value = values;
+                            continue;
+                        }
                         const questionAndSolution = sectionElement.children[firstIndex].querySelectorAll("input");
                         questionAndSolution[0].value = values.problem;
                         questionAndSolution[1].value = values.solution;
@@ -162,10 +173,10 @@ function CreateQuestion() {
 function ClearQuestions() {
     const sectionElement = document.getElementById("quiz-form").querySelector("section");
 
-    const firstIndex = 3;
+    const firstIndex = 5;
     const lastIndex = sectionElement.children.length - 2;
 
     for (let i = firstIndex + 1; i < lastIndex; i++) {
-        sectionElement.children[4].remove();
+        sectionElement.children[6].remove();
     }
 }

@@ -583,6 +583,7 @@ async function StudentLesson() {
                         hiddenInput.value = key;
 
                         const titleCell = document.createElement("td");
+                        titleCell.style.maxWidth = "350px";
                         titleCell.textContent = values.title;
 
                         const descriptionCell = document.createElement("td");
