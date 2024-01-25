@@ -80,7 +80,7 @@ namespace MathMate.ViewModels
                             else
                             {
                                 Debug.WriteLine("Your total score is: " + Score);
-                                await Database.FirebaseClient.Child($"users/{UserManager.User.Uid}/Quiz/{CurrentQuiz.Key}").PutAsync(JsonConvert.SerializeObject(new { Score = Score, Date = DateTime.Now.ToShortDateString(), Total = FlashCards.Count, Title = "Flashcard" }));
+                                await Database.FirebaseClient.Child($"users/{UserManager.User.Uid}/Quiz/{CurrentQuiz.Key}").PutAsync(JsonConvert.SerializeObject(new { Score = Score, Date = DateTime.Now.ToShortDateString(), Total = FlashCards.Count, Title = "Flashcard", Description = CurrentQuiz.Description }));
                                 await Application.Current.MainPage.Navigation.PopModalAsync();
                             }
                         }
@@ -102,7 +102,7 @@ namespace MathMate.ViewModels
                                 else
                                 {
                                     Debug.WriteLine("Your total score is: " + Score);
-                                    await Database.FirebaseClient.Child($"users/{UserManager.User.Uid}/Quiz/{CurrentQuiz.Key}").PutAsync(JsonConvert.SerializeObject(new { Score = Score, Date = DateTime.Now.ToShortDateString(), Total = FlashCards.Count, Title = "Flashcard" }));
+                                    await Database.FirebaseClient.Child($"users/{UserManager.User.Uid}/Quiz/{CurrentQuiz.Key}").PutAsync(JsonConvert.SerializeObject(new { Score = Score, Date = DateTime.Now.ToShortDateString(), Total = FlashCards.Count, Title = "Flashcard", Description = CurrentQuiz.Description }));
                                     await Application.Current.MainPage.Navigation.PopModalAsync();
                                 }
                             }
@@ -145,7 +145,7 @@ namespace MathMate.ViewModels
                             else
                             {
                                 Debug.WriteLine("Your total score is: " + Score);
-                                await Database.FirebaseClient.Child($"users/{UserManager.User.Uid}/Quiz/{CurrentQuiz.Key}").PutAsync(JsonConvert.SerializeObject(new { Score = Score, Date = DateTime.Now.ToShortDateString(), Total = FlashCards.Count, Title = "Flashcard" }));
+                                await Database.FirebaseClient.Child($"users/{UserManager.User.Uid}/Quiz/{CurrentQuiz.Key}").PutAsync(JsonConvert.SerializeObject(new { Score = Score, Date = DateTime.Now.ToShortDateString(), Total = FlashCards.Count, Title = "Flashcard", Description = CurrentQuiz.Description }));
                                 await Application.Current.MainPage.Navigation.PopModalAsync();
                             }
                             TextAnswer = string.Empty;

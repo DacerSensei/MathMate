@@ -63,7 +63,7 @@
                                             <TapGestureRecognizer />
                                         </Frame.GestureRecognizers>
                                         <Grid Margin="20" RowDefinitions="Auto,Auto,*" ColumnDefinitions="*,Auto" RowSpacing="0">
-                                            <Label Text="{Binding Key}" FontSize="16" FontFamily="PoppinsBold" TextColor="Black"/>
+                                            <Label Text="{Binding Description}" FontSize="16" FontFamily="PoppinsBold" TextColor="Black"/>
                                             <Label Grid.Row="1" Grid.ColumnSpan="2" Text="{Binding Date}" FontSize="14" FontFamily="PoppinsRegular" TextColor="#7c7c7c" Margin="0,0,0,10"/>
                                             <StackLayout Grid.Row="2" Grid.ColumnSpan="2" HorizontalOptions="CenterAndExpand">
                                                 <Label Text="{Binding Title}" HorizontalTextAlignment="Center" FontSize="16" FontFamily="PoppinsRegular" TextColor="#258657"/>

@@ -12,6 +12,7 @@ namespace MathMate.Models
         public string Total { get; set; }
         public string Title { get; set; }
         public string TitleColor { get; set; }
+        public string Description { get; set; }
 
     }
 }

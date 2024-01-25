@@ -86,12 +86,27 @@ namespace MathMate.ViewModels
                 Debug.WriteLine(ex.InnerException);
             }
 
+
             float averageScore = PerformanceList.Sum(item => float.Parse(item.Score));
             float averageTotal = PerformanceList.Sum(item => float.Parse(item.Total));
             float quizTotal = QuizList.Count;
-            ChartEntries.Add(CreateChartEntry(averageScore / averageTotal * 100, "Average", sKColors[0]));
-            ChartEntries.Add(CreateChartEntry(completedQuiz / quizTotal * 100, "Completed", sKColors[1]));
-            ChartEntries.Add(CreateChartEntry((quizTotal - completedQuiz) / quizTotal * 100, "Incomplete", sKColors[2]));
+            if(averageTotal > 0) {
+                ChartEntries.Add(CreateChartEntry(averageScore / averageTotal * 100, "Average", sKColors[0]));
+            }else
+            {
+                ChartEntries.Add(CreateChartEntry(0, "Average", sKColors[0]));
+            }
+            if(quizTotal > 0)
+            {
+                ChartEntries.Add(CreateChartEntry(completedQuiz / quizTotal * 100, "Completed", sKColors[1]));
+                ChartEntries.Add(CreateChartEntry((quizTotal - completedQuiz) / quizTotal * 100, "Incomplete", sKColors[2]));
+            }
+            else
+            {
+                ChartEntries.Add(CreateChartEntry(0, "Completed", sKColors[1]));
+                ChartEntries.Add(CreateChartEntry(0, "Incomplete", sKColors[2]));
+            }
+            
             UpdateBarChart();
 
         }
