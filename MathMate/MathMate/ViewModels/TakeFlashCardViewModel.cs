@@ -23,7 +23,7 @@ namespace MathMate.ViewModels
         public TakeFlashCardViewModel(Quiz quiz)
         {
             CurrentQuiz = quiz;
-            FlashCards = new ObservableCollection<FlashCard>(quiz.FlashCardsList);
+            FlashCards = new ObservableCollection<FlashCard>(quiz.Flashcards.Values.ToList());
             FlashCards.FirstOrDefault().IsCurrentQuestion = true;
             AnswerMicCommand = new Command(AnswerMicExecute);
             AnswerTextCommand = new Command(AnswerTextExecute);

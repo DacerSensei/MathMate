@@ -7,10 +7,18 @@ namespace MathMate.Models
     public class Quiz
     {
         public string Key { get; set; }
-        public List<FlashCard> FlashCardsList { get; set; } = new List<FlashCard>();
+        public string Description { get; set; }
+        public string Created { get; set; }
+        public DateTime DueDate { get; set; }
+        public string Title { get; set; }
+        public Dictionary<string, FlashCard> Flashcards { get; set; }
         public string status { get; set; }
         public string statusColor { get; set; }
         public bool isCompleted { get; set; } = false;
+        public string DueDateString
+        {
+            get => DueDate.ToString("MMM d, yyyy");
+        }
 
     }
 }

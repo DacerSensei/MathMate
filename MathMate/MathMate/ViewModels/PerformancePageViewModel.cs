@@ -58,28 +58,27 @@ namespace MathMate.ViewModels
                     }
                 }
 
-
                 var quizResult = await Database.FirebaseClient.Child($"teachers/{UserManager.User.Teacher}/Quiz").OnceAsync<Quiz>();
                 if (quizResult != null)
                 {
-                    foreach (var item in quizResult)
+                    foreach (var quiz in quizResult.Reverse())
                     {
-                        var finishedQuiz = await Database.FirebaseClient.Child($"users/{UserManager.User.Uid}/Quiz").OnceAsync<Quiz>();
-                        if (finishedQuiz != null)
+                        DateTime? dateFinished = null;
+                        if (performanceResult != null)
                         {
-                            foreach (var quiz in finishedQuiz)
+                            foreach (var completeQuiz in performanceResult)
                             {
-                                if (item.Key == quiz.Key)
+                                if (quiz.Key == completeQuiz.Key)
                                 {
                                     completedQuiz++;
+                                    dateFinished = Convert.ToDateTime(completeQuiz.Object.Date.ToString());
                                 }
                             }
                         }
-                        item.Object.Key = item.Key;
-                        QuizList.Add(item.Object);
+                        quiz.Object.Key = quiz.Key;
+                        QuizList.Add(quiz.Object);
                     }
                 }
-
             }
             catch (Exception ex)
             {
@@ -130,7 +129,7 @@ namespace MathMate.ViewModels
                 IsAnimated = true,
                 Entries = ChartEntries,
                 LabelColor = SKColor.Parse("#000"),
-                
+
             };
             OnPropertyChanged(nameof(Chart));
         }

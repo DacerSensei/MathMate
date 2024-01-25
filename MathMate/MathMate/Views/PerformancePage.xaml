@@ -46,7 +46,6 @@
                     </StackLayout>
 
                     <CollectionView ItemsSource="{Binding PerformanceList}" x:Name="MyList">
-
                         <CollectionView.EmptyView>
                             <Label Text="No Records" TextColor="Black" FontAttributes="Bold" FontSize="Subtitle" VerticalTextAlignment="Center" HorizontalTextAlignment="Center"/>
                         </CollectionView.EmptyView>

@@ -5,7 +5,7 @@ import {
     getAuth, createUserWithEmailAndPassword, signOut
 } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-auth.js";
 import {
-    getDatabase, ref, set, onValue, get, child, remove
+    getDatabase, ref, set, onValue, get, child, remove, push
 } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-database.js";
 import { Database, GetElementValue, FirebaseConfig, StudentQuiz, IsNullOrEmpty } from "./main.js";
 
@@ -17,8 +17,13 @@ document.getElementById("AddProblem").addEventListener("click", async (e) => {
 });
 
 document.getElementById("CreateData").addEventListener("click", () => {
+    isUpdating = false;
+    document.getElementById("CreateQuiz").innerHTML = "Create Quiz";
     ClearQuestions();
 });
+
+let isUpdating = false;
+let hiddenKey = null;
 
 document.getElementById("quiz-form").addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -31,20 +36,35 @@ document.getElementById("quiz-form").addEventListener("submit", async (e) => {
     const firstIndex = 5;
     const lastIndex = sectionElement.children.length - 2;
 
-    let quizData = {};
-    quizData.description = description;
-    quizData.DueDate = dueDate;
+    let quizData = {
+        Title: title, // replace with your actual title
+        Description: description, // replace with your actual description
+        Duedate: dueDate, // replace with your actual due date
+        Created: new Date().toLocaleDateString('en-US', {
+            month: 'short',
+            day: 'numeric',
+            year: 'numeric'
+        }),
+        Flashcards: {}
+    };
     for (let i = firstIndex; i < lastIndex; i++) {
         const questionAndSolution = sectionElement.children[i].querySelectorAll("input");
         const questionParagraph = sectionElement.children[i].querySelector("p").textContent;
 
-        quizData[questionParagraph] = {
+        quizData.Flashcards[questionParagraph] = {
             problem: questionAndSolution[0].value,
             solution: questionAndSolution[1].value
         };
     }
     ShowLoading();
-    await set(ref(Database, "teachers/" + parsedData.uid + '/Quiz/' + title), quizData);
+    if (isUpdating == false) {
+        await push(ref(Database, "teachers/" + parsedData.uid + '/Quiz/'), quizData);
+    } else if (isUpdating == true) {
+        if (hiddenKey != null) {
+            await set(ref(Database, "teachers/" + parsedData.uid + '/Quiz/' + hiddenKey), quizData);
+            hiddenKey = null;
+        }
+    }
     document.getElementById("quiz-form").reset();
     document.querySelector('.modal-close').click();
 
@@ -61,6 +81,9 @@ document.getElementById("quiz-form").addEventListener("submit", async (e) => {
 const table = document.getElementById("myTable");
 table.addEventListener("click", async (event) => {
     if (event.target && event.target.matches(".Button-Yellow-Icon")) {
+        isUpdating = true;
+
+        document.getElementById("CreateQuiz").innerHTML = "Update Quiz";
         const sectionElement = document.getElementById("quiz-form").querySelector("section");
 
         const firstIndex = 5;
@@ -73,26 +96,23 @@ table.addEventListener("click", async (event) => {
         const row = event.target.closest("tr");
         const hiddenInput = row.querySelector("input[type='hidden']");
         const id = hiddenInput.value;
+        hiddenKey = hiddenInput.value;
         const parsedData = JSON.parse(localStorage.getItem('userData'));
-        document.getElementById("quiz-form").querySelector("section").children[2].querySelector("input").value = id;
         try {
             await get(child(ref(Database), 'teachers/' + parsedData.uid + '/Quiz/' + id)).then(async (quizSnapshot) => {
                 const data = quizSnapshot.val();
-                if (data) {
-                    for (let i = 0; i < Object.keys(data).length - (1 + 2); i++) {
+
+                document.getElementById("quiz-form").querySelector("section").children[2].querySelector("input").value = data.Title;
+                document.getElementById("quiz-form").querySelector("section").children[3].querySelector("input").value = data.Description;
+                document.getElementById("quiz-form").querySelector("section").children[4].querySelector("input").value = data.Duedate;
+
+                if (data.Flashcards) {
+                    for (let i = 0; i < Object.keys(data.Flashcards).length - 1; i++) {
                         CreateQuestion();
                     }
                     const sectionElement = document.getElementById("quiz-form").querySelector("section");
                     let firstIndex = 5;
-                    for (const [key, values] of Object.entries(data)) {
-                        if (key.toString().toLowerCase() == "description") {
-                            document.getElementById("quiz-form").querySelector("section").children[3].querySelector("input").value = values;
-                            continue;
-                        }
-                        if (key.toString().toLowerCase() == "duedate") {
-                            document.getElementById("quiz-form").querySelector("section").children[4].querySelector("input").value = values;
-                            continue;
-                        }
+                    for (const [key, values] of Object.entries(data.Flashcards)) {
                         const questionAndSolution = sectionElement.children[firstIndex].querySelectorAll("input");
                         questionAndSolution[0].value = values.problem;
                         questionAndSolution[1].value = values.solution;

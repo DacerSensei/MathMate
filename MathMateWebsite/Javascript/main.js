@@ -513,7 +513,7 @@ async function StudentQuiz() {
                         hiddenInput.value = key;
 
                         const titleCell = document.createElement("td");
-                        titleCell.textContent = key;
+                        titleCell.textContent = values.Title;
 
                         const actionsCell = document.createElement("td");
                         const editButton = document.createElement("button");

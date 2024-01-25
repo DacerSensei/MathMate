@@ -53,33 +53,37 @@
                     </CollectionView.Header>
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
-                            <StackLayout Padding="4">
-                                <Frame>
+                            <StackLayout Padding="5">
+                                <Frame Margin="10" Padding="0" CornerRadius="6" xct:ShadowEffect.Color="Black" xct:ShadowEffect.Radius="6">
                                     <xct:Expander>
                                         <xct:Expander.Header>
-                                            <Grid ColumnDefinitions="*,Auto">
+                                            <Grid  RowDefinitions="Auto,Auto" ColumnDefinitions="*,Auto" Margin="20">
                                                 <Label TextColor="black" FontFamily="PoppinsBold" FontSize="Subtitle" >
                                                     <Label.FormattedText>
                                                         <FormattedString>
                                                             <FormattedString.Spans>
-                                                                <Span Text="{Binding Key}"/>
+                                                                <Span Text="{Binding Title}"/>
                                                             </FormattedString.Spans>
                                                         </FormattedString>
                                                     </Label.FormattedText>
                                                 </Label>
+
                                                 <Label Grid.Column="1" Text="{Binding status}" TextColor="{Binding statusColor}" FontSize="Subtitle" FontFamily="PoppinsBold"/>
+                                                <Label Grid.Row="1" Grid.ColumnSpan="2" Text="{Binding Created}" FontSize="14" FontFamily="PoppinsRegular" TextColor="#7c7c7c"/>
                                             </Grid>
                                         </xct:Expander.Header>
-                                        <StackLayout>
-                                            <StackLayout BindableLayout.ItemsSource="{Binding FlashCardsList}">
-                                                <BindableLayout.ItemTemplate>
-                                                    <DataTemplate>
-                                                        <Label Text="{Binding Key}" TextColor="Black" />
-                                                    </DataTemplate>
-                                                </BindableLayout.ItemTemplate>
-                                            </StackLayout>
-                                            <Button Text="Take Quiz" TextColor="White" Command="{Binding Source={x:Reference MyList}, Path=BindingContext.TakeQuizCommand}" CommandParameter="{Binding .}" BackgroundColor="DarkGreen"/>
-                                        </StackLayout>
+                                        <Grid Margin="20" RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="*,Auto" RowSpacing="0">
+                                            <Label Text="{Binding Description}" FontSize="16" FontFamily="PoppinsBold" TextColor="Black"/>
+                                            <Label Grid.Row="1" Grid.ColumnSpan="2" FontSize="14" FontFamily="PoppinsRegular" Margin="0,0,0,10">
+                                                <Label.FormattedText>
+                                                    <FormattedString>
+                                                        <Span Text="Due: " TextColor="Black"/>
+                                                        <Span Text="{Binding DueDateString}" TextColor="#7c7c7c"/>
+                                                    </FormattedString>
+                                                </Label.FormattedText>
+                                            </Label>
+                                            <Button Grid.Row="2" Text="Take Quiz" TextColor="White" Command="{Binding Source={x:Reference MyList}, Path=BindingContext.TakeQuizCommand}" CommandParameter="{Binding .}" BackgroundColor="DarkGreen"/>
+                                        </Grid>
                                     </xct:Expander>
                                 </Frame>
                             </StackLayout>

@@ -65,40 +65,53 @@ namespace MathMate.ViewModels
             {
                 QuizList.Clear();
                 var result = await Database.FirebaseClient.Child($"teachers/{UserManager.User.Teacher}/Quiz").OnceAsync<Quiz>();
-                foreach (var item in result.Reverse())
+
+                foreach (var quiz in result.Reverse())
                 {
-                    var flashCards = await Database.FirebaseClient.Child($"teachers/{UserManager.User.Teacher}/Quiz/{item.Key}").OnceAsync<FlashCard>();
-                    if (flashCards != null)
-                    {
-                        foreach (var cards in flashCards)
-                        {
-                            cards.Object.Key = cards.Key;
-                            item.Object.FlashCardsList.Add(cards.Object);
-                        }
-                    }
-                    var finishedQuiz = await Database.FirebaseClient.Child($"users/{UserManager.User.Uid}/Quiz").OnceAsync<Quiz>();
+                    var finishedQuiz = await Database.FirebaseClient.Child($"users/{UserManager.User.Uid}/Quiz").OnceAsync<Performance>();
+                    DateTime? dateFinished = null;
                     if (finishedQuiz != null)
                     {
-                        foreach (var quiz in finishedQuiz)
+                        foreach (var completedQuiz in finishedQuiz)
                         {
-                            if (item.Key == quiz.Key)
+                            if (quiz.Key == completedQuiz.Key)
                             {
-                                item.Object.isCompleted = true;
+                                quiz.Object.isCompleted = true;
+                                dateFinished = Convert.ToDateTime(completedQuiz.Object.Date.ToString());
                             }
                         }
                     }
-                    if (item.Object.isCompleted)
+                    if (quiz.Object.isCompleted)
                     {
-                        item.Object.status = "Completed";
-                        item.Object.statusColor = "#1eb980";
+                        if (dateFinished != null)
+                        {
+                            if (dateFinished < quiz.Object.DueDate)
+                            {
+                                quiz.Object.status = "Completed";
+                            }
+                            else
+                            {
+                                quiz.Object.status = "Done Late";
+                            }
+                            quiz.Object.statusColor = "#1eb980";
+                        }
                     }
                     else
                     {
-                        item.Object.status = "Incomplete";
-                        item.Object.statusColor = "#ff2a04";
+                        if (quiz.Object.DueDate < DateTime.Now)
+                        {
+                            quiz.Object.status = "Missing";
+                            quiz.Object.statusColor = "#ff2a04";
+                        }
+                        else
+                        {
+                            quiz.Object.status = "Incomplete";
+                            quiz.Object.statusColor = "#ffb702";
+
+                        }
                     }
-                    item.Object.Key = item.Key;
-                    QuizList.Add(item.Object);
+                    quiz.Object.Key = quiz.Key;
+                    QuizList.Add(quiz.Object);
                 }
             }
             catch (Exception ex)
