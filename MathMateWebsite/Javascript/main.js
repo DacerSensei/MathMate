@@ -64,7 +64,7 @@ async function RenderElementById(link, elementType, id, isAppend = true) {
             if (parsedData.isAdmin) {
                 await RenderElementById("/Library/sidebar-admin.html", "aside", "main", false)
             } else {
-                await RenderElementById("/Library/sidebar-teachers.html", "aside", "main", false)
+                await RenderElementById("/Library/sidebar-teacher.html", "aside", "main", false)
             }
             const links = document.querySelectorAll(".nav-links");
             const currentURL = window.location.href;
