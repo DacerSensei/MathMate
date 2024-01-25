@@ -10,9 +10,9 @@ using Xamarin.Forms.Xaml;
 namespace MathMate.Views
 {
 	[XamlCompilation(XamlCompilationOptions.Compile)]
-	public partial class FlashCardQuiz : ContentPage
+	public partial class FlashcardPage : ContentPage
 	{
-		public FlashCardQuiz ()
+		public FlashcardPage()
 		{
 			InitializeComponent ();
 		}

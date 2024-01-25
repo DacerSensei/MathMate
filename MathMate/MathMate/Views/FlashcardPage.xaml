@@ -4,7 +4,7 @@
              xmlns:ViewModel="clr-namespace:MathMate.ViewModels" 
              xmlns:xct="http://xamarin.com/schemas/2020/toolkit" 
              xmlns:converter="clr-namespace:MathMate.Services"
-             x:Class="MathMate.Views.FlashCardQuiz"
+             x:Class="MathMate.Views.FlashcardPage"
              Background="White"
              NavigationPage.HasNavigationBar="False">
     <ContentPage.Resources>
@@ -13,7 +13,7 @@
         </ResourceDictionary>
     </ContentPage.Resources>
     <ContentPage.BindingContext>
-        <ViewModel:FlashCardQuizViewModel />
+        <ViewModel:FlashcardPageViewModel />
     </ContentPage.BindingContext>
     <ContentPage.Behaviors>
         <xct:EventToCommandBehavior EventName="Appearing" Command="{Binding LoadedCommand}" />
@@ -45,8 +45,8 @@
                                     </LinearGradientBrush>
                                 </Frame.Background>
                                 <Grid Margin="20" RowDefinitions="Auto,Auto,*" RowSpacing="0">
-                                    <Label Text="Activities" FontSize="Title" FontFamily="PoppinsRegular" TextColor="White"/>
-                                    <Label Grid.Row="1" Text="Activity" FontSize="Subtitle" FontFamily="PoppinsRegular" TextColor="White"/>
+                                    <Label Text="Flashcards" FontSize="Title" FontFamily="PoppinsRegular" TextColor="White"/>
+                                    <Label Grid.Row="1" Text="Activity and Quizzes" FontSize="Subtitle" FontFamily="PoppinsRegular" TextColor="White"/>
                                 </Grid>
                             </Frame>
                         </StackLayout>
@@ -54,7 +54,7 @@
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
                             <StackLayout Padding="5">
-                                <Frame Margin="10" Padding="0" CornerRadius="6" xct:ShadowEffect.Color="Black" xct:ShadowEffect.Radius="6">
+                                <Frame Margin="10,10,10,0" Padding="0" CornerRadius="6" xct:ShadowEffect.Color="Black" xct:ShadowEffect.Radius="6">
                                     <xct:Expander>
                                         <xct:Expander.Header>
                                             <Grid  RowDefinitions="Auto,Auto" ColumnDefinitions="*,Auto" Margin="20">

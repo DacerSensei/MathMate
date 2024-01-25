@@ -25,8 +25,8 @@
                     <TapGestureRecognizer Command="{Binding ViewFlashCardCommand}"/>
                 </Frame.GestureRecognizers>
                 <Grid Margin="20" RowDefinitions="Auto,Auto,*" RowSpacing="0">
-                    <Label Text="Activities" FontSize="Title" FontFamily="PoppinsBold" TextColor="White"/>
-                    <Label Grid.Row="1" Text="Activities" FontSize="Subtitle" FontFamily="PoppinsRegular" TextColor="White"/>
+                    <Label Text="Flashcards" FontSize="Title" FontFamily="PoppinsBold" TextColor="White"/>
+                    <Label Grid.Row="1" Text="Activity and Quizzes" FontSize="Subtitle" FontFamily="PoppinsRegular" TextColor="White"/>
                 </Grid>
             </Frame>
             <Frame Margin="10,10,10,0" Padding="0" CornerRadius="10" HeightRequest="150" xct:TouchEffect.NativeAnimation="True">

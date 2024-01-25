@@ -19,7 +19,7 @@ namespace MathMate.ViewModels
 
         private async Task ViewFlashCardExecute()
         {
-            await Application.Current.MainPage.Navigation.PushModalAsync(new FlashCardQuiz());
+            await Application.Current.MainPage.Navigation.PushModalAsync(new FlashcardPage());
         }
 
         public ICommand ViewLessonCommand { get; }

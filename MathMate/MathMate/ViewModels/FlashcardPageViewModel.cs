@@ -15,9 +15,9 @@ using Xamarin.Forms;
 
 namespace MathMate.ViewModels
 {
-    public class FlashCardQuizViewModel : ObservableObject
+    public class FlashcardPageViewModel : ObservableObject
     {
-        public FlashCardQuizViewModel()
+        public FlashcardPageViewModel()
         {
             LoadedCommand = new AsyncCommand(LoadedExecute);
             BackCommand = new AsyncCommand(BackExecute);
