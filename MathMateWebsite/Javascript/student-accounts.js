@@ -5,7 +5,7 @@ import {
     getAuth, createUserWithEmailAndPassword, signOut
 } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-auth.js";
 import {
-    getDatabase, ref, set, onValue, get, child, push
+    getDatabase, ref, set, onValue, get, child, push, remove
 } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-database.js";
 import { Database, GetElementValue, FirebaseConfig, StudentAccount, IsNullOrEmpty } from "./main.js";
 
@@ -88,6 +88,23 @@ function ExcelImportStudent(event) {
     };
     reader.readAsArrayBuffer(file);
 }
+
+const table = document.getElementById("myTable");
+table.addEventListener("click", async (event) => {
+    if (event.target && event.target.matches(".Button-Red-Icon")) {
+        const row = event.target.closest("tr");
+
+        const hiddenInput = row.querySelector("input[type='hidden']");
+        const id = hiddenInput.value;
+
+        var result = await ShowPopup('Are you sure you want to delete?', PopupType.Prompt);
+        if (result) {
+            await remove(ref(Database, "users/" + id));
+            row.remove();
+            ShowNotification('Deleted Successfully', Colors.Green);
+        }
+    }
+});
 
 // document.getElementById("grade-level").addEventListener("change", async () => {
 //     const gradeElement = document.getElementById("grade-level");
