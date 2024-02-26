@@ -867,6 +867,15 @@ header #SearchButton>svg {
     border-color: #3354cc;
 }
 
+/* File button */
+
+.Button-Purple > input[type="file"] {
+    display: none;
+}
+
+.Button-Purple > label {
+    cursor: pointer;
+}
 
 /* Status */
 

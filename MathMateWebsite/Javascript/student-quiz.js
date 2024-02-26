@@ -157,7 +157,7 @@ function CreateQuestion() {
     firstInputDiv.classList.add("Solid-Textbox-Red");
 
     const firstIcon = document.createElement("i");
-    firstIcon.classList.add("fa-solid", "fa-signature");
+    firstIcon.classList.add("fa-solid", "fa-q");
 
     const firstInput = document.createElement("input");
     firstInput.type = "text";
@@ -172,7 +172,7 @@ function CreateQuestion() {
     secondInputDiv.classList.add("Solid-Textbox-Red");
 
     const secondIcon = document.createElement("i");
-    secondIcon.classList.add("fa-solid", "fa-signature");
+    secondIcon.classList.add("fa-solid", "fa-a");
 
     const secondInput = document.createElement("input");
     secondInput.type = "text";

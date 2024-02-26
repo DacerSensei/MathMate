@@ -14,6 +14,12 @@ main>section>.header-section {
     color: white;
 }
 
+main>section>.header-section > div {
+    display: flex;
+    align-items: center;
+    gap: .4rem;
+}
+
 main>section>.table-section {
     background-color: #d1272c;
     padding: 1.25rem;

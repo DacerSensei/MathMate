@@ -422,11 +422,11 @@ async function StudentAccount() {
                                 hiddenInput.type = "hidden";
                                 hiddenInput.value = key;
 
+                                const studentNumberCell = document.createElement("td");
+                                studentNumberCell.textContent = values.Username;
+
                                 const nameCell = document.createElement("td");
                                 nameCell.textContent = values.LastName + ", " + values.FirstName;
-
-                                const emailCell = document.createElement("td");
-                                emailCell.textContent = values.Email;
 
                                 const teacherCell = document.createElement("td");
                                 teacherCell.textContent = teacher.LastName + ", " + teacher.FirstName;
@@ -474,8 +474,8 @@ async function StudentAccount() {
                                 genderCell.appendChild(genderDiv)
 
                                 row.appendChild(hiddenInput);
+                                row.appendChild(studentNumberCell);
                                 row.appendChild(nameCell);
-                                row.appendChild(emailCell);
                                 row.appendChild(gradeCell);
                                 row.appendChild(genderCell);
                                 row.appendChild(teacherCell);
@@ -647,8 +647,10 @@ document.addEventListener("DOMContentLoaded", function () {
                         console.log(error.message);
                     });
                 }
-                if (userData.isAdmin == true || userData.isTeacher == true) {
-                    window.location.href = "/dashboard.html";
+                if (userData.isAdmin == true && userData.isTeacher == false) {
+                    window.location.href = "/admin-dashboard.html";
+                }else if(userData.isAdmin == false && userData.isTeacher == true){
+                    window.location.href = "/teacher-dashboard.html";
                 } else {
                     signOut(Auth).then(() => {
                         localStorage.clear();
@@ -679,8 +681,8 @@ function Login() {
                 return;
             }
             ShowLoading();
-            const areTeacher = document.getElementById("IsTeacher").checked;
-            if (!areTeacher) {
+            const areTeacher = IsTeacher(email);
+            if (areTeacher == false) {
                 let isAdmin = false;
                 await get(child(ref(Database), 'admins')).then(async (userSnapshot) => {
                     if (await userSnapshot.exists()) {
@@ -707,7 +709,7 @@ function Login() {
                                 userData.isAdmin = true;
                                 userData.isTeacher = false;
                                 localStorage.setItem('userData', JSON.stringify(userData));
-                                window.location.href = "/dashboard.html";
+                                window.location.href = "/admin-dashboard.html";
                             } else {
                                 ShowNotification("Your account is not admin", Colors.Red);
                                 signOut(Auth).then(() => {
@@ -754,7 +756,7 @@ function Login() {
                                 userData.isAdmin = false;
                                 userData.isTeacher = true;
                                 localStorage.setItem('userData', JSON.stringify(userData));
-                                window.location.href = "/dashboard.html";
+                                window.location.href = "/teacher-dashboard.html";
                             } else {
                                 ShowNotification("Your account is not teacher", Colors.Red);
                                 signOut(Auth).then(() => {
@@ -776,6 +778,14 @@ function Login() {
                 }
             }
         });
+    }
+}
+
+function IsTeacher(email) {
+    if (email == "admin@gmail.com") {
+        return false;
+    } else {
+        return true;
     }
 }
 
