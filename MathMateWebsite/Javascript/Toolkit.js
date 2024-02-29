@@ -102,6 +102,13 @@ function GetValidDate() {
     });
 }
 
+const chooseFileButtons = document.querySelectorAll(".Burger-File");
+chooseFileButtons.forEach((button) => {
+    button.addEventListener("change", (event) => {
+        button.getElementsByTagName("label")[0].textContent = event.target.files[0].name; // Get the selected file
+    });
+});
+
 function ValidateDate(event) {
     var inputTextbox = event.target;
     var input = event.target.value;
@@ -266,7 +273,7 @@ class Picker extends HTMLElement {
         }
     }
 
-    get Value(){
+    get Value() {
         return this._selectedItem ? this._selectedItem.getAttribute("value") : null;
     }
 

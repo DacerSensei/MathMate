@@ -869,6 +869,17 @@ header #SearchButton>svg {
 
 /* File button */
 
+.Burger-File > input[type="file"] {
+    display: none;
+}
+
+.Burger-File > label {
+    align-self: center;
+    margin-left: 1rem;
+    cursor: pointer;
+    width: 100%;
+}
+
 .Button-Purple > input[type="file"] {
     display: none;
 }
@@ -1006,7 +1017,7 @@ header #SearchButton>svg {
     height: 18px;
     border: 2px solid #d1272c;
     border-radius: 50%;
-    margin-right: 10px;
+    margin-right: 5px;
     cursor: pointer;
 }
 
@@ -1029,7 +1040,7 @@ header #SearchButton>svg {
 }
 
 .radio span {
-    font-family: Arial, sans-serif;
+    font-family: 'Poppins';
     font-size: 14px;
     color: #333;
 }
@@ -1374,6 +1385,10 @@ header #SearchButton>svg {
 .display-block {
     display: flex;
     flex-direction: column;
+}
+
+.display-none {
+    display: none;
 }
 
 .gap-1 {

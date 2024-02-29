@@ -35,6 +35,47 @@
                             <i class="fa-solid fa-signature"></i>
                             <input id="lesson-description" type="text" placeholder="Enter your description" required>
                         </div>
+                        <div id="release-scheduled">
+                            <h3>Choose Release mode</h3>
+                            <div>
+                                <div class="radio">
+                                    <input type="radio" id="for-instant" name="schedule" value="instant" checked>
+                                    <label for="for-instant"></label>
+                                    <span>Now</span>
+                                </div>
+                                <div class="radio">
+                                    <input type="radio" id="for-scheduled" name="schedule" value="scheduled">
+                                    <label for="for-scheduled"></label>
+                                    <span>Scheduled</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="Solid-Textbox-Red display-none" id="schedule-datetime">
+                            <i class="fa-solid fa-calendar"></i>
+                            <input id="lesson-release" type="datetime-local" required title="Release date and time">
+                        </div>
+                        <h3>Upload your tutorial video (optional)</h3>
+                        <div class="Solid-Textbox-Red Burger-File">
+                            <i class="fa-solid fa-video"></i>
+                            <label for="lesson-video">Choose your file</label>
+                            <input id="lesson-video" type="file" accept="video/mp4">
+                        </div>
+                        <h3>Pre and Post Questions</h3>
+                        <div id="pre-post-container">
+                            <div class="pre-post-problem">
+                                <p>Question 1</p>
+                                <div class="Solid-Textbox-Red">
+                                    <i class="fa-solid fa-q"></i>
+                                    <input type="text" placeholder="Enter your question" required>
+                                </div>
+                                <div class="Solid-Textbox-Red">
+                                    <i class="fa-solid fa-a"></i>
+                                    <input type="text" placeholder="Enter your answer" required>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="button" class="Solid-Button-Red" style="font-size: 1.125rem" id="AddProblem">Add
+                            Problem</button>
                         <button type="submit" class="Solid-Button-Red" style="font-size: 1.125rem"
                             id="CreateLesson">Create Lesson</button>
                     </section>
@@ -58,7 +99,7 @@
                     </div>
                 </form>
                 <div>
-                    <button class="Button-Green modal-trigger" data-target="Add-Modal" style="max-width: 400px;">Create
+                    <button class="Button-Green modal-trigger" data-target="Add-Modal" style="max-width: 400px;" id="create-lesson-button">Create
                         Student Lesson</button>
                 </div>
             </div>
