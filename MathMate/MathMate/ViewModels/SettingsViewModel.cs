@@ -24,7 +24,6 @@ namespace MathMate.ViewModels
         public ICommand ChangePasswordCommand { get; }
         private async Task LogoutExecute()
         {
-            Database.FirebaseAuthClient.SignOut();
             await Application.Current.MainPage.Navigation.PopAsync();
         }
 

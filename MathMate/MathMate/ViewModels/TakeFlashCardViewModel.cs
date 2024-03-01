@@ -27,6 +27,7 @@ namespace MathMate.ViewModels
             FlashCards.FirstOrDefault().IsCurrentQuestion = true;
             AnswerMicCommand = new Command(AnswerMicExecute);
             AnswerTextCommand = new Command(AnswerTextExecute);
+            UpdateOverItems();
         }
 
         Dictionary<string, int> WordToNumberMap = new Dictionary<string, int>
@@ -81,6 +82,7 @@ namespace MathMate.ViewModels
                             {
                                 Debug.WriteLine("Your total score is: " + Score);
                                 await Database.FirebaseClient.Child($"users/{UserManager.User.Uid}/Quiz/{CurrentQuiz.Key}").PutAsync(JsonConvert.SerializeObject(new { Score = Score, Date = DateTime.Now.ToShortDateString(), Total = FlashCards.Count, Title = "Flashcard", Description = CurrentQuiz.Description }));
+                                await Application.Current.MainPage.DisplayAlert("Total score", $"Your total score is {Score} out of {FlashCards.Count}", "Ok");
                                 await Application.Current.MainPage.Navigation.PopModalAsync();
                             }
                         }
@@ -103,6 +105,7 @@ namespace MathMate.ViewModels
                                 {
                                     Debug.WriteLine("Your total score is: " + Score);
                                     await Database.FirebaseClient.Child($"users/{UserManager.User.Uid}/Quiz/{CurrentQuiz.Key}").PutAsync(JsonConvert.SerializeObject(new { Score = Score, Date = DateTime.Now.ToShortDateString(), Total = FlashCards.Count, Title = "Flashcard", Description = CurrentQuiz.Description }));
+                                    await Application.Current.MainPage.DisplayAlert("Total score", $"Your total score is {Score} out of {FlashCards.Count}", "Ok");
                                     await Application.Current.MainPage.Navigation.PopModalAsync();
                                 }
                             }
@@ -132,6 +135,11 @@ namespace MathMate.ViewModels
                         if (int.TryParse(TextAnswer, out int numericConversion))
                         {
                             // Successfully converted the word to an integer
+                            if(CurrentItem < FlashCards.Count)
+                            {
+                                CurrentItem++;
+                            }
+                            UpdateOverItems();
                             if (currentQuestion.solution.ToLower() == numericConversion.ToString().ToLower())
                             {
                                 Score++;
@@ -144,8 +152,8 @@ namespace MathMate.ViewModels
                             }
                             else
                             {
-                                Debug.WriteLine("Your total score is: " + Score);
                                 await Database.FirebaseClient.Child($"users/{UserManager.User.Uid}/Quiz/{CurrentQuiz.Key}").PutAsync(JsonConvert.SerializeObject(new { Score = Score, Date = DateTime.Now.ToShortDateString(), Total = FlashCards.Count, Title = "Flashcard", Description = CurrentQuiz.Description }));
+                                await Application.Current.MainPage.DisplayAlert("Total score", $"Your total score is {Score} out of {FlashCards.Count}", "Ok");
                                 await Application.Current.MainPage.Navigation.PopModalAsync();
                             }
                             TextAnswer = string.Empty;
@@ -155,9 +163,23 @@ namespace MathMate.ViewModels
             }
         }
 
+        private string overItems;
+        public string OverItems
+        {
+            get => overItems;
+            set => SetProperty(ref overItems, value);
+        }
+
+        private int CurrentItem = 1;
+
+        private void UpdateOverItems()
+        {
+            OverItems = $"{CurrentItem}/{FlashCards.Count}";
+        }
+
         async Task<string> WaitForSpeechToText()
         {
-            return await DependencyService.Get<Services.ISpeechToText>().SpeechToTextAsync();
+            return await DependencyService.Get<ISpeechToText>().SpeechToTextAsync();
         }
 
         private string textAnswer;

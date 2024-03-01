@@ -36,6 +36,12 @@
                     <Label Text="User Information" TextColor="Black" FontSize="Title" FontAttributes="Bold" Margin="0,0,0,10"/>
                     <Frame Padding="10">
                         <StackLayout Orientation="Horizontal">
+                            <Label FontFamily="PoppinsRegular" TextColor="#999" Text="Student Number"/>
+                            <Label FontFamily="PoppinsRegular" TextColor="black"  HorizontalOptions="EndAndExpand" Text="{Binding Username}"/>
+                        </StackLayout>
+                    </Frame>
+                    <Frame Padding="10">
+                        <StackLayout Orientation="Horizontal">
                             <Label FontFamily="PoppinsRegular" TextColor="#999" Text="First Name"/>
                             <Label FontFamily="PoppinsRegular" TextColor="black"  HorizontalOptions="EndAndExpand" Text="{Binding FirstName}"/>
                         </StackLayout>
@@ -44,12 +50,6 @@
                         <StackLayout Orientation="Horizontal">
                             <Label FontFamily="PoppinsRegular" TextColor="#999" Text="Last Name"/>
                             <Label FontFamily="PoppinsRegular" TextColor="black"  HorizontalOptions="EndAndExpand" Text="{Binding LastName}"/>
-                        </StackLayout>
-                    </Frame>
-                    <Frame Padding="10">
-                        <StackLayout Orientation="Horizontal">
-                            <Label FontFamily="PoppinsRegular" TextColor="#999" Text="Email"/>
-                            <Label FontFamily="PoppinsRegular" TextColor="black"  HorizontalOptions="EndAndExpand" Text="{Binding Email}"/>
                         </StackLayout>
                     </Frame>
                     <Frame Padding="10">

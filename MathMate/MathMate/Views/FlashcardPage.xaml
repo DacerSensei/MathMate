@@ -67,7 +67,6 @@
                                                         </FormattedString>
                                                     </Label.FormattedText>
                                                 </Label>
-
                                                 <Label Grid.Column="1" Text="{Binding status}" TextColor="{Binding statusColor}" FontSize="Subtitle" FontFamily="PoppinsBold"/>
                                                 <Label Grid.Row="1" Grid.ColumnSpan="2" Text="{Binding Created}" FontSize="14" FontFamily="PoppinsRegular" TextColor="#7c7c7c"/>
                                             </Grid>
@@ -82,7 +81,15 @@
                                                     </FormattedString>
                                                 </Label.FormattedText>
                                             </Label>
-                                            <Button Grid.Row="2" Text="Take Quiz" TextColor="White" Command="{Binding Source={x:Reference MyList}, Path=BindingContext.TakeQuizCommand}" CommandParameter="{Binding .}" BackgroundColor="DarkGreen"/>
+                                            <Frame Grid.Row="2" Grid.Column="1" BackgroundColor="#4361ee" CornerRadius="25" Padding="12" VerticalOptions="EndAndExpand">
+                                                <Frame.GestureRecognizers>
+                                                    <TapGestureRecognizer Command="{Binding Source={x:Reference MyList}, Path=BindingContext.TakeQuizCommand}" CommandParameter="{Binding .}" />
+                                                </Frame.GestureRecognizers>
+                                                <StackLayout Orientation="Horizontal" HorizontalOptions="Center" Margin="40,0">
+                                                    <Image Source="TakeQuiz.png" WidthRequest="25" HeightRequest="25" />
+                                                    <Label Text="Take Quiz" TextColor="White" VerticalTextAlignment="Center"/>
+                                                </StackLayout>
+                                            </Frame>
                                         </Grid>
                                     </xct:Expander>
                                 </Frame>

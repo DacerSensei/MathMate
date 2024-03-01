@@ -32,26 +32,15 @@
                     <StackLayout Spacing="0">
                         <lottie:AnimationView HeightRequest="175" WidthRequest="175" AnimationSource="AssetOrBundle" Animation="Login.json" RepeatMode="Infinite" AutoPlay="True" />
 
-                        <Label Text="Email" FontSize="18" FontFamily="PoppinsRegular" TextColor="#999" Margin="5,0"/>
+                        <Label Text="Student Number" FontSize="18" FontFamily="PoppinsRegular" TextColor="#999" Margin="5,0"/>
                         <Frame Padding="20,0" BackgroundColor="#f6f7f9" CornerRadius="10" Margin="5,0,5,5">
-                            <Entry FontFamily="PoppinsRegular" Text="{Binding Email}" Placeholder="Enter your email address" TextColor="Black" PlaceholderColor="#999">
-                                <Entry.Behaviors>
-                                    <xct:EmailValidationBehavior IsValid="{Binding IsValidEmail}" />
-                                </Entry.Behaviors>
+                            <Entry FontFamily="PoppinsRegular" Text="{Binding StudentNumber}" Placeholder="Enter your student number" TextColor="Black" PlaceholderColor="#999">
                             </Entry>
                         </Frame>
                         <Label Text="Password" FontSize="18" FontFamily="PoppinsRegular" TextColor="#999" Margin="5,0"/>
                         <Frame Padding="20,0" BackgroundColor="#f6f7f9" CornerRadius="10" Margin="5,0,5,5">
                             <Entry FontFamily="PoppinsRegular" IsPassword="True" Text="{Binding Password}" Placeholder="Enter your password" TextColor="Black" PlaceholderColor="#999"/>
                         </Frame>
-                        <StackLayout Orientation="Horizontal" Margin="0,10" Spacing="0">
-                            <Label Text="Forgot Password?" FontSize="16" FontFamily="PoppinsRegular" TextColor="#e01e37" TextDecorations="Underline" HorizontalOptions="EndAndExpand">
-                                <Label.GestureRecognizers>
-                                    <TapGestureRecognizer Command="{Binding ForgotPasswordCommand}" />
-                                </Label.GestureRecognizers>
-                            </Label>
-                        </StackLayout>
-                        
 
                         <Button Text="Login" Command="{Binding LoginCommand}" CornerRadius="10" Margin="5,5" TextColor="White" FontFamily="PoppinsBold">
                             <Button.Background>

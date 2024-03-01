@@ -4,7 +4,8 @@
              x:Class="MathMate.Views.TakeFlashCard"
              xmlns:local="http://xamarin.com/schemas/2020/toolkit" 
              xmlns:converter="clr-namespace:MathMate.Services" 
-             xmlns:ViewModel="clr-namespace:MathMate.ViewModels"
+             xmlns:ViewModel="clr-namespace:MathMate.ViewModels" 
+             xmlns:behaviors="clr-namespace:MathMate.Behaviors"
              Background="White"
              NavigationPage.HasNavigationBar="False">
     <ContentPage.Behaviors>
@@ -16,6 +17,9 @@
                 <BindableLayout.ItemTemplate>
                     <DataTemplate>
                         <StackLayout IsVisible="{Binding IsCurrentQuestion}">
+                            <StackLayout.Behaviors>
+                                <behaviors:FadeAnimationBehavior/>
+                            </StackLayout.Behaviors>
                             <Frame  VerticalOptions="EndAndExpand" Margin="10,0" CornerRadius="10">
                                 <StackLayout>
                                     <Label Text="Problem:" TextColor="Black" FontSize="Title" FontFamily="PoppinsRegular" HorizontalTextAlignment="Center"/>
@@ -23,16 +27,33 @@
                                     <Frame Padding="20,0" BackgroundColor="#f6f7f9" CornerRadius="10" Margin="5,0,5,5">
                                         <Entry FontFamily="PoppinsRegular" Text="{Binding Source={x:Reference MyList}, Path=BindingContext.TextAnswer}" Placeholder="Enter your answer as text" TextColor="Black" PlaceholderColor="#999"/>
                                     </Frame>
-                                    <Button Text="Submit your answer" Command="{Binding Source={x:Reference MyList}, Path=BindingContext.AnswerTextCommand}" CommandParameter="{Binding .}" TextColor="White" FontSize="Subtitle" BackgroundColor="red"/>
+                                    <StackLayout Orientation="Horizontal" HorizontalOptions="End" Margin="12,10">
+                                        <Frame CornerRadius="25" BackgroundColor="#168aad"  Padding="26,14">
+                                            <Frame.GestureRecognizers>
+                                                <TapGestureRecognizer Command="{Binding Source={x:Reference MyList}, Path=BindingContext.AnswerTextCommand}" CommandParameter="{Binding .}" />
+                                            </Frame.GestureRecognizers>
+                                            <StackLayout Orientation="Horizontal">
+                                                <Image Source="Submit.png" WidthRequest="25" HeightRequest="25"/>
+                                                <Label Text="Submit" TextColor="White" VerticalTextAlignment="Center"/>
+                                            </StackLayout>
+                                        </Frame>
+                                        <Frame CornerRadius="25" BackgroundColor="#560bad" Padding="26,14" HorizontalOptions="End">
+                                            <Frame.GestureRecognizers>
+                                                <TapGestureRecognizer Command="{Binding Source={x:Reference MyList}, Path=BindingContext.AnswerMicCommand}" CommandParameter="{Binding .}" />
+                                            </Frame.GestureRecognizers>
+                                            <StackLayout Orientation="Horizontal">
+                                                <Image Source="Microphone.png" WidthRequest="25" HeightRequest="25"/>
+                                                <Label Text="Microphone" TextColor="White" VerticalTextAlignment="Center"/>
+                                            </StackLayout>
+                                        </Frame>
+                                    </StackLayout>
                                 </StackLayout>
                             </Frame>
-                            <StackLayout>
-                                <Button Text="Answer using microphone" Command="{Binding Source={x:Reference MyList}, Path=BindingContext.AnswerMicCommand}" CommandParameter="{Binding .}" TextColor="White" FontSize="Subtitle" BackgroundColor="red"/>
-                            </StackLayout>
                         </StackLayout>
                     </DataTemplate>
                 </BindableLayout.ItemTemplate>
             </StackLayout>
+            <Label Grid.Row="1" Margin="20" HorizontalTextAlignment="Center" Text="{Binding OverItems}" TextColor="DarkGreen" FontSize="Title"/>
         </Grid>
     </ContentPage.Content>
 </ContentPage>

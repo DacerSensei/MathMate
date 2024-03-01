@@ -1,4 +1,5 @@
 ﻿using Firebase.Auth;
+using Firebase.Database.Query;
 using MathMate.Config;
 using MathMate.Services;
 using System;
@@ -50,27 +51,14 @@ namespace MathMate.ViewModels
             }
             try
             {
-                await Database.FirebaseAuthClient.User.ChangePasswordAsync(NewPassword);
+                await Database.FirebaseClient.Child($"users/{Services.UserManager.User.Username}").PatchAsync(new { Password = NewPassword });
+                Services.UserManager.User.Password = NewPassword;
                 await Application.Current.MainPage.Navigation.PopModalAsync();
                 await ToastManager.ShowToast("Your password has been changed", Color.FromHex("#1eb980"));
             }
-            catch (FirebaseAuthException ex)
+            catch (Exception ex)
             {
-                switch (ex.Reason)
-                {
-                    case AuthErrorReason.InvalidEmailAddress:
-                        await ToastManager.ShowToast("Invalid Email Address", Color.FromHex("#FF605C"));
-                        break;
-                    case AuthErrorReason.UnknownEmailAddress:
-                        await ToastManager.ShowToast("Email didn't exist", Color.FromHex("#FF605C"));
-                        break;
-                    case AuthErrorReason.EmailExists:
-                        await ToastManager.ShowToast("Email already used", Color.FromHex("#FF605C"));
-                        break;
-                    default:
-                        Debug.WriteLine(ex.Message);
-                        break;
-                }
+                Debug.WriteLine(ex.Message);
             }
         }
 

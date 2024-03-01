@@ -25,8 +25,6 @@ namespace MathMate.ViewModels
             TakeQuizCommand = new Command(TakeQuizExecute);
         }
 
-
-
         public ObservableCollection<Quiz> QuizList { get; set; } = new ObservableCollection<Quiz>();
 
         public ICommand AddCommand { get; set; }

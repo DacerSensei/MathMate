@@ -28,13 +28,23 @@ namespace MathMate.Models
             }
         }
 
-        private string email;
-        public string Email
+        private string username;
+        public string Username
         {
-            get => email;
+            get => username;
             set
             {
-                SetProperty(ref email, value);
+                SetProperty(ref username, value);
+            }
+        }
+
+        private string password;
+        public string Password
+        {
+            get => password;
+            set
+            {
+                SetProperty(ref password, value);
             }
         }
 

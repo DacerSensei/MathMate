@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MathMate.Services;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,5 +17,17 @@ namespace MathMate.Views
 		{
 			InitializeComponent ();
 		}
-	}
+
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+            DependencyService.Get<IOrientationService>().SetLandscapeOrientation();
+        }
+
+        protected override void OnDisappearing()
+        {
+            base.OnDisappearing();
+            DependencyService.Get<IOrientationService>().SetPortraitOrientation();
+        }
+    }
 }
