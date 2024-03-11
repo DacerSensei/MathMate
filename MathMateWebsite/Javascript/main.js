@@ -7,6 +7,9 @@ import {
 import {
     getDatabase, ref, set, onValue, get, child
 } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
+import {
+    getStorage
+} from "https://www.gstatic.com/firebasejs/10.8.1/firebase-storage.js";
 
 const FirebaseConfig = {
     apiKey: "AIzaSyAUpaMjpjjFKoacRv7fB6bdGXmFaODkQjM",
@@ -22,6 +25,7 @@ const FirebaseConfig = {
 const App = initializeApp(FirebaseConfig);
 const Auth = getAuth(App);
 const Database = getDatabase(App);
+export const FirebaseStorage = getStorage(App);
 
 
 async function RenderElementInBody(link, elementType, isAppend = true) {
