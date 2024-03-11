@@ -140,5 +140,25 @@ namespace MathMate.Models
                 return "#000";
             }
         }
+
+        private Uri displayPicture;
+        public Uri DisplayPicture
+        {
+            get => displayPicture;
+            set
+            {
+                SetProperty(ref displayPicture, value);
+            }
+        }
+
+        private string displayFileName;
+        public string DisplayFileName
+        {
+            get => displayFileName;
+            set
+            {
+                SetProperty(ref displayFileName, value);
+            }
+        }
     }
 }

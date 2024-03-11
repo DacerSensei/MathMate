@@ -3,12 +3,13 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="MathMate.Views.Profile"
              Background="White"
-             xmlns:xct="http://xamarin.com/schemas/2020/toolkit" 
+             xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
              xmlns:local="clr-namespace:MathMate"
              xmlns:lottie="clr-namespace:Lottie.Forms;assembly=Lottie.Forms" 
              xmlns:ViewModel="clr-namespace:MathMate.ViewModels"
              xmlns:UserManager="clr-namespace:MathMate.Services"
-             NavigationPage.HasNavigationBar="False">
+             NavigationPage.HasNavigationBar="False"
+             x:Name="MyPage">
     <ContentPage.BindingContext>
         <ViewModel:ProfileViewModel />
     </ContentPage.BindingContext>
@@ -23,13 +24,24 @@
                         </LinearGradientBrush>
                     </local:CustomFrame.Background>
                     <StackLayout>
-                        <Frame CornerRadius="6" Margin="4,0">
-                            <StackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" BindingContext="{Binding Source={x:Static UserManager:UserManager.User}}">
-                                <xct:AvatarView Size="100" HorizontalOptions="CenterAndExpand" Text="{Binding InitialName}"/>
-                                <Label Text="{Binding CompleteName}" HorizontalTextAlignment="Center" TextColor="Black" FontSize="Title" FontAttributes="Bold" FontFamily="PoppinsBold" />
-                                <!--<Button Command="{Binding UploadCommand}" Text="Change Picture" CornerRadius="6" BackgroundColor="LightGoldenrodYellow"/>-->
-                            </StackLayout>
+                        <Frame CornerRadius="6" Margin="4,0" Padding="0,10,0,0">
+                            <Grid RowDefinitions="*,Auto" RowSpacing="0">
+                                <StackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" BindingContext="{Binding Source={x:Static UserManager:UserManager.User}}">
+                                    <AbsoluteLayout HorizontalOptions="Center">
+                                        <xct:AvatarView Size="125" HorizontalOptions="CenterAndExpand" Text="{Binding InitialName}" Source="{Binding DisplayPicture}" AbsoluteLayout.LayoutFlags="PositionProportional" AbsoluteLayout.LayoutBounds="0.5, 0.5, -1, -1"/>
+                                        <Frame xct:TouchEffect.NativeAnimation="True" CornerRadius="50" Padding="6" AbsoluteLayout.LayoutFlags="PositionProportional" AbsoluteLayout.LayoutBounds="1, 1, -1, -1">
+                                            <Frame.GestureRecognizers>
+                                                <TapGestureRecognizer Command="{Binding Source={x:Reference MyPage}, Path=BindingContext.UploadCommand}" />
+                                            </Frame.GestureRecognizers>
+                                            <Image Source="Camera.png" WidthRequest="25" HeightRequest="25"/>
+                                        </Frame>
+                                    </AbsoluteLayout>
+                                    <Label Text="{Binding CompleteName}" HorizontalTextAlignment="Center" TextColor="Black" FontSize="Title" FontAttributes="Bold" FontFamily="PoppinsBold" />
+                                </StackLayout>
+                                <ProgressBar Grid.Row="1" HeightRequest="4.5" Progress="{Binding UploadProgress}" ProgressColor="#0277bd"/>
+                            </Grid>
                         </Frame>
+
                     </StackLayout>
                 </local:CustomFrame>
                 <StackLayout Grid.Row="1" Padding="10" Spacing="1" BindingContext="{Binding Source={x:Static UserManager:UserManager.User}}">
