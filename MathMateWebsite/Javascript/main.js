@@ -1,12 +1,12 @@
 import {
     initializeApp
-} from "https://www.gstatic.com/firebasejs/10.5.2/firebase-app.js";
+} from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
 import {
     getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail, onAuthStateChanged, signOut
-} from "https://www.gstatic.com/firebasejs/10.5.2/firebase-auth.js";
+} from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
 import {
     getDatabase, ref, set, onValue, get, child
-} from "https://www.gstatic.com/firebasejs/10.5.2/firebase-database.js";
+} from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
 
 const FirebaseConfig = {
     apiKey: "AIzaSyAUpaMjpjjFKoacRv7fB6bdGXmFaODkQjM",
@@ -456,10 +456,22 @@ async function StudentAccount() {
 
                                 const actionsCell = document.createElement("td");
                                 const editButton = document.createElement("button");
-                                editButton.classList.add('Button-Blue-Icon', 'modal-trigger');
+                                editButton.classList.add('Button-Yellow-Icon', 'modal-trigger');
                                 editButton.title = "Edit";
-                                editButton.setAttribute('data-target', 'Edit-Modal');
+                                editButton.setAttribute('data-target', 'Add-Modal');
                                 editButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="pointer-events: none;"><path d="M14.06,9L15,9.94L5.92,19H5V18.08L14.06,9M17.66,3C17.41,3 17.15,3.1 16.96,3.29L15.13,5.12L18.88,8.87L20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18.17,3.09 17.92,3 17.66,3M14.06,6.19L3,17.25V21H6.75L17.81,9.94L14.06,6.19Z"/></svg>';
+
+                                editButton.addEventListener('click', function () {
+                                    const modal = document.getElementById(this.dataset.target);
+                                    modal.style.display = 'flex';
+        
+                                    // When the user clicks on the close button, close the modal
+                                    var closeBtn = modal.querySelector('.modal-close');
+                                    closeBtn.addEventListener('click', function () {
+                                        modal.style.display = 'none';
+                                        document.getElementById("student-form").reset();
+                                    });
+                                });
 
                                 const deleteButton = document.createElement("button");
                                 deleteButton.className = "Button-Red-Icon";
@@ -524,8 +536,7 @@ async function StudentQuiz() {
                         editButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="pointer-events: none;"><path d="M14.06,9L15,9.94L5.92,19H5V18.08L14.06,9M17.66,3C17.41,3 17.15,3.1 16.96,3.29L15.13,5.12L18.88,8.87L20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18.17,3.09 17.92,3 17.66,3M14.06,6.19L3,17.25V21H6.75L17.81,9.94L14.06,6.19Z"/></svg>';
 
                         editButton.addEventListener('click', function () {
-                            var modalId = this.dataset.target;
-                            var modal = document.getElementById(modalId);
+                            const modal = document.getElementById(this.dataset.target);
                             console.log(modal);
                             modal.style.display = 'flex';
 

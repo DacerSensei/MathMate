@@ -14,7 +14,7 @@ const SecondaryAuth = getAuth(SecondaryApp);
 
 document.getElementById("teacher-form").addEventListener("submit", async (e) => {
     e.preventDefault();
-    const gradeElement = document.getElementById("grade-level");
+    // const gradeElement = document.getElementById("grade-level");
     const genderElement = document.getElementById("gender");
 
     const firstname = GetElementValue("first-name") ?? "";
@@ -24,7 +24,8 @@ document.getElementById("teacher-form").addEventListener("submit", async (e) => 
     const email = GetElementValue("email") ?? "";
     const password = GetElementValue("password") ?? "";
     const birthday = GetElementValue("birthday") ?? "";
-    const gradeLevel = (gradeElement === null) ? "None" : gradeElement.Value;
+    // const gradeLevel = (gradeElement === null) ? "None" : gradeElement.Value;
+    const gradeLevel = "Grade 3";
     const gender = (genderElement === null) ? "None" : genderElement.Value;
     if (IsNullOrEmpty(firstname) || IsNullOrEmpty(lastname) || IsNullOrEmpty(section) || IsNullOrEmpty(contact) || IsNullOrEmpty(email) || IsNullOrEmpty(password) || IsNullOrEmpty(birthday) || gradeLevel == "None" || gender == "None") {
         ShowNotification("Please fill up all the required data", Colors.Red);
@@ -57,7 +58,7 @@ document.getElementById("teacher-form").addEventListener("submit", async (e) => 
         ShowPopup("You just created a new account");
         document.getElementById("teacher-form").reset();
         document.querySelector('.modal-close').click();
-        gradeElement.SelectedItem = gradeElement.Items[0];
+        // gradeElement.SelectedItem = gradeElement.Items[0];
         genderElement.SelectedItem = genderElement.Items[0];
         document.getElementById("table-body").innerHTML = "";
         await TeacherAccount();
