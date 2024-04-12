@@ -33,7 +33,6 @@ document.getElementById("create-lesson-button").addEventListener("click", () => 
 });
 
 const scheduleRadios = document.querySelectorAll("#release-scheduled input[name='schedule']");
-console.log(scheduleRadios);
 scheduleRadios.forEach(function (radio) {
     radio.addEventListener("change", handleScheduleChanged);
 });
@@ -60,7 +59,7 @@ document.getElementById("lesson-form").addEventListener("submit", async (e) => {
             schedule = radio.value;
         }
     });
-    let lessonData = {
+    var lessonData = {
         title: title,
         description: description,
         created: new Date().toLocaleDateString('en-US', {
@@ -117,7 +116,7 @@ document.getElementById("lesson-form").addEventListener("submit", async (e) => {
                 lessonData["videoName"] = lessonVideo.name;
 
                 await push(databaseRef(Database, "teachers/" + parsedData.uid + '/Lesson/'), lessonData);
-                document.getElementById("lesson-form").reset();
+                
                 document.querySelector('.modal-close').click();
                 ShowPopup("You just created a new lesson");
                 document.getElementById("table-body").innerHTML = "";
@@ -125,6 +124,8 @@ document.getElementById("lesson-form").addEventListener("submit", async (e) => {
             }
         );
     }
+    document.getElementById("lesson-form").reset();
+    document.getElementById("lesson-video").value = "";
     HideLoading();
 });
 
@@ -139,7 +140,7 @@ table.addEventListener("click", async (event) => {
         const parsedData = JSON.parse(localStorage.getItem('userData'));
         var result = await ShowPopup('Are you sure you want to delete?', PopupType.Prompt);
         if (result) {
-            await remove(ref(Database, "teachers/" + parsedData.uid + '/Lesson/' + id));
+            await remove(databaseRef(Database, "teachers/" + parsedData.uid + '/Lesson/' + id));
             row.remove();
             ShowNotification('Deleted Successfully', Colors.Green);
         }

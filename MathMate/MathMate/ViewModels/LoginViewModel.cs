@@ -35,20 +35,20 @@ namespace MathMate.ViewModels
         public ICommand LoginCommand { get; }
         private async Task LoginExecute()
         {
-            //if (string.IsNullOrWhiteSpace(StudentNumber))
-            //{
-            //    await ToastManager.ShowToast("Email cannot be empty", Color.FromHex("#FF605C"));
-            //    return;
-            //}
-            //if (string.IsNullOrWhiteSpace(Password))
-            //{
-            //    await ToastManager.ShowToast("Password cannot be empty", Color.FromHex("#FF605C"));
-            //    return;
-            //}
+            if (string.IsNullOrWhiteSpace(StudentNumber))
+            {
+                await ToastManager.ShowToast("Email cannot be empty", Color.FromHex("#FF605C"));
+                return;
+            }
+            if (string.IsNullOrWhiteSpace(Password))
+            {
+                await ToastManager.ShowToast("Password cannot be empty", Color.FromHex("#FF605C"));
+                return;
+            }
             try
             {
-                StudentNumber = "123";
-                Password = "123";
+                //StudentNumber = "123";
+                //Password = "123";
                 Models.User user = await Database.FirebaseClient.Child($"users/{StudentNumber}").OnceSingleAsync<Models.User>();
 
                 if (user != null)

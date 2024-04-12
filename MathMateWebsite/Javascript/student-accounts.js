@@ -20,6 +20,24 @@ document.getElementById("CreateData").addEventListener("click", () => {
     document.getElementById("student-form").querySelector("section").children[2].querySelector("input").disabled = false;
 });
 
+document.getElementById("ArchiveButton").addEventListener("click", async () => {
+    let result = await ShowPopup('Are you sure you want to archive all students?', PopupType.Prompt);
+    if (result) {
+        const students = table.querySelectorAll("tbody > tr");
+        const updatePromises = [];
+
+        students.forEach(async student => {
+            const id = student.querySelector("input").value;
+            const updatePromise = set(ref(Database, "users/" + id + "/Status"), "archived");
+            updatePromises.push(updatePromise);
+        });
+        await Promise.all(updatePromises);
+
+        document.getElementById("table-body").innerHTML = "";
+        await StudentAccount();
+    }
+});
+
 let isUpdating = false;
 let hiddenKey = null;
 
@@ -32,10 +50,11 @@ document.getElementById("student-form").addEventListener("submit", async (e) => 
     const firstName = GetElementValue("first-name") ?? "";
     const lastName = GetElementValue("last-name") ?? "";
     const birthday = GetElementValue("birthday") ?? "";
+    const email = GetElementValue("email") ?? "";
     const contact = GetElementValue("contact") ?? "";
     const gender = (genderElement === null) ? "None" : genderElement.Value;
     const teacher = parsedData.uid ?? "None"
-    if (IsNullOrEmpty(studentNumber) || IsNullOrEmpty(firstName) || IsNullOrEmpty(lastName) || IsNullOrEmpty(birthday) || IsNullOrEmpty(contact) || gender == "None" || teacher == "None") {
+    if (IsNullOrEmpty(studentNumber) || IsNullOrEmpty(firstName) || IsNullOrEmpty(lastName) || IsNullOrEmpty(birthday) || IsNullOrEmpty(contact) || gender == "None" || teacher == "None" || IsNullOrEmpty(email)) {
         ShowNotification("Please fill up all the required data", Colors.Red);
         return;
     }
@@ -46,6 +65,7 @@ document.getElementById("student-form").addEventListener("submit", async (e) => 
         LastName: lastName,
         Gender: gender,
         Contact: contact,
+        Email: email,
         Teacher: teacher,
         Birthday: birthday,
         Username: studentNumber,
@@ -82,7 +102,7 @@ function ExcelImportStudent(event) {
         const workbook = XLSX.read(data, { type: 'array' });
         const worksheet = workbook.Sheets[workbook.SheetNames[0]];
         const jsonData = XLSX.utils.sheet_to_json(worksheet);
-        var result = await ShowPopup('Are you sure you want import ' + file.name + '?', PopupType.Prompt);
+        let result = await ShowPopup('Are you sure you want import ' + file.name + '?', PopupType.Prompt);
         if (result) {
             const teacher = JSON.parse(localStorage.getItem('userData')).uid ?? "None";
             ShowLoading();
@@ -95,6 +115,7 @@ function ExcelImportStudent(event) {
                     'LastName': values["Last Name"],
                     'Gender': values["Sex"],
                     'Contact': values["Contact Number"],
+                    'Email': values["Guardian Email"],
                     'Teacher': teacher,
                     'Birthday': Birthday.getFullYear() + "-" + ('0' + (Birthday.getMonth() + 1)).slice(-2) + "-" + ('0' + Birthday.getDate()).slice(-2),
                     'Username': values["Student Number"],
@@ -138,7 +159,8 @@ table.addEventListener("click", async (event) => {
                 } else if (data.Gender === "Female") {
                     sexElement.SelectedItem = sexElement.Items[2];
                 }
-                document.getElementById("student-form").querySelector("section").children[7].querySelector("input").value = data.Contact;
+                document.getElementById("student-form").querySelector("section").children[7].querySelector("input").value = data.Email;
+                document.getElementById("student-form").querySelector("section").children[8].querySelector("input").value = data.Contact;
             }).catch((error) => {
                 console.log(error);
             });

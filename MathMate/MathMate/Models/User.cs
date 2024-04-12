@@ -7,6 +7,16 @@ namespace MathMate.Models
     {
         public string Uid { get; set; }
 
+        private string email;
+        public string Email
+        {
+            get => email;
+            set
+            {
+                SetProperty(ref email, value);
+            }
+        }
+
         private string contact;
         public string Contact
         {
