@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.CommunityToolkit.ObjectModel;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 
 namespace MathMate.ViewModels
@@ -22,32 +23,38 @@ namespace MathMate.ViewModels
             LoadedCommand = new AsyncCommand(LoadedExecute);
             BackCommand = new AsyncCommand(BackExecute);
             RefreshCommand = new AsyncCommand(RefreshExecute);
-            TakeQuizCommand = new Command(TakeQuizExecute);
+            TakeLessonCommand = new Command(TakeLessonExecute);
+            RedirectCommand = new Command(RedirectExecute);
         }
-
-
 
         public ObservableCollection<Lesson> LessonList { get; set; } = new ObservableCollection<Lesson>();
 
         public ICommand BackCommand { get; set; }
         public ICommand LoadedCommand { get; set; }
         public ICommand DeleteCommand { get; set; }
-        public ICommand TakeQuizCommand { get; set; }
+        public ICommand TakeLessonCommand { get; set; }
+        public ICommand RedirectCommand { get; set; }
 
-        private async void TakeQuizExecute(object parameter)
+        private async void RedirectExecute(object parameter)
         {
-            Quiz quiz = parameter as Quiz;
-            if (quiz != null)
+            Lesson lesson = parameter as Lesson;
+            await Launcher.OpenAsync(lesson.link);
+        }
+
+        private async void TakeLessonExecute(object parameter)
+        {
+            Lesson lesson = parameter as Lesson;
+            if (lesson != null)
             {
-                if (quiz.isCompleted)
+                if (lesson.isCompleted)
                 {
-                    await ToastManager.ShowToast("You cannot take completed quiz", Color.FromHex("#FF605C"));
+                    await ToastManager.ShowToast("You cannot take completed lesson", Color.FromHex("#FF605C"));
                 }
                 else
                 {
-                    await Application.Current.MainPage.Navigation.PushModalAsync(new TakeFlashCard()
+                    await Application.Current.MainPage.Navigation.PushModalAsync(new TakeLesson()
                     {
-                        BindingContext = new TakeFlashCardViewModel(quiz)
+                        BindingContext = new TakeLessonViewModel(lesson)
                     });
                 }
             }
@@ -63,14 +70,14 @@ namespace MathMate.ViewModels
             try
             {
                 LessonList.Clear();
-
                 var result = await Database.FirebaseClient.Child($"teachers/{UserManager.User.Teacher}/Lesson").OnceAsync<Lesson>();
+
                 foreach (var item in result.Reverse())
                 {
-                    var finishedQuiz = await Database.FirebaseClient.Child($"users/{UserManager.User.Uid}/Lesson").OnceAsync<Lesson>();
-                    if (finishedQuiz != null)
+                    var finishedLesson = await Database.FirebaseClient.Child($"users/{UserManager.User.Uid}/Lesson").OnceAsync<Lesson>();
+                    if (finishedLesson != null)
                     {
-                        foreach (var quiz in finishedQuiz)
+                        foreach (var quiz in finishedLesson)
                         {
                             if (item.Key == quiz.Key)
                             {
@@ -88,6 +95,8 @@ namespace MathMate.ViewModels
                         item.Object.status = "Incomplete";
                         item.Object.statusColor = "#ff2a04";
                     }
+                    item.Object.isAvailable = item.Object.schedule < DateTime.Now ? true : false;
+                    item.Object.isThereLink = item.Object.link != null ? true : false;
                     item.Object.Key = item.Key;
                     LessonList.Add(item.Object);
                 }

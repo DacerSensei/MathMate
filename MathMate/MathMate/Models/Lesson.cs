@@ -14,9 +14,16 @@ namespace MathMate.Models
         public string title { get; set; }
         public string description { get; set; }
         public string created { get; set; }
+        public Uri link { get; set; }
         public string status { get; set; }
         public string statusColor { get; set; }
+        public DateTime schedule { get; set; }
+        public string videoPath { get; set; }
+        public string videoName { get; set; }
+        public Dictionary<string, Assessment> Assessment { get; set; }
         public bool isCompleted { get; set; } = false;
+        public bool isThereLink { get; set; } = false;
+        public bool isAvailable { get; set; } = false;
 
         public FormattedString DescriptionFormatted
         {

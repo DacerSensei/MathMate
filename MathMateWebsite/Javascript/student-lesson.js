@@ -78,19 +78,25 @@ document.getElementById("lesson-form").addEventListener("submit", async (e) => {
     } else if (schedule == ScheduleEnums.SCHEDULED) {
         lessonData["schedule"] = new Date(GetElementValue("lesson-release")).toLocaleString('en-US', { timeZone: "Asia/Manila" });
     }
+
+    const problems = document.querySelectorAll("#pre-post-container > .pre-post-problem");
+    problems.forEach(problem => {
+        const problemTitle = problem.querySelector("p").textContent;
+        const questionAndSolution = problem.querySelectorAll("input");
+
+        lessonData.assessment[problemTitle] = {
+            question: questionAndSolution[0].value,
+            answer: questionAndSolution[1].value
+        }
+    });
+
     ShowLoading();
     if (lessonVideo != null) {
         const metadata = {
             contentType: 'video/mp4',
         };
-        const storagePath = storageRef(FirebaseStorage, "teachers/" + parsedData.uid + '/Lesson' + lessonVideo.name);
-        const reader = new FileReader();
-        let file;
-        reader.onload = function (event) {
-            file = new Uint8Array(event.target.result);
-        };
-        reader.readAsArrayBuffer(lessonVideo);
-        const uploadTask = uploadBytesResumable(storagePath, file, metadata);
+        const storagePath = storageRef(FirebaseStorage, "teachers/" + parsedData.uid + '/Lesson/' + lessonVideo.name);
+        const uploadTask = uploadBytesResumable(storagePath, lessonVideo, metadata);
         uploadTask.on('state_changed',
             (snapshot) => {
                 const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
@@ -109,27 +115,16 @@ document.getElementById("lesson-form").addEventListener("submit", async (e) => {
             async () => {
                 lessonData["videoPath"] = await getDownloadURL(uploadTask.snapshot.ref);
                 lessonData["videoName"] = lessonVideo.name;
+
+                await push(databaseRef(Database, "teachers/" + parsedData.uid + '/Lesson/'), lessonData);
+                document.getElementById("lesson-form").reset();
+                document.querySelector('.modal-close').click();
+                ShowPopup("You just created a new lesson");
+                document.getElementById("table-body").innerHTML = "";
+                await StudentLesson();
             }
         );
     }
-
-    const problems = document.querySelectorAll("#pre-post-container > .pre-post-problem");
-    problems.forEach(problem => {
-        const problemTitle = problem.querySelector("p").textContent;
-        const questionAndSolution = problem.querySelectorAll("input");
-
-        lessonData.assessment[problemTitle] = {
-            question: questionAndSolution[0].value,
-            answer: questionAndSolution[1].value
-        }
-    });
-
-    await push(databaseRef(Database, "teachers/" + parsedData.uid + '/Lesson/'), lessonData);
-    document.getElementById("lesson-form").reset();
-    document.querySelector('.modal-close').click();
-    ShowPopup("You just created a new lesson");
-    document.getElementById("table-body").innerHTML = "";
-    await StudentLesson();
     HideLoading();
 });
 

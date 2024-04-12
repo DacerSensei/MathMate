@@ -48,7 +48,7 @@
                     </CollectionView.Header>
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
-                            <StackLayout Padding="5">
+                            <StackLayout Padding="5" IsVisible="{Binding isAvailable}">
                                 <Frame Margin="10" Padding="0" CornerRadius="6" xct:ShadowEffect.Color="Black" xct:ShadowEffect.Radius="6">
                                     <Frame.Background>
                                         <LinearGradientBrush  StartPoint="0,.5" EndPoint="1,.5">
@@ -56,12 +56,36 @@
                                             <GradientStop Color="White" Offset="1.0"/>
                                         </LinearGradientBrush>
                                     </Frame.Background>
-                                    <Grid Margin="20" RowDefinitions="Auto,Auto,*" RowSpacing="0">
-                                        <Label Text="{Binding title}" FontSize="16" FontFamily="PoppinsBold" TextColor="Black"/>
-                                        <!--<Label Grid.Column="1" Text="{Binding status}" FontSize="16" FontFamily="PoppinsBold" TextColor="{Binding statusColor}"/>-->
-                                        <Label Grid.Row="1" Text="{Binding created}" FontSize="14" FontFamily="PoppinsRegular" TextColor="#7c7c7c" Margin="0,0,0,10"/>
-                                        <Label Grid.Row="2" FormattedText="{Binding DescriptionFormatted}" FontSize="16" FontFamily="PoppinsRegular" TextColor="Black"/>
-                                    </Grid>
+                                    <xct:Expander>
+                                        <xct:Expander.Header>
+                                            <Grid Margin="20" RowDefinitions="Auto,Auto,*" ColumnDefinitions="*,Auto" RowSpacing="0">
+                                                <Label Text="{Binding title}" FontSize="16" FontFamily="PoppinsBold" TextColor="Black"/>
+                                                <Label Grid.Column="1" Text="{Binding status}" FontSize="16" FontFamily="PoppinsBold" TextColor="{Binding statusColor}"/>
+                                                <Label Grid.Row="1" Text="{Binding created}" FontSize="14" FontFamily="PoppinsRegular" TextColor="#7c7c7c" Margin="0,0,0,10"/>
+                                                <Label Grid.Row="2" Grid.ColumnSpan="2" FormattedText="{Binding DescriptionFormatted}" FontSize="16" FontFamily="PoppinsRegular" TextColor="Black"/>
+                                            </Grid>
+                                        </xct:Expander.Header>
+                                        <Grid Margin="20" RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="*,Auto" RowSpacing="0">
+                                            <Frame Grid.ColumnSpan="2" BackgroundColor="LightGray" CornerRadius="4" Padding="0,12" Margin="0,10" IsVisible="{Binding isThereLink}">
+                                                <Frame.GestureRecognizers>
+                                                    <TapGestureRecognizer Command="{Binding Source={x:Reference MyList}, Path=BindingContext.RedirectCommand}" CommandParameter="{Binding .}"/>
+                                                </Frame.GestureRecognizers>
+                                                <StackLayout Orientation="Horizontal" HorizontalOptions="StartAndExpand" Margin="10,0">
+                                                    <Image Source="Link.png" WidthRequest="25" HeightRequest="25" />
+                                                    <Label Text="{Binding link}" TextColor="Black" VerticalTextAlignment="Center"/>
+                                                </StackLayout>
+                                            </Frame>
+                                            <Frame Grid.Row="2" Grid.Column="1" BackgroundColor="#004eb3" CornerRadius="25" Padding="12" VerticalOptions="EndAndExpand">
+                                                <Frame.GestureRecognizers>
+                                                    <TapGestureRecognizer Command="{Binding Source={x:Reference MyList}, Path=BindingContext.TakeLessonCommand}" CommandParameter="{Binding .}" />
+                                                </Frame.GestureRecognizers>
+                                                <StackLayout Orientation="Horizontal" HorizontalOptions="Center" Margin="40,0">
+                                                    <Image Source="TakeQuiz.png" WidthRequest="25" HeightRequest="25" />
+                                                    <Label Text="Take Lesson" TextColor="White" VerticalTextAlignment="Center"/>
+                                                </StackLayout>
+                                            </Frame>
+                                        </Grid>
+                                    </xct:Expander>
                                 </Frame>
                             </StackLayout>
                         </DataTemplate>

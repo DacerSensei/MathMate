@@ -1,0 +1,148 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MathMate.Views.TakeLesson"
+             Background="White"
+             xmlns:xct="http://xamarin.com/schemas/2020/toolkit" xmlns:video="clr-namespace:Xam.Forms.VideoPlayer;assembly=Xam.Forms.VideoPlayer"
+             NavigationPage.HasNavigationBar="False">
+    <ContentPage.Content>
+        <xct:TabView IsSwipeEnabled="False" IsTabStripVisible="False" SelectedIndex="{Binding SelectedTab}">
+            <xct:TabViewItem>
+                <xct:TabViewItem.Content>
+                    <Grid RowDefinitions="Auto,Auto,Auto">
+                        <StackLayout Padding="2">
+                            <Frame Margin="10,10,10,0" Padding="0" CornerRadius="6" HeightRequest="100">
+                                <Frame.Background>
+                                    <LinearGradientBrush  StartPoint="0,.5" EndPoint="1,.5">
+                                        <GradientStop Color="#85182a" Offset="0.0"/>
+                                        <GradientStop Color="#e01e37" Offset=".5"/>
+                                    </LinearGradientBrush>
+                                </Frame.Background>
+                                <Grid Margin="20" RowDefinitions="Auto,Auto,*" RowSpacing="0">
+                                    <Label Text="Assessment" FontSize="Title" FontFamily="PoppinsRegular" TextColor="White"/>
+                                    <Label Grid.Row="1" Text="Answer the following question" FontSize="Subtitle" FontFamily="PoppinsRegular" TextColor="White"/>
+                                </Grid>
+                            </Frame>
+                        </StackLayout>
+                        <CollectionView Grid.Row="1" ItemsSource="{Binding InitialAssessmentList}" x:Name="MyList">
+                            <CollectionView.EmptyView>
+                                <Label Text="No Questions" TextColor="Black" FontAttributes="Bold" FontSize="Subtitle" VerticalTextAlignment="Center" HorizontalTextAlignment="Center"/>
+                            </CollectionView.EmptyView>
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate>
+                                    <StackLayout Padding="5">
+                                        <Frame Margin="10,10,10,0" Padding="0" CornerRadius="6" xct:ShadowEffect.Color="Black" xct:ShadowEffect.Radius="6">
+                                            <StackLayout Margin="20">
+                                                <Label Text="{Binding question}" TextColor="Black" FontSize="20" FontFamily="PoppinsRegular" HorizontalTextAlignment="Center"/>
+                                                <Frame Padding="20,0" BackgroundColor="#f6f7f9" CornerRadius="10" Margin="5,20,5,5">
+                                                    <Entry FontFamily="PoppinsRegular" Text="{Binding UserAnswer}" Placeholder="Enter your answer" TextColor="Black" PlaceholderColor="#999"/>
+                                                </Frame>
+                                            </StackLayout>
+                                        </Frame>
+                                    </StackLayout>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                            <CollectionView.Footer>
+                                <StackLayout HorizontalOptions="Center" Margin="30">
+                                    <Frame CornerRadius="25" BackgroundColor="#85182a" WidthRequest="10" HeightRequest="30" Padding="20,14" Margin="20,10" xct:TouchEffect.NativeAnimation="True">
+                                        <Frame.GestureRecognizers>
+                                            <TapGestureRecognizer Command="{Binding Source={x:Reference MyList}, Path=BindingContext.InitialAssessmentCommand}"/>
+                                        </Frame.GestureRecognizers>
+                                        <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
+                                            <Image Source="Submit.png" WidthRequest="25" HeightRequest="25" Margin="-10,0,0,0"/>
+                                            <Label Text="Submit" TextColor="#FFF" VerticalTextAlignment="Center"/>
+                                        </StackLayout>
+                                    </Frame>
+                                </StackLayout>
+                            </CollectionView.Footer>
+                        </CollectionView>
+                    </Grid>
+                </xct:TabViewItem.Content>
+            </xct:TabViewItem>
+            <xct:TabViewItem>
+                <xct:TabViewItem.Content>
+                    <Grid RowDefinitions="Auto,Auto">
+                        <StackLayout Padding="2">
+                            <Frame Margin="10,10,10,0" Padding="0" CornerRadius="6" HeightRequest="100">
+                                <Frame.Background>
+                                    <LinearGradientBrush  StartPoint="0,.5" EndPoint="1,.5">
+                                        <GradientStop Color="#85182a" Offset="0.0"/>
+                                        <GradientStop Color="#e01e37" Offset=".5"/>
+                                    </LinearGradientBrush>
+                                </Frame.Background>
+                                <Grid Margin="20" RowDefinitions="Auto,Auto,*" RowSpacing="0">
+                                    <Label Text="Lectures" FontSize="Title" FontFamily="PoppinsRegular" TextColor="White"/>
+                                    <Label Grid.Row="1" Text="Watch lecture below" FontSize="Subtitle" FontFamily="PoppinsRegular" TextColor="White"/>
+                                </Grid>
+                            </Frame>
+                        </StackLayout>
+                        <xct:MediaElement Grid.Row="1" Source="{Binding VideoPath}" Margin="0,30,0,0" HeightRequest="300" ShowsPlaybackControls="True" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Aspect="AspectFill"/>
+                        <StackLayout Grid.Row="2" HorizontalOptions="CenterAndExpand" Margin="30">
+                            <Frame CornerRadius="25" BackgroundColor="#85182a" WidthRequest="200" HeightRequest="30" Padding="20,14" xct:TouchEffect.NativeAnimation="True">
+                                <Frame.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding NextCommand}"/>
+                                </Frame.GestureRecognizers>
+                                <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
+                                    <Image Source="Submit.png" WidthRequest="25" HeightRequest="25" Margin="-10,0,0,0"/>
+                                    <Label Text="Take Final Assessment" TextColor="#FFF" VerticalTextAlignment="Center"/>
+                                </StackLayout>
+                            </Frame>
+                        </StackLayout>
+                    </Grid>
+                </xct:TabViewItem.Content>
+            </xct:TabViewItem>
+            <xct:TabViewItem>
+                <xct:TabViewItem.Content>
+                    <Grid RowDefinitions="Auto,Auto,Auto">
+                        <StackLayout Padding="2">
+                            <Frame Margin="10,10,10,0" Padding="0" CornerRadius="6" HeightRequest="100">
+                                <Frame.Background>
+                                    <LinearGradientBrush  StartPoint="0,.5" EndPoint="1,.5">
+                                        <GradientStop Color="#85182a" Offset="0.0"/>
+                                        <GradientStop Color="#e01e37" Offset=".5"/>
+                                    </LinearGradientBrush>
+                                </Frame.Background>
+                                <Grid Margin="20" RowDefinitions="Auto,Auto,*" RowSpacing="0">
+                                    <Label Text="Final Assessment" FontSize="Title" FontFamily="PoppinsRegular" TextColor="White"/>
+                                    <Label Grid.Row="1" Text="Answer the following question" FontSize="Subtitle" FontFamily="PoppinsRegular" TextColor="White"/>
+                                </Grid>
+                            </Frame>
+                        </StackLayout>
+                        <CollectionView Grid.Row="1" ItemsSource="{Binding FinalAssessmentList}" x:Name="MyFinalList">
+                            <CollectionView.EmptyView>
+                                <Label Text="No Questions" TextColor="Black" FontAttributes="Bold" FontSize="Subtitle" VerticalTextAlignment="Center" HorizontalTextAlignment="Center"/>
+                            </CollectionView.EmptyView>
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate>
+                                    <StackLayout Padding="5">
+                                        <Frame Margin="10,10,10,0" Padding="0" CornerRadius="6" xct:ShadowEffect.Color="Black" xct:ShadowEffect.Radius="6">
+                                            <StackLayout Margin="20">
+                                                <Label Text="{Binding question}" TextColor="Black" FontSize="20" FontFamily="PoppinsRegular" HorizontalTextAlignment="Center"/>
+                                                <Frame Padding="20,0" BackgroundColor="#f6f7f9" CornerRadius="10" Margin="5,20,5,5">
+                                                    <Entry FontFamily="PoppinsRegular" Text="{Binding UserAnswer}" Placeholder="Enter your answer" TextColor="Black" PlaceholderColor="#999"/>
+                                                </Frame>
+                                            </StackLayout>
+                                        </Frame>
+                                    </StackLayout>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                            <CollectionView.Footer>
+                                <StackLayout HorizontalOptions="Center" Margin="30">
+                                    <Frame CornerRadius="25" BackgroundColor="#85182a" WidthRequest="10" HeightRequest="30" Padding="20,14" Margin="20,10" xct:TouchEffect.NativeAnimation="True">
+                                        <Frame.GestureRecognizers>
+                                            <TapGestureRecognizer Command="{Binding Source={x:Reference MyFinalList}, Path=BindingContext.FinalAssessmentCommand}"/>
+                                        </Frame.GestureRecognizers>
+                                        <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
+                                            <Image Source="Submit.png" WidthRequest="25" HeightRequest="25" Margin="-10,0,0,0"/>
+                                            <Label Text="Finish Lesson" TextColor="#FFF" VerticalTextAlignment="Center"/>
+                                        </StackLayout>
+                                    </Frame>
+                                </StackLayout>
+                            </CollectionView.Footer>
+                        </CollectionView>
+                    </Grid>
+                </xct:TabViewItem.Content>
+            </xct:TabViewItem>
+        </xct:TabView>
+    </ContentPage.Content>
+</ContentPage>

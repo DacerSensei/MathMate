@@ -7,6 +7,7 @@ using Android.OS;
 using Android.Speech;
 using MathMate.Droid.Services;
 using Android.Content;
+using Xamarin.Forms;
 
 namespace MathMate.Droid
 {
@@ -17,6 +18,8 @@ namespace MathMate.Droid
         {
             base.OnCreate(savedInstanceState);
 
+            Xam.Forms.VideoPlayer.Android.VideoPlayerRenderer.Init();
+            Device.SetFlags(new string[] { "MediaElement_Experimental" });
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
             LoadApplication(new App());

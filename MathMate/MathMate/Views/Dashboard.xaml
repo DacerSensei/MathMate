@@ -8,6 +8,7 @@
              xmlns:lottie="clr-namespace:Lottie.Forms;assembly=Lottie.Forms" 
              xmlns:UserManager="clr-namespace:MathMate.Services" 
              xmlns:ViewModel="clr-namespace:MathMate.ViewModels"
+             xmlns:o="clr-namespace:Octane.Xamarin.Forms.VideoPlayer;assembly=Octane.Xamarin.Forms.VideoPlayer"
              NavigationPage.HasNavigationBar="False">
     <ContentPage.BindingContext>
         <ViewModel:DashboardViewModel />
