@@ -1,6 +1,7 @@
 ﻿using MathMate.Config;
 using MathMate.Models;
 using MathMate.Services;
+using MathMate.Views;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -39,20 +40,23 @@ namespace MathMate.ViewModels
 
         private void InitialAssessmentExecute()
         {
+            TapButton.TapSound();
             SelectedTab = 1;
         }
 
         private void NextExecute()
         {
+            TapButton.TapSound();
             SelectedTab++;
         }
 
         private async Task FinalAssessmentExecute()
         {
+            TapButton.TapSound();
             int InitialScore = 0;
             int FinalScore = 0;
 
-            for(int i = 0; i < InitialAssessmentList.Count; i++)
+            for (int i = 0; i < InitialAssessmentList.Count; i++)
             {
                 if (InitialAssessmentList[i].UserAnswer != null && InitialAssessmentList[i].answer.ToLower() == InitialAssessmentList[i].UserAnswer.ToLower())
                 {
@@ -70,11 +74,15 @@ namespace MathMate.ViewModels
 
             try
             {
-                await Database.FirebaseClient.Child($"users/{UserManager.User.Uid}/Lesson/{Lesson.Key}").PutAsync(JsonConvert.SerializeObject(new { InitialScore = InitialScore, FinalScore = FinalScore, Date = DateTime.Now.ToShortDateString(), Total = InitialAssessmentList.Count, Title = "Assessment", Description = Lesson.description }));
-                await Application.Current.MainPage.DisplayAlert("Total score", $"Your total score in initial assessment is {InitialScore} out of {InitialAssessmentList.Count}\nYour total score in final assessment is {FinalScore} out of {FinalAssessmentList.Count}", "Ok");
+                var dateNow = DateTime.Now;
+                await Database.FirebaseClient.Child($"users/{UserManager.User.Uid}/Lesson/{Lesson.Key}").PutAsync(JsonConvert.SerializeObject(new { InitialScore = InitialScore, FinalScore = FinalScore, Date = dateNow.ToShortDateString(), Total = InitialAssessmentList.Count, Title = "Assessment", Description = Lesson.description }));
                 await Application.Current.MainPage.Navigation.PopModalAsync();
-            }catch(Exception)
+                await Application.Current.MainPage.Navigation.PushModalAsync(new LessonScore() { BindingContext = new LessonScoreViewModel(InitialScore, FinalScore, InitialAssessmentList.Count, dateNow) });
+
+            }
+            catch (Exception ex)
             {
+                Debug.WriteLine(ex.Message);
                 await Application.Current.MainPage.DisplayAlert("Error:", "Something Went Wrong", "Ok");
             }
         }

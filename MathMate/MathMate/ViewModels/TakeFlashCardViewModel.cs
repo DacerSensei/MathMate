@@ -2,10 +2,12 @@
 using MathMate.Config;
 using MathMate.Models;
 using MathMate.Services;
+using MathMate.Views;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Data;
 using System.Diagnostics;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
@@ -23,7 +25,9 @@ namespace MathMate.ViewModels
         public TakeFlashCardViewModel(Quiz quiz)
         {
             CurrentQuiz = quiz;
-            FlashCards = new ObservableCollection<FlashCard>(quiz.Flashcards.Values.ToList());
+            var quizzes = quiz.Flashcards.Values.ToList();
+            quizzes.Shuffle();
+            FlashCards = new ObservableCollection<FlashCard>(quizzes);
             FlashCards.FirstOrDefault().IsCurrentQuestion = true;
             AnswerMicCommand = new Command(AnswerMicExecute);
             AnswerTextCommand = new Command(AnswerTextExecute);
@@ -80,10 +84,10 @@ namespace MathMate.ViewModels
                             }
                             else
                             {
-                                Debug.WriteLine("Your total score is: " + Score);
-                                await Database.FirebaseClient.Child($"users/{UserManager.User.Uid}/Quiz/{CurrentQuiz.Key}").PutAsync(JsonConvert.SerializeObject(new { Score = Score, Date = DateTime.Now.ToShortDateString(), Total = FlashCards.Count, Title = "Flashcard", Description = CurrentQuiz.Description }));
-                                await Application.Current.MainPage.DisplayAlert("Total score", $"Your total score is {Score} out of {FlashCards.Count}", "Ok");
+                                var dateNow = DateTime.Now;
+                                await Database.FirebaseClient.Child($"users/{UserManager.User.Uid}/Quiz/{CurrentQuiz.Key}").PutAsync(JsonConvert.SerializeObject(new { Score = Score, Date = dateNow.ToShortDateString(), Total = FlashCards.Count, Title = "Flashcard", Description = CurrentQuiz.Description }));
                                 await Application.Current.MainPage.Navigation.PopModalAsync();
+                                await Application.Current.MainPage.Navigation.PushModalAsync(new FlashcardScore() { BindingContext = new FlashcardScoreViewModel(Score, FlashCards.Count, dateNow) });
                             }
                         }
                         else
@@ -103,10 +107,10 @@ namespace MathMate.ViewModels
                                 }
                                 else
                                 {
-                                    Debug.WriteLine("Your total score is: " + Score);
-                                    await Database.FirebaseClient.Child($"users/{UserManager.User.Uid}/Quiz/{CurrentQuiz.Key}").PutAsync(JsonConvert.SerializeObject(new { Score = Score, Date = DateTime.Now.ToShortDateString(), Total = FlashCards.Count, Title = "Flashcard", Description = CurrentQuiz.Description }));
-                                    await Application.Current.MainPage.DisplayAlert("Total score", $"Your total score is {Score} out of {FlashCards.Count}", "Ok");
+                                    var dateNow = DateTime.Now;
+                                    await Database.FirebaseClient.Child($"users/{UserManager.User.Uid}/Quiz/{CurrentQuiz.Key}").PutAsync(JsonConvert.SerializeObject(new { Score = Score, Date = dateNow.ToShortDateString(), Total = FlashCards.Count, Title = "Flashcard", Description = CurrentQuiz.Description }));
                                     await Application.Current.MainPage.Navigation.PopModalAsync();
+                                    await Application.Current.MainPage.Navigation.PushModalAsync(new FlashcardScore() { BindingContext = new FlashcardScoreViewModel(Score, FlashCards.Count, dateNow) });
                                 }
                             }
                             else
@@ -123,6 +127,7 @@ namespace MathMate.ViewModels
 
         private async void AnswerTextExecute(object parameter)
         {
+            TapButton.TapSound();
             FlashCard flashCard = parameter as FlashCard;
             if (flashCard != null)
             {
@@ -152,9 +157,10 @@ namespace MathMate.ViewModels
                             }
                             else
                             {
-                                await Database.FirebaseClient.Child($"users/{UserManager.User.Uid}/Quiz/{CurrentQuiz.Key}").PutAsync(JsonConvert.SerializeObject(new { Score = Score, Date = DateTime.Now.ToShortDateString(), Total = FlashCards.Count, Title = "Flashcard", Description = CurrentQuiz.Description }));
-                                await Application.Current.MainPage.DisplayAlert("Total score", $"Your total score is {Score} out of {FlashCards.Count}", "Ok");
+                                var dateNow = DateTime.Now;
+                                await Database.FirebaseClient.Child($"users/{UserManager.User.Uid}/Quiz/{CurrentQuiz.Key}").PutAsync(JsonConvert.SerializeObject(new { Score = Score, Date = dateNow.ToShortDateString(), Total = FlashCards.Count, Title = "Flashcard", Description = CurrentQuiz.Description }));
                                 await Application.Current.MainPage.Navigation.PopModalAsync();
+                                await Application.Current.MainPage.Navigation.PushModalAsync(new FlashcardScore() { BindingContext = new FlashcardScoreViewModel(Score, FlashCards.Count, dateNow) });
                             }
                             TextAnswer = string.Empty;
                         }

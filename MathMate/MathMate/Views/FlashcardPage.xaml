@@ -81,7 +81,7 @@
                                                     </FormattedString>
                                                 </Label.FormattedText>
                                             </Label>
-                                            <Frame Grid.Row="2" Grid.Column="1" BackgroundColor="#4361ee" CornerRadius="25" Padding="12" VerticalOptions="EndAndExpand">
+                                            <Frame Grid.Row="2" Grid.Column="1" BackgroundColor="#4361ee" CornerRadius="25" Padding="12" VerticalOptions="EndAndExpand" xct:TouchEffect.NativeAnimation="True">
                                                 <Frame.GestureRecognizers>
                                                     <TapGestureRecognizer Command="{Binding Source={x:Reference MyList}, Path=BindingContext.TakeQuizCommand}" CommandParameter="{Binding .}" />
                                                 </Frame.GestureRecognizers>

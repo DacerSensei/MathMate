@@ -35,6 +35,7 @@ namespace MathMate.ViewModels
 
         private async void TakeQuizExecute(object parameter)
         {
+            TapButton.TapSound();
             Quiz quiz = parameter as Quiz;
             if (quiz != null)
             {

@@ -30,6 +30,36 @@ function ShowNotification(text, backgroundColor, textColor = Colors.White) {
     }
 }
 
+function SetTab() {
+    // Get all the tab containers
+    var tabContainers = document.querySelectorAll('.tab-container');
+
+    // Loop through each tab container
+    for (let i = 0; i < tabContainers.length; i++) {
+        const container = tabContainers[i];
+        // Get all the tab buttons and content for this container
+        const tabButtons = container.querySelectorAll('.tab-button');
+        const tabPanels = container.querySelectorAll('.tab-panel');
+
+        // Add click event listener to each tab button
+        for (let j = 0; j < tabButtons.length; j++) {
+            const button = tabButtons[j];
+            button.addEventListener('click', () => {
+                // Remove active class from all tab buttons and panels
+                for (let k = 0; k < tabButtons.length; k++) {
+                    tabButtons[k].classList.remove('active');
+                    tabPanels[k].classList.remove('active');
+                }
+
+                // Add active class to clicked tab button and panel
+                const tab = button.dataset.tab;
+                document.getElementById(tab).classList.add('active');
+                button.classList.add('active');
+            });
+        }
+    }
+}
+
 function SetErrorFocus(object) {
     Element.prototype.documentOffsetTop = function () {
         return this.offsetTop + (this.offsetParent ? this.offsetParent.documentOffsetTop() : 0);

@@ -75,7 +75,7 @@
                                                     <Label Text="{Binding link}" TextColor="Black" VerticalTextAlignment="Center"/>
                                                 </StackLayout>
                                             </Frame>
-                                            <Frame Grid.Row="2" Grid.Column="1" BackgroundColor="#004eb3" CornerRadius="25" Padding="12" VerticalOptions="EndAndExpand">
+                                            <Frame Grid.Row="2" Grid.Column="1" BackgroundColor="#004eb3" CornerRadius="25" Padding="12" VerticalOptions="EndAndExpand"  xct:TouchEffect.NativeAnimation="True">
                                                 <Frame.GestureRecognizers>
                                                     <TapGestureRecognizer Command="{Binding Source={x:Reference MyList}, Path=BindingContext.TakeLessonCommand}" CommandParameter="{Binding .}" />
                                                 </Frame.GestureRecognizers>

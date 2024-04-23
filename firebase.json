@@ -1,0 +1,9 @@
+{
+  "hosting": {
+    "public": "MathMateWebsite",
+    "ignore": [
+      "firebase.json",
+      "**/.*"
+    ]
+  }
+}

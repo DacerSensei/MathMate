@@ -71,6 +71,90 @@ main>section>.table-section>table th {
     box-sizing: content-box;
 }
 
+/* /////////////////////////////////////////////////////////////// */
+
+
+.top-background {
+    position: absolute;
+    top: calc(2.5rem + 2px);
+    /* background-color: #001e36; */
+    height: 8rem;
+    width: calc(100% - 15rem);
+    z-index: -1;
+}
+
+.trapezoid-large {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 55%;
+    border-top: 8rem solid #01120C;
+    border-right: 80px solid transparent;
+}
+
+.trapezoid-small {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 60%;
+    /* Adjust the width as desired */
+    border-top: calc(8rem * .35) solid #FF8427;
+    border-left: 30px solid transparent;
+}
+
+#view-section {
+    padding: 0 1rem 2rem 2rem;
+    display: grid;
+    grid-template-columns: auto 1fr;
+}
+
+#overview-modal-content {
+    display: grid;
+    justify-items: center;
+    justify-content: center;
+    align-content: start;
+
+}
+
+.overview-picture {
+    width: 10rem;
+    height: 10rem;
+    border-radius: 50%;
+    overflow: hidden;
+    margin: 12px;
+    border: 8px solid white;
+}
+
+.overview-picture img {
+    width: 100%;
+}
+
+.overview-name>div {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: .6rem;
+    place-items: center;
+}
+
+#CompleteName {
+    grid-column: 1 / -1;
+}
+
+#StudentEmail {
+    grid-column: 1 / -1;
+}
+
+.overview-body {
+    background-color: white;
+    /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); */
+    border: 1px solid #eee;
+    grid-column: span 2;
+    grid-row: 1 / -1;
+    border-radius: 4px 4px 0 0;
+}
+
+/* /////////////////////////////////////////////////////////////// */
+
 #quiz-form section > .quiz-problem {
     width: 40rem;
     padding: 1rem;

@@ -1,4 +1,5 @@
-﻿using MathMate.Views;
+﻿using MathMate.Services;
+using MathMate.Views;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.CommunityToolkit.ObjectModel;
@@ -19,6 +20,7 @@ namespace MathMate.ViewModels
 
         private async Task ViewFlashCardExecute()
         {
+            TapButton.TapSound();
             await Application.Current.MainPage.Navigation.PushModalAsync(new FlashcardPage());
         }
 
@@ -26,6 +28,7 @@ namespace MathMate.ViewModels
 
         private async Task ViewLessonExecute()
         {
+            TapButton.TapSound();
             await Application.Current.MainPage.Navigation.PushModalAsync(new LessonPage());
         }
 
@@ -33,6 +36,7 @@ namespace MathMate.ViewModels
 
         private async Task ViewPerformanceExecute()
         {
+            TapButton.TapSound();
             await Application.Current.MainPage.Navigation.PushModalAsync(new PerformancePage());
         }
     }

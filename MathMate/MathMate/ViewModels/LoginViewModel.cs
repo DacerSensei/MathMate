@@ -34,7 +34,8 @@ namespace MathMate.ViewModels
 
         public ICommand LoginCommand { get; }
         private async Task LoginExecute()
-        {
+        { 
+            TapButton.TapSound();
             if (string.IsNullOrWhiteSpace(StudentNumber))
             {
                 await ToastManager.ShowToast("Email cannot be empty", Color.FromHex("#FF605C"));

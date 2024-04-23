@@ -271,7 +271,6 @@ async function TeacherDashboard() {
     const storedData = localStorage.getItem('userData');
     if (storedData) {
         const parsedData = JSON.parse(storedData);
-        console.log(parsedData);
         try {
             const usersSnapshot = await get(child(ref(Database), 'users'));
             if (usersSnapshot.exists()) {
@@ -310,6 +309,8 @@ async function TeacherDashboard() {
                 let totalStudentsAnswered = 0;
                 let totalQuizzesAnswered = 0;
 
+                const data = []; // fill the data for charts
+
                 const usersSnapshot = await get(child(ref(Database), 'users'));
 
                 if (usersSnapshot.exists()) {
@@ -321,10 +322,23 @@ async function TeacherDashboard() {
                                 totalStudents++;
                                 const studentAnsweredQuiz = student.Quiz;
                                 let answeredAllQuizzes = true;
-                                
+                                if (studentAnsweredQuiz) {
+                                    for (const [quizKey, quizValue] of Object.entries(studentAnsweredQuiz)) {
+                                        const answeredDate = quizValue.Date;
+                                        const existingDataIndex = data.findIndex(item => item.date === answeredDate);
+
+                                        if (existingDataIndex !== -1) {
+                                            data[existingDataIndex].count++;
+                                        } else {
+                                            data.push({ date: answeredDate, count: 1 });
+                                        }
+                                    }
+                                }
+
                                 for (const [quizKey] of Object.entries(quiz)) {
                                     if (studentAnsweredQuiz && studentAnsweredQuiz.hasOwnProperty(quizKey)) {
                                         totalQuizzesAnswered++;
+
                                     } else {
                                         answeredAllQuizzes = false;
                                         break;
@@ -333,18 +347,56 @@ async function TeacherDashboard() {
                                 if (answeredAllQuizzes) {
                                     totalStudentsAnswered++;
                                 }
+
+
                             }
                         });
                     }
                 }
-
-
-                const totalPercentage = (totalQuizzesAnswered / (totalStudents * totalQuizzes))  * 100;
-                console.log("Total Students:", totalStudents);
-                console.log("Total Quizzes:", totalQuizzes);
-                console.log("Total Students Answered in All Quizzes:", totalQuizzesAnswered);
-                console.log("Total Percentage:", totalPercentage);
+                const totalPercentage = (totalQuizzesAnswered / (totalStudents * totalQuizzes)) * 100;
                 SetContentById("TotalQuizAnswered", Math.round(totalPercentage) + "%");
+                data.sort((a, b) => new Date(a.date) - new Date(b.date));
+                let highestCount = 0;
+                data.forEach((item) => {
+                    if (item.count > highestCount) {
+                        highestCount = item.count;
+                    }
+                });
+                new Chart(document.getElementById('dashboard-chart').getContext("2d"),
+                    {
+                        type: 'line',
+                        data: {
+                            labels: data.map(row => row.date),
+                            datasets: [
+                                {
+                                    label: 'Student Answered',
+                                    data: data.map(row => row.count),
+                                    fill: false,
+                                    borderColor: 'rgb(209, 39, 44)',
+                                    backgroundColor: 'rgb(209, 39, 44)',
+                                    tension: 0.1
+                                }
+                            ]
+                        },
+                        options: {
+                            animations: {
+                                tension: {
+                                    duration: 1000,
+                                    easing: 'linear',
+                                    from: 1,
+                                    to: 0,
+                                    loop: true
+                                }
+                            },
+                            scales: {
+                                y: { // defining min and max so hiding the dataset does not change scale range
+                                    min: 0,
+                                    max: Math.ceil(highestCount / 10) * 10
+                                }
+                            }
+                        }
+                    }
+                );
             }
 
         } catch (error) {
@@ -504,6 +556,7 @@ async function TeacherAccount() {
 }
 
 async function StudentAccount() {
+
     try {
         const parsedData = JSON.parse(localStorage.getItem('userData'));
         await get(child(ref(Database), 'teachers')).then(async (teacherSnapshot) => {
@@ -559,7 +612,7 @@ async function StudentAccount() {
                                 const actionsCell = document.createElement("td");
                                 const viewButton = document.createElement("button");
                                 viewButton.classList.add('Button-Blue-Icon', 'modal-trigger');
-                                viewButton.title = "Edit";
+                                viewButton.title = "View";
                                 viewButton.setAttribute('data-target', 'View-Modal');
                                 viewButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="pointer-events: none;"><path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z" /></svg></svg>';
 
@@ -571,7 +624,6 @@ async function StudentAccount() {
                                     var closeBtn = modal.querySelector('.modal-close');
                                     closeBtn.addEventListener('click', function () {
                                         modal.style.display = 'none';
-                                        document.getElementById("student-view").reset();
                                     });
                                 });
 

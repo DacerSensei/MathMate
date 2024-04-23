@@ -1,0 +1,84 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MathMate.Views.LessonScore"
+             Background="White"
+             xmlns:xct="http://xamarin.com/schemas/2020/toolkit" 
+             xmlns:lottie="clr-namespace:Lottie.Forms;assembly=Lottie.Forms" 
+             xmlns:CPB="clr-namespace:Xamarin.Forms.Controls;assembly=CircularProgressBar"
+             NavigationPage.HasNavigationBar="False">
+    <ContentPage.Content>
+        <Grid RowDefinitions="Auto,*,Auto" ColumnDefinitions="*,*">
+            <StackLayout Grid.Row="1" Grid.ColumnSpan="2" VerticalOptions="Center">
+                <Label Text="Lesson Completed" TextColor="#32ac71" FontSize="Title" HorizontalTextAlignment="Center" FontAttributes="Bold" FontFamily="PoppinsRegular"/>
+                <Frame Margin="20" Padding="10">
+                    <StackLayout VerticalOptions="Center" HorizontalOptions="Center">
+                        <Label Text="Congratulations" TextColor="Black" FontSize="20" HorizontalTextAlignment="Center" FontAttributes="Bold" FontFamily="PoppinsBold"/>
+                        <StackLayout Orientation="Horizontal">
+                            <Label TextColor="Black" Text="Pre" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" FontSize="20" FontAttributes="Bold"/>
+                            <Label TextColor="Black" Text="Post" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" FontSize="20" FontAttributes="Bold"/>
+                        </StackLayout>
+                        <StackLayout Orientation="Horizontal">
+                            <Label TextColor="{Binding InitialScoreColor}" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" FontSize="25" FontAttributes="Bold">
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="{Binding InitialScore}"/>
+                                        <Span Text="/"/>
+                                        <Span Text="{Binding OverallScore}"/>
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                            <Label TextColor="{Binding FinalScoreColor}" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" FontSize="25" FontAttributes="Bold">
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="{Binding FinalScore}"/>
+                                        <Span Text="/"/>
+                                        <Span Text="{Binding OverallScore}"/>
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                        </StackLayout>
+                        <StackLayout Orientation="Horizontal">
+                            <Grid HorizontalOptions="CenterAndExpand" VerticalOptions="Center">
+                                <CPB:CircularProgressBar WidthRequest="150" HeightRequest="150" Easing="True" Progress="{Binding InitialScorePercent}" Stroke="20" Color="{Binding InitialScoreColor}"/>
+                                <Label TextColor="{Binding InitialScoreColor}" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" FontSize="30" FontAttributes="Bold">
+                                    <Label.FormattedText>
+                                        <FormattedString>
+                                            <Span Text="{Binding InitialScorePercent}"/>
+                                            <Span Text="%"/>
+                                        </FormattedString>
+                                    </Label.FormattedText>
+                                </Label>
+                            </Grid>
+                            <Grid HorizontalOptions="CenterAndExpand" VerticalOptions="Center">
+                                <CPB:CircularProgressBar WidthRequest="150" HeightRequest="150" Easing="True" Progress="{Binding FinalScorePercent}" Stroke="20" Color="{Binding FinalScoreColor}"/>
+                                <Label TextColor="{Binding FinalScoreColor}" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" FontSize="30" FontAttributes="Bold">
+                                    <Label.FormattedText>
+                                        <FormattedString>
+                                            <Span Text="{Binding FinalScorePercent}"/>
+                                            <Span Text="%"/>
+                                        </FormattedString>
+                                    </Label.FormattedText>
+                                </Label>
+                            </Grid>
+                        </StackLayout>
+                        <Label Text="Knowledge Check" TextColor="#e01e37" FontSize="Title" HorizontalTextAlignment="Center" FontAttributes="Bold" FontFamily="PoppinsRegular"/>
+                        <Label TextColor="Black" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" FontSize="17" FontAttributes="Bold">
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="{Binding DateFinish}"/>
+                                    <Span Text=" "/>
+                                    <Span Text="{Binding TimeFinish}"/>
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                    </StackLayout>
+                </Frame>
+            </StackLayout>
+            <lottie:AnimationView Grid.RowSpan="2" Grid.ColumnSpan="2" HeightRequest="175" WidthRequest="175" AnimationSource="AssetOrBundle" Animation="Confetti.json" RepeatMode="Restart" AutoPlay="True" />
+
+            <Button Grid.Row="2" Grid.ColumnSpan="2" Margin="40,20" Text="Okay" BackgroundColor="#004eb3" Command="{Binding BackCommand}" xct:TouchEffect.NativeAnimation="True"/>
+
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

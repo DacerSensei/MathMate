@@ -869,22 +869,22 @@ header #SearchButton>svg {
 
 /* File button */
 
-.Burger-File > input[type="file"] {
+.Burger-File>input[type="file"] {
     display: none;
 }
 
-.Burger-File > label {
+.Burger-File>label {
     align-self: center;
     margin-left: 1rem;
     cursor: pointer;
     width: 100%;
 }
 
-.Button-Purple > input[type="file"] {
+.Button-Purple>input[type="file"] {
     display: none;
 }
 
-.Button-Purple > label {
+.Button-Purple>label {
     cursor: pointer;
 }
 
@@ -1311,7 +1311,6 @@ header #SearchButton>svg {
     max-width: calc(100% - 4rem);
 }
 
-
 /* Notification */
 
 #Notification-Bar {
@@ -1378,6 +1377,14 @@ header #SearchButton>svg {
     height: min-content;
 }
 
+.width-fill-available {
+    width: -webkit-fill-available;
+}
+
+.height-fill-available {
+    height: -webkit-fill-available;
+}
+
 .display-inline {
     display: flex;
 }
@@ -1428,6 +1435,139 @@ header #SearchButton>svg {
 .horizontal-center-margin {
     margin: 0 auto;
 }
+
+/* Tab */
+
+.tab-container {
+    display: flex;
+    flex-direction: column;
+    max-width: 100%;
+    margin: 0 auto;
+    border-radius: 4px 4px 0 0;
+}
+
+.tab-header {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    border-radius: 4px 4px 0 0;
+    overflow: hidden;
+}
+
+.tab-button {
+    display: inline-block;
+    padding: 1rem 1rem;
+    border: none;
+    background-color: #01120C;
+    color: white;
+    font-size: .8rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+    font-family: 'Poppins';
+    box-sizing: border-box;
+    position: relative;
+}
+
+.tab-button::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 5px;
+    width: 100%;    
+    background-color: #ddd;
+    transition: .5s;
+}
+
+.tab-button::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    height: 5px;
+    width: 0%;
+    background-color: #FF8427;
+    transition: .5s;
+    z-index: 1;
+}
+
+.tab-button:hover::after {
+    width: 80%;
+    background-color: #FF8427;
+}
+
+.tab-button.active::after {
+    width: 100%;
+}
+
+.tab-content {
+    padding: 1rem;
+}
+
+.tab-panel {
+    display: none;
+}
+
+.tab-panel.active {
+    display: block;
+}
+
+.tab-panel > * {
+    display: grid;
+}
+
+/* End Tab */
+
+/* Expander */
+
+.expander {
+    width: 300px;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 2px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: max-height 0.3s ease-out;
+    overflow: hidden;
+}
+
+.expander .header {
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.expander .header .title {
+    font-size: 18px;
+    font-weight: bold;
+    width: 100%;
+}
+
+.expander .content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+    transition: margin-top 0.3s ease-out;
+}
+
+.expander.active .content {
+    margin-top: 10px;
+    max-height: 400px;
+    /* Change this value to expand more or less */
+}
+
+/* Arrow animation */
+.arrow {
+    transition: transform 0.3s ease-out;
+}
+
+.expander.active .arrow {
+    transform: rotate(180deg);
+}
+
+/* End Expander */
 
 
 /* Michael */

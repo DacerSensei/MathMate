@@ -68,6 +68,67 @@
             </div>
         </div>
     </div>
+    <div id="View-Modal" class="modal-container">
+        <div class="modal-content" style="width: -webkit-fill-available; height: -webkit-fill-available;">
+            <div class="modal-header">
+                <h4>View Student Account</h4>
+                <span class="modal-close">&times;</span>
+            </div>
+            <div class="modal-body" style="padding: 1rem; box-sizing: border-box;">
+                <section id="view-section">
+                    <div id="overview-modal-content">
+                        <div class="overview-picture">
+                            <div>
+                                <img id="ProfilePicture" src="Assets/sample.jpg" alt="">
+                            </div>
+                        </div>
+                        <div class="overview-name">
+                            <div>
+                                <h1 id="CompleteName"></h1>
+                                <span id="StudentID"></span>
+                                <span id="StudentStatus"></span>
+                                <span id="StudentGender"></span>
+                                <span id="StudentEmail"></span>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div id="overview-body">
+                        <div class="tab-container">
+                            <div class="tab-header">
+                                <button class="tab-button active" data-tab="Tab-1">Quizzes</button>
+                                <button class="tab-button" data-tab="Tab-2">Lessons</button>
+                            </div>
+                            <div class="tab-content">
+                                <div class="tab-panel active" id="Tab-1">
+
+                                </div>
+                                <div class="tab-panel" id="Tab-2">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <div id="charts-overview">
+                    <div class="tab-container">
+                        <div class="tab-header">
+                            <button class="tab-button active" data-tab="quiz-chart-container">Quizzes</button>
+                            <button class="tab-button" data-tab="lesson-chart-container">Lessons</button>
+                        </div>
+                        <div class="tab-content">
+                            <div class="tab-panel active" id="quiz-chart-container">
+                                <canvas id="quiz-chart"></canvas>
+                            </div>
+                            <div class="tab-panel" id="lesson-chart-container">
+                                <canvas id="lesson-chart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <main id="main">
         <section id="main-section">
             <div class="header-section">
@@ -113,6 +174,9 @@
         </section>
     </main>
     <script src="Javascript/Toolkit.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.0/chart.js"
+        integrity="sha512-ohOeYvGoLlCxYkfMoPBKJh/wp4Oe76rEJDWOmQq1LLrJD6yCBSPVmhhXuZYvuxdYR3PiozsUf+TZZ6yhVBGYAQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script type="module" src="Javascript/main.js"></script>
     <script type="module" src="Javascript/student-accounts.js"></script>
 

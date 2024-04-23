@@ -19,7 +19,7 @@
                                     </LinearGradientBrush>
                                 </Frame.Background>
                                 <Grid Margin="20" RowDefinitions="Auto,Auto,*" RowSpacing="0">
-                                    <Label Text="Assessment" FontSize="Title" FontFamily="PoppinsRegular" TextColor="White"/>
+                                    <Label Text="Knowledge Check" FontSize="Title" FontFamily="PoppinsRegular" TextColor="White"/>
                                     <Label Grid.Row="1" Text="Answer the following question" FontSize="Subtitle" FontFamily="PoppinsRegular" TextColor="White"/>
                                 </Grid>
                             </Frame>
@@ -103,7 +103,7 @@
                                     </LinearGradientBrush>
                                 </Frame.Background>
                                 <Grid Margin="20" RowDefinitions="Auto,Auto,*" RowSpacing="0">
-                                    <Label Text="Final Assessment" FontSize="Title" FontFamily="PoppinsRegular" TextColor="White"/>
+                                    <Label Text="Knowledge Check" FontSize="Title" FontFamily="PoppinsRegular" TextColor="White"/>
                                     <Label Grid.Row="1" Text="Answer the following question" FontSize="Subtitle" FontFamily="PoppinsRegular" TextColor="White"/>
                                 </Grid>
                             </Frame>
@@ -142,6 +142,9 @@
                         </CollectionView>
                     </Grid>
                 </xct:TabViewItem.Content>
+            </xct:TabViewItem>
+            <xct:TabViewItem>
+                
             </xct:TabViewItem>
         </xct:TabView>
     </ContentPage.Content>

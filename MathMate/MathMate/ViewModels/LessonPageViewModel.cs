@@ -43,6 +43,7 @@ namespace MathMate.ViewModels
 
         private async void TakeLessonExecute(object parameter)
         {
+            TapButton.TapSound();
             Lesson lesson = parameter as Lesson;
             if (lesson != null)
             {
