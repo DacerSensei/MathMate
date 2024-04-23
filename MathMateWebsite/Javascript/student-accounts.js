@@ -10,7 +10,11 @@ import {
 import { Database, GetElementValue, FirebaseConfig, StudentAccount, IsNullOrEmpty } from "./main.js";
 
 import * as XLSX from '/node_modules/xlsx/xlsx.mjs';
+// import { Email } from "./smtp.js";
 
+const smtpEmail = "ilijahisaacsantos@gmail.com";
+const smtpPassword = "916E88DB80EA4A28ADA1AFDB0260D73C593A";
+// const smtpToken = "7cf2d17b-4714-402f-965f-33676f792dca";
 
 const SecondaryApp = initializeApp(FirebaseConfig, "SecondaryApp");
 const SecondaryAuth = getAuth(SecondaryApp);
@@ -84,6 +88,7 @@ document.getElementById("ArchiveButton").addEventListener("click", async () => {
 
 let isUpdating = false;
 let hiddenKey = null;
+let currentStudent;
 
 document.getElementById("student-form").addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -176,18 +181,72 @@ function ExcelImportStudent(event) {
     reader.readAsArrayBuffer(file);
 }
 
+document.getElementById("ReportParentButton").addEventListener("click", () => {
+    if (currentStudent) {
+        let emailHTMLContent = `
+                <h4>Full Name: ${currentStudent.LastName + " " + currentStudent.FirstName}</h4>
+                <h1 style="text-align: center;">Quiz</h1>
+                <table border="1" style="width: 100%; border-collapse: collapse;">
+                    <tr>
+                        <th>Description</th>
+                        <th>Score</th>
+                        <th>Date</th>
+                    </tr>
+                `
+        if (currentStudent.Quiz) {
+            for (const [key, values] of Object.entries(currentStudent.Quiz)) {
+                emailHTMLContent += `
+                            <tr>
+                                <td>${values.Description}</td>
+                                <td>${values.Score}/${values.Total}</td>
+                                <td>${values.Date}</td>
+                            </tr>
+                        `
+            }
+        }
+        emailHTMLContent += "</table>";
+        emailHTMLContent += `
+                <h1 style="text-align: center;">Lessons</h1>
+                <table border="1" style="width: 100%; border-collapse: collapse;">
+                    <tr>
+                        <th>ID</th>
+                        <th>Pre Score</th>
+                        <th>Post Score</th>
+                        <th>Date</th>
+                    </tr>
+                `
+        if (currentStudent.Lesson) {
+            for (const [key, values] of Object.entries(currentStudent.Lesson)) {
+                emailHTMLContent += `
+                            <tr>
+                                <td>${key}</td>
+                                <td>${values.InitialScore}/${values.Total}</td>
+                                <td>${values.FinalScore}/${values.Total}</td>
+                                <td>${values.Date}</td>
+                            </tr>
+                        `
+            }
+        }
+        emailHTMLContent += "</table>";
+        console.log(emailHTMLContent);
+        SendEmail(currentStudent.Email, emailHTMLContent);
+    }
+});
+
 SetTab();
 let quizChart = new Chart(document.getElementById('quiz-chart').getContext("2d"));
 let lessonChart = new Chart(document.getElementById('lesson-chart').getContext("2d"));
 const table = document.getElementById("myTable");
 table.addEventListener("click", async (event) => {
     if (event.target && event.target.matches(".Button-Blue-Icon")) {
+
+
         document.getElementById("Tab-1").innerHTML = "";
         document.getElementById("Tab-2").innerHTML = "";
-        if(quizChart){
+        if (quizChart) {
             quizChart.destroy();
         }
-        if(lessonChart){
+        if (lessonChart) {
             lessonChart.destroy();
         }
 
@@ -198,6 +257,7 @@ table.addEventListener("click", async (event) => {
         try {
             await get(child(ref(Database), 'users/' + id)).then(async (studentSnapshot) => {
                 const data = studentSnapshot.val();
+                currentStudent = data;
 
                 document.getElementById("overview-modal-content").querySelector(".overview-name #StudentID").textContent = data.Username;
                 document.getElementById("overview-modal-content").querySelector(".overview-name #StudentID").classList.add("Status-Purple", "width-fill-available")
@@ -222,7 +282,6 @@ table.addEventListener("click", async (event) => {
 
                 let quizChartData = []
                 let lessonChartData = []
-
                 let tab1 = document.getElementById("Tab-1");
                 if (data.Quiz) {
                     for (const [key, values] of Object.entries(data.Quiz)) {
@@ -244,10 +303,10 @@ table.addEventListener("click", async (event) => {
                         lessonChartData.push({ date: values.Date, initial: preResult, final: postResult })
 
                         const htmlContent = `
-                    <p>Date: ${values.Date}</p>
-                    <p>Pre Score: ${values.InitialScore}/${values.Total}</p>
-                    <p>Post Score: ${values.FinalScore}/${values.Total}</p>
-                    `
+                            <p>Date: ${values.Date}</p>
+                            <p>Pre Score: ${values.InitialScore}/${values.Total}</p>
+                            <p>Post Score: ${values.FinalScore}/${values.Total}</p>
+                        `
                         createExpander(tab2, key, htmlContent);
                     }
                 }
@@ -388,6 +447,24 @@ table.addEventListener("click", async (event) => {
         }
     }
 });
+
+function SendEmail(toEmail, htmlContent) {
+    Email.send({
+        Host: "smtp.elasticemail.com",
+        Username: smtpEmail,
+        Password: smtpPassword,
+        // SecureToken: smtpToken,
+        To: toEmail,
+        From: smtpEmail,
+        Subject: "Performance Report",
+        Body: htmlContent,
+    }).then(message => {
+        console.log(message);
+        alert("mail sent successfully")
+    }).catch(exception => {
+        alert(exception);
+    });
+}
 
 // document.getElementById("grade-level").addEventListener("change", async () => {
 //     const gradeElement = document.getElementById("grade-level");

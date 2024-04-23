@@ -14,7 +14,7 @@ main>section>.header-section {
     color: white;
 }
 
-main>section>.header-section > div {
+main>section>.header-section>div {
     display: flex;
     align-items: center;
     gap: .4rem;
@@ -54,11 +54,11 @@ main>section>.table-section>table th {
     background-color: var(--color-purple);
 }
 
-#admin-form section, 
+#admin-form section,
 #teacher-form section,
 #student-form section,
 #quiz-form section,
-#lesson-form section  {
+#lesson-form section {
     width: 40rem;
     margin: 0 auto;
     background-color: white;
@@ -136,11 +136,9 @@ main>section>.table-section>table th {
     place-items: center;
 }
 
-#CompleteName {
-    grid-column: 1 / -1;
-}
-
-#StudentEmail {
+#CompleteName,
+#StudentEmail,
+#ReportParentButton {
     grid-column: 1 / -1;
 }
 
@@ -155,7 +153,7 @@ main>section>.table-section>table th {
 
 /* /////////////////////////////////////////////////////////////// */
 
-#quiz-form section > .quiz-problem {
+#quiz-form section>.quiz-problem {
     width: 40rem;
     padding: 1rem;
     background-color: #feaf39;
@@ -173,7 +171,7 @@ main>section>.table-section>table th {
     gap: 1rem;
 }
 
-#pre-post-container > .pre-post-problem {
+#pre-post-container>.pre-post-problem {
     width: 40rem;
     padding: 1rem;
     background-color: #feaf39;
@@ -185,12 +183,12 @@ main>section>.table-section>table th {
     box-sizing: border-box;
 }
 
-#lesson-form section > #release-scheduled > div {
+#lesson-form section>#release-scheduled>div {
     display: flex;
     gap: 1rem;
 }
 
-@media (max-width: 62.5rem){
+@media (max-width: 62.5rem) {
     main>section>.header-section {
         grid-template-columns: 1fr;
     }
