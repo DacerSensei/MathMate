@@ -84,6 +84,8 @@ namespace MathMate.ViewModels
 
                             if (SelectedTab + 1 < FlashCards.Count)
                             {
+                                FlashCards[CurrentItem - 2].IsCurrentQuestion = false;
+                                FlashCards[CurrentItem - 1].IsCurrentQuestion = true;
                                 SelectedTab++;
                             }
                             else
@@ -126,6 +128,8 @@ namespace MathMate.ViewModels
 
                                 if (SelectedTab + 1 < FlashCards.Count)
                                 {
+                                    FlashCards[CurrentItem - 2].IsCurrentQuestion = false;
+                                    FlashCards[CurrentItem - 1].IsCurrentQuestion = true;
                                     SelectedTab++;
                                 }
                                 else
@@ -184,11 +188,10 @@ namespace MathMate.ViewModels
                             Score++;
                         }
 
-                        FlashCards[CurrentItem - 2].IsCurrentQuestion = false;
-                        FlashCards[CurrentItem - 1].IsCurrentQuestion = true;
-
                         if (SelectedTab + 1 < FlashCards.Count)
                         {
+                            FlashCards[CurrentItem - 2].IsCurrentQuestion = false;
+                            FlashCards[CurrentItem - 1].IsCurrentQuestion = true;
                             SelectedTab++;
                         }
                         else
