@@ -198,3 +198,22 @@ main>section>.table-section>table th {
         width: 100%;
     }
 }
+
+/* //////////////////// */
+
+.hover-container {
+    display: none;
+    position: absolute;
+    white-space: normal;
+    max-width: 500px; /* Adjust width as needed */
+    background-color: #fff;
+    color: black;
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 12px;
+    z-index: 1;
+}
+
+td:hover .hover-container {
+    display: block;
+}

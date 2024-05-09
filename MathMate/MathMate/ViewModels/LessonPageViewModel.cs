@@ -49,11 +49,20 @@ namespace MathMate.ViewModels
             {
                 if (lesson.isCompleted)
                 {
-                    await ToastManager.ShowToast("You cannot take completed lesson", Color.FromHex("#FF605C"));
+                    if (string.IsNullOrEmpty(lesson.videoPath))
+                    {
+                        await ToastManager.ShowToast("You cannot view lesson without video", Color.FromHex("#FF605C"));
+                    }else
+                    {
+                        await Application.Current.MainPage.Navigation.PushModalAsync(new TakeLesson(lesson.isCompleted)
+                        {
+                            BindingContext = new TakeLessonViewModel(lesson)
+                        });
+                    }
                 }
                 else
                 {
-                    await Application.Current.MainPage.Navigation.PushModalAsync(new TakeLesson()
+                    await Application.Current.MainPage.Navigation.PushModalAsync(new TakeLesson(lesson.isCompleted)
                     {
                         BindingContext = new TakeLessonViewModel(lesson)
                     });

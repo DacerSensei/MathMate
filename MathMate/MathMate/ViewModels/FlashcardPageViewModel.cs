@@ -39,9 +39,9 @@ namespace MathMate.ViewModels
             Quiz quiz = parameter as Quiz;
             if (quiz != null)
             {
-                if (quiz.isCompleted)
+                if (quiz.Attempts >= 3)
                 {
-                    await ToastManager.ShowToast("You cannot take completed quiz", Color.FromHex("#FF605C"));
+                    await ToastManager.ShowToast("You're out of attempt to take this quiz", Color.FromHex("#FF605C"));
                 }
                 else
                 {
@@ -76,6 +76,9 @@ namespace MathMate.ViewModels
                             if (quiz.Key == completedQuiz.Key)
                             {
                                 quiz.Object.isCompleted = true;
+                                quiz.Object.HighestScore = Convert.ToInt16(completedQuiz.Object.Score);
+                                quiz.Object.Attempts = completedQuiz.Object.Attempts ?? 0;
+                                quiz.Object.AttemptString = $"Attempts: {completedQuiz.Object.Attempts ?? 0}/3";
                                 dateFinished = Convert.ToDateTime(completedQuiz.Object.Date.ToString());
                             }
                         }

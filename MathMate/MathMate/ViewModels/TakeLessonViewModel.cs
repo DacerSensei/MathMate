@@ -25,7 +25,14 @@ namespace MathMate.ViewModels
         public TakeLessonViewModel(Lesson lesson)
         {
             Lesson = lesson;
-            VideoPath = new Uri(lesson.videoPath);
+            if (lesson.isCompleted)
+            {
+                buttonLabel = "Back";
+            }
+            if (!string.IsNullOrEmpty(lesson.videoPath))
+            {
+                VideoPath = new Uri(lesson.videoPath);
+            }
             InitialAssessmentList = new ObservableCollection<Assessment>(lesson.Assessment.Values.Select(a => a.Copy()));
             FinalAssessmentList = new ObservableCollection<Assessment>(lesson.Assessment.Values.Select(a => a.Copy()));
             InitialAssessmentCommand = new Command(InitialAssessmentExecute);
@@ -41,13 +48,27 @@ namespace MathMate.ViewModels
         private void InitialAssessmentExecute()
         {
             TapButton.TapSound();
-            SelectedTab = 1;
+            if (VideoPath == null)
+            {
+                SelectedTab = 2;
+            }
+            else
+            {
+                SelectedTab = 1;
+            }
         }
 
-        private void NextExecute()
+        private async void NextExecute()
         {
             TapButton.TapSound();
-            SelectedTab++;
+            if (Lesson.isCompleted)
+            {
+                await Application.Current.MainPage.Navigation.PopModalAsync();
+            }
+            else
+            {
+                SelectedTab++;
+            }
         }
 
         private async Task FinalAssessmentExecute()
@@ -75,7 +96,7 @@ namespace MathMate.ViewModels
             try
             {
                 var dateNow = DateTime.Now;
-                await Database.FirebaseClient.Child($"users/{UserManager.User.Uid}/Lesson/{Lesson.Key}").PutAsync(JsonConvert.SerializeObject(new { InitialScore = InitialScore, FinalScore = FinalScore, Date = dateNow.ToShortDateString(), Total = InitialAssessmentList.Count, Title = "Assessment", Description = Lesson.description }));
+                await Database.FirebaseClient.Child($"users/{UserManager.User.Uid}/Lesson/{Lesson.Key}").PutAsync(JsonConvert.SerializeObject(new { InitialScore = InitialScore, FinalScore = FinalScore, Date = dateNow.ToShortDateString(), Total = InitialAssessmentList.Count, Title = "Assessment", Description = Lesson.description, LessonTitle = Lesson.title }));
                 await Application.Current.MainPage.Navigation.PopModalAsync();
                 await Application.Current.MainPage.Navigation.PushModalAsync(new LessonScore() { BindingContext = new LessonScoreViewModel(InitialScore, FinalScore, InitialAssessmentList.Count, dateNow) });
 
@@ -93,6 +114,14 @@ namespace MathMate.ViewModels
         {
             get => _selectedTab;
             set => SetProperty(ref _selectedTab, value);
+        }
+
+        private string buttonLabel = "Take Final Assessment";
+
+        public string ButtonLabel
+        {
+            get => buttonLabel;
+            set => SetProperty(ref buttonLabel, value);
         }
 
         private Uri _videoPath;

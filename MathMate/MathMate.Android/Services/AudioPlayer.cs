@@ -7,6 +7,7 @@ using Android.Content.Res;
 using System.Threading.Tasks;
 using Android.Content;
 using Xamarin.Forms.Platform.Android;
+using System.Diagnostics;
 
 [assembly: Dependency(typeof(AudioPlayer))]
 namespace MathMate.Droid
@@ -18,7 +19,7 @@ namespace MathMate.Droid
         public void Load(int resourceId)
         {
             Context context = Android.App.Application.Context;
-            mediaPlayer= MediaPlayer.Create(context, resourceId);
+            mediaPlayer= MediaPlayer.Create(context, resourceId); 
             mediaPlayer.SetVolume((float)Volume.Max, (float)Volume.Max);
         }
 

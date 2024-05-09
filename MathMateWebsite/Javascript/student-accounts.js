@@ -59,7 +59,6 @@ function toggleExpander(event) {
     if (event.target.parentNode) {
         event.target.parentNode.parentNode.classList.toggle('active');
     }
-
 }
 
 document.getElementById("CreateData").addEventListener("click", () => {
@@ -131,7 +130,13 @@ document.getElementById("student-form").addEventListener("submit", async (e) => 
         }
     }
     HideLoading();
-    ShowPopup("You just created a new account");
+
+    if (isUpdating == false) {
+        ShowPopup("You just created a new account");
+    } else if (isUpdating == true) {
+        ShowPopup("You update the stduent " + firstName + " " + lastName);
+    }
+
     document.getElementById("student-form").reset();
     document.querySelector('.modal-close').click();
     genderElement.SelectedItem = genderElement.Items[0];
@@ -181,6 +186,101 @@ function ExcelImportStudent(event) {
     reader.readAsArrayBuffer(file);
 }
 
+document.getElementById("GenerateReport").addEventListener("click", async () => {
+    let result = await ShowPopup("Are you sure you want generate student as PDF?", PopupType.Prompt);
+    if (result) {
+        await get(child(ref(Database), 'teachers')).then(async (teacherSnapshot) => {
+            if (await teacherSnapshot.exists()) {
+                const teachers = teacherSnapshot.val();
+                await get(child(ref(Database), 'users')).then(async (userSnapshot) => {
+                    if (await userSnapshot.exists()) {
+                        const data = userSnapshot.val();
+                        if (data) {
+                            const storedData = localStorage.getItem('userData');
+                            const parsedData = JSON.parse(storedData);
+
+                            const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+                            const dateNow = new Date();
+                            const dateString = `${months[dateNow.getMonth()]} ${dateNow.getDate()}, ${dateNow.getFullYear()}`
+                            const timeString = `${dateNow.getHours() % 12 === 0 ? 12 : dateNow.getHours() % 12}:${dateNow.getMinutes() < 10 ? `0${dateNow.getMinutes()}` : dateNow.getMinutes()} ${dateNow.getHours() >= 12 ? 'PM' : 'AM'}`
+
+                            const table = [];
+                            for (const [key, values] of Object.entries(data)) {
+                                if (parsedData.uid != values.Teacher || values.Status.toLowerCase() != "active") {
+                                    continue;
+                                }
+                                table.push([
+                                    key,
+                                    values.FirstName + " " + values.LastName,
+                                    values.Gender,
+                                    values.Contact,
+                                    values.Email
+                                ]);
+                            }
+
+                            const props = {
+                                outputType: jsPDFInvoiceTemplate.OutputType.Save,
+                                returnJsPDFDocObject: true,
+                                fileName: "Generated Report " + dateString + " " + timeString,
+                                orientationLandscape: false,
+                                compress: true,
+                                logo: {
+                                    src: "../Assets/Logo.png",
+                                    type: 'PNG', //optional, when src= data:uri (nodejs case)
+                                    width: 26.66, //aspect ratio = width/height
+                                    height: 26.66,
+                                    margin: {
+                                        top: 0, //negative or positive num, from the current position
+                                        left: 0 //negative or positive num, from the current position
+                                    }
+                                },
+                                business: {
+                                    name: "Math Mate",
+                                    website: "https://mathmate-ee4f2.web.app/"
+                                },
+                                contact: {
+                                    label: "Students of:",
+                                    name: parsedData.FirstName + " " + parsedData.LastName,
+                                    email: parsedData.Email
+                                },
+                                invoice: {
+                                    invGenDate: "Generate Date: " + dateString + " " + timeString,
+                                    headerBorder: false,
+                                    tableBodyBorder: false,
+                                    header: [
+                                        {
+                                            title: "Student Number",
+                                        },
+                                        {
+                                            title: "Name",
+                                            style: {
+                                                width: 30
+                                            }
+                                        },
+                                        { title: "Gender" },
+                                        { title: "Contact" },
+                                        { title: "Guardian Email" },
+                                    ],
+
+                                    table: table,
+                                },
+                                footer: {
+                                    text: "The generated report is created on a computer and is valid without the signature and stamp.",
+                                },
+                                pageEnable: true,
+                                pageLabel: "Report",
+                            };
+
+
+                            var pdfObject = jsPDFInvoiceTemplate.default(props);
+                        }
+                    }
+                });
+            }
+        });
+    }
+})
+
 document.getElementById("ReportParentButton").addEventListener("click", () => {
     if (currentStudent) {
         let emailHTMLContent = `
@@ -219,7 +319,7 @@ document.getElementById("ReportParentButton").addEventListener("click", () => {
             for (const [key, values] of Object.entries(currentStudent.Lesson)) {
                 emailHTMLContent += `
                             <tr>
-                                <td>${key}</td>
+                                <td>${values.LessonTitle}</td>
                                 <td>${values.InitialScore}/${values.Total}</td>
                                 <td>${values.FinalScore}/${values.Total}</td>
                                 <td>${values.Date}</td>
@@ -307,7 +407,7 @@ table.addEventListener("click", async (event) => {
                             <p>Pre Score: ${values.InitialScore}/${values.Total}</p>
                             <p>Post Score: ${values.FinalScore}/${values.Total}</p>
                         `
-                        createExpander(tab2, key, htmlContent);
+                        createExpander(tab2, values.LessonTitle, htmlContent);
                     }
                 }
 
@@ -439,11 +539,32 @@ table.addEventListener("click", async (event) => {
         const hiddenInput = row.querySelector("input[type='hidden']");
         const id = hiddenInput.value;
 
-        var result = await ShowPopup('Are you sure you want to delete?', PopupType.Prompt);
+        var result = await ShowPopup('Are you sure you want to set disable?', PopupType.Prompt);
+
         if (result) {
-            await remove(ref(Database, "users/" + id));
-            row.remove();
-            ShowNotification('Deleted Successfully', Colors.Green);
+            ShowLoading();
+            await set(ref(Database, "users/" + id + "/Status"), "disabled");
+            document.getElementById("table-body").innerHTML = "";
+            await StudentAccount();
+            HideLoading();
+            ShowNotification('Set Status Successfully', Colors.Green);
+        }
+    }
+    if (event.target && event.target.matches(".Button-Green-Icon")) {
+        const row = event.target.closest("tr");
+
+        const hiddenInput = row.querySelector("input[type='hidden']");
+        const id = hiddenInput.value;
+
+        var result = await ShowPopup('Are you sure you want to set active?', PopupType.Prompt);
+
+        if (result) {
+            ShowLoading();
+            await set(ref(Database, "users/" + id + "/Status"), "active");
+            document.getElementById("table-body").innerHTML = "";
+            await StudentAccount();
+            HideLoading();
+            ShowNotification('Set Status Successfully', Colors.Green);
         }
     }
 });
@@ -465,6 +586,14 @@ function SendEmail(toEmail, htmlContent) {
         alert(exception);
     });
 }
+
+document.getElementById("SearchButton").addEventListener("click", async (e) => {
+    e.preventDefault();
+    ShowLoading();
+    document.getElementById("table-body").innerHTML = "";
+    await StudentAccount(document.getElementById("ContentSearch").value);
+    HideLoading();
+});
 
 // document.getElementById("grade-level").addEventListener("change", async () => {
 //     const gradeElement = document.getElementById("grade-level");

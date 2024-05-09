@@ -33,12 +33,19 @@
                 <button type="submit" class="Solid-Button-Red" style="font-size: 1.125rem"
                     id="LoginButton">Login</button>
 
-                <button type="button" class="Solid-Button-Red" style="font-size: 1.125rem" id="DownloadAndroid">Download
+                <button type="button" class="Solid-Button-Red" style="font-size: 1.125rem" id="DownloadAndroid"
+                    onclick="downloadAndroidApp()">Download
                     Android App</button>
             </section>
         </form>
     </main>
     <script src="/Javascript/Toolkit.js"></script>
+    <script>
+        function downloadAndroidApp() {
+            var fileUrl = "/Assets/MathMate.apk";
+            window.location.href = fileUrl;
+        }
+    </script>
     <script type="module" src="/Javascript/main.js"></script>
 </body>
 

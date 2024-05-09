@@ -5,7 +5,7 @@
              xmlns:xct="http://xamarin.com/schemas/2020/toolkit" 
              xmlns:converter="clr-namespace:MathMate.Services"
              x:Class="MathMate.Views.FlashcardPage"
-             Background="White"
+             Background="#0a092d"
              NavigationPage.HasNavigationBar="False">
     <ContentPage.Resources>
         <ResourceDictionary>
@@ -33,7 +33,7 @@
             <RefreshView Grid.Row="1" IsRefreshing="{Binding IsRefreshing}" Command="{Binding RefreshCommand}">
                 <CollectionView ItemsSource="{Binding QuizList}" x:Name="MyList">
                     <CollectionView.EmptyView>
-                        <Label Text="No Quizes" TextColor="Black" FontAttributes="Bold" FontSize="Subtitle" VerticalTextAlignment="Center" HorizontalTextAlignment="Center"/>
+                        <Label Text="No Quizes" TextColor="White" FontAttributes="Bold" FontSize="Subtitle" VerticalTextAlignment="Center" HorizontalTextAlignment="Center"/>
                     </CollectionView.EmptyView>
                     <CollectionView.Header>
                         <StackLayout Padding="2">
@@ -57,7 +57,7 @@
                                 <Frame Margin="10,10,10,0" Padding="0" CornerRadius="6" xct:ShadowEffect.Color="Black" xct:ShadowEffect.Radius="6">
                                     <xct:Expander>
                                         <xct:Expander.Header>
-                                            <Grid  RowDefinitions="Auto,Auto" ColumnDefinitions="*,Auto" Margin="20">
+                                            <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="*,Auto" Margin="20" ColumnSpacing="10">
                                                 <Label TextColor="black" FontFamily="PoppinsBold" FontSize="Subtitle" >
                                                     <Label.FormattedText>
                                                         <FormattedString>
@@ -67,8 +67,9 @@
                                                         </FormattedString>
                                                     </Label.FormattedText>
                                                 </Label>
-                                                <Label Grid.Column="1" Text="{Binding status}" TextColor="{Binding statusColor}" FontSize="Subtitle" FontFamily="PoppinsBold"/>
-                                                <Label Grid.Row="1" Grid.ColumnSpan="2" Text="{Binding Created}" FontSize="14" FontFamily="PoppinsRegular" TextColor="#7c7c7c"/>
+                                                <Label Grid.Column="1" Text="{Binding status}" TextColor="{Binding statusColor}" FontSize="Subtitle" FontFamily="PoppinsBold" HorizontalTextAlignment="End"/>
+                                                <Label Grid.Row="1" Text="{Binding Created}" FontSize="14" FontFamily="PoppinsRegular" TextColor="#7c7c7c"/>
+                                                <Label Grid.Row="1" Grid.Column="1" Text="{Binding AttemptString}" FontSize="14" FontAttributes="Bold" FontFamily="PoppinsBold" TextColor="Black"/>
                                             </Grid>
                                         </xct:Expander.Header>
                                         <Grid Margin="20" RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="*,Auto" RowSpacing="0">

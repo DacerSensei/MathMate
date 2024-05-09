@@ -13,6 +13,7 @@ namespace MathMate.Models
         public string Title { get; set; }
         public string TitleColor { get; set; }
         public string Description { get; set; }
+        public int? Attempts { get; set; }
 
     }
 }

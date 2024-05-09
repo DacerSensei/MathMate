@@ -9,7 +9,7 @@ namespace MathMate.Services
     public static class TapButton
     {
         private enum SoundID{
-            TapSound = 2131165369,
+            TapSound = 2131165370,
             Congratulation = 2131165300
         }
 

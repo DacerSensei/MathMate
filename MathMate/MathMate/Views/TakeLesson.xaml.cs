@@ -12,9 +12,14 @@ namespace MathMate.Views
 	[XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class TakeLesson : ContentPage
 	{
-		public TakeLesson ()
+		public TakeLesson (bool isCompleted)
 		{
 			InitializeComponent ();
-		}
+			if (isCompleted)
+			{
+                MyTab.TabItems.RemoveAt(0);
+                MyTab.TabItems.RemoveAt(2);
+            }
+        }
 	}
 }

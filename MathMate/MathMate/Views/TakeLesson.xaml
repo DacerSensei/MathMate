@@ -6,7 +6,7 @@
              xmlns:xct="http://xamarin.com/schemas/2020/toolkit" xmlns:video="clr-namespace:Xam.Forms.VideoPlayer;assembly=Xam.Forms.VideoPlayer"
              NavigationPage.HasNavigationBar="False">
     <ContentPage.Content>
-        <xct:TabView IsSwipeEnabled="False" IsTabStripVisible="False" SelectedIndex="{Binding SelectedTab}">
+        <xct:TabView IsSwipeEnabled="False" IsTabStripVisible="False" IsTabTransitionEnabled="True" SelectedIndex="{Binding SelectedTab}" x:Name="MyTab">
             <xct:TabViewItem>
                 <xct:TabViewItem.Content>
                     <Grid RowDefinitions="Auto,Auto,Auto">
@@ -84,7 +84,7 @@
                                 </Frame.GestureRecognizers>
                                 <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
                                     <Image Source="Submit.png" WidthRequest="25" HeightRequest="25" Margin="-10,0,0,0"/>
-                                    <Label Text="Take Final Assessment" TextColor="#FFF" VerticalTextAlignment="Center"/>
+                                    <Label Text="{Binding ButtonLabel}" TextColor="#FFF" VerticalTextAlignment="Center"/>
                                 </StackLayout>
                             </Frame>
                         </StackLayout>

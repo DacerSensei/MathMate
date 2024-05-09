@@ -15,6 +15,9 @@ namespace MathMate.Models
         public string status { get; set; }
         public string statusColor { get; set; }
         public bool isCompleted { get; set; } = false;
+        public int Attempts { get; set; }
+        public int HighestScore { get; set; }
+        public string AttemptString { get; set; }
         public string DueDateString
         {
             get => DueDate.ToString("MMM d, yyyy");

@@ -38,7 +38,7 @@ namespace MathMate.ViewModels
             TapButton.TapSound();
             if (string.IsNullOrWhiteSpace(StudentNumber))
             {
-                await ToastManager.ShowToast("Email cannot be empty", Color.FromHex("#FF605C"));
+                await ToastManager.ShowToast("Student Number cannot be empty", Color.FromHex("#FF605C"));
                 return;
             }
             if (string.IsNullOrWhiteSpace(Password))

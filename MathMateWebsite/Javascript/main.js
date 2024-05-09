@@ -233,7 +233,7 @@ async function DashboardLoaded() {
                     SetContentById("AdminAccounts", Object.entries(data).length);
                 }
             } else {
-                ShowNotification("Something went wrong", Colors.Red);
+                // ShowNotification("Something went wrong", Colors.Red);
             }
         }).catch((error) => {
             console.log(error);
@@ -245,7 +245,7 @@ async function DashboardLoaded() {
                     SetContentById("TeacherAccounts", Object.entries(data).length);
                 }
             } else {
-                ShowNotification("Something went wrong", Colors.Red);
+                // ShowNotification("Something went wrong", Colors.Red);
             }
         }).catch((error) => {
             console.log(error);
@@ -257,7 +257,7 @@ async function DashboardLoaded() {
                     SetContentById("StudentAccounts", Object.entries(data).length);
                 }
             } else {
-                ShowNotification("Something went wrong", Colors.Red);
+                // ShowNotification("Something went wrong", Colors.Red);
             }
         }).catch((error) => {
             console.log(error);
@@ -469,7 +469,7 @@ async function AdminAccount() {
     }
 }
 
-async function TeacherAccount() {
+async function TeacherAccount(search = null) {
     try {
         await get(child(ref(Database), 'teachers')).then(async (teacherSnapshot) => {
             if (await teacherSnapshot.exists()) {
@@ -477,6 +477,12 @@ async function TeacherAccount() {
                 if (data) {
                     const tableBody = document.getElementById("table-body");
                     for (const [key, values] of Object.entries(data)) {
+                        if (!IsNullOrEmpty(search)) {
+                            if (!(values.Email.toLowerCase().includes(search.toLowerCase()) || values.FirstName.toLowerCase().includes(search.toLowerCase()) || values.LastName.toLowerCase().includes(search.toLowerCase()))) {
+                                continue;
+                            }
+                        }
+
                         const row = document.createElement("tr");
                         const hiddenInput = document.createElement("input");
                         hiddenInput.type = "hidden";
@@ -514,15 +520,24 @@ async function TeacherAccount() {
                             genderDiv.className = "Status-Pink";
                         }
 
-
-
                         const actionsCell = document.createElement("td");
                         const editButton = document.createElement("button");
-                        editButton.classList.add('Button-Blue-Icon', 'modal-trigger');
+                        editButton.classList.add('Button-Yellow-Icon', 'modal-trigger');
                         editButton.title = "Edit";
-                        editButton.setAttribute('data-target', 'Edit-Modal');
+                        editButton.setAttribute('data-target', 'Add-Modal');
                         editButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="pointer-events: none;"><path d="M14.06,9L15,9.94L5.92,19H5V18.08L14.06,9M17.66,3C17.41,3 17.15,3.1 16.96,3.29L15.13,5.12L18.88,8.87L20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18.17,3.09 17.92,3 17.66,3M14.06,6.19L3,17.25V21H6.75L17.81,9.94L14.06,6.19Z"/></svg>';
 
+                        editButton.addEventListener('click', function () {
+                            const modal = document.getElementById(this.dataset.target);
+                            modal.style.display = 'flex';
+
+                            // When the user clicks on the close button, close the modal
+                            var closeBtn = modal.querySelector('.modal-close');
+                            closeBtn.addEventListener('click', function () {
+                                modal.style.display = 'none';
+                                document.getElementById("teacher-form").reset();
+                            });
+                        });
                         // const disableButton = document.createElement("button");
                         // disableButton.className = "Button-Red-Icon";
                         // disableButton.style = "margin-left: 4px;"
@@ -555,8 +570,7 @@ async function TeacherAccount() {
     }
 }
 
-async function StudentAccount() {
-
+async function StudentAccount(search = null) {
     try {
         const parsedData = JSON.parse(localStorage.getItem('userData'));
         await get(child(ref(Database), 'teachers')).then(async (teacherSnapshot) => {
@@ -568,7 +582,13 @@ async function StudentAccount() {
                         if (data) {
                             const tableBody = document.getElementById("table-body");
                             for (const [key, values] of Object.entries(data)) {
-                                if (parsedData.uid != values.Teacher || values.Status.toLowerCase() != "active") {
+                                if (!IsNullOrEmpty(search)) {
+                                    if (!(key.toLowerCase().includes(search.toLowerCase()) || values.FirstName.toLowerCase().includes(search.toLowerCase()) || values.LastName.toLowerCase().includes(search.toLowerCase()))) {
+                                        continue;
+                                    }
+                                }
+                                console.log(parsedData.uid != values.Teacher || !(values.Status.toLowerCase() != "active" || values.Status.toLowerCase() != "disabled"));
+                                if (parsedData.uid != values.Teacher || values.Status.toLowerCase() == "archived") {
                                     continue;
                                 }
                                 const teacher = teachers[values.Teacher];
@@ -583,8 +603,38 @@ async function StudentAccount() {
                                 const nameCell = document.createElement("td");
                                 nameCell.textContent = values.LastName + ", " + values.FirstName;
 
-                                const teacherCell = document.createElement("td");
-                                teacherCell.textContent = teacher.LastName + ", " + teacher.FirstName;
+                                let deleteIcon;
+                                let deleteButtonColor;
+                                let deleteButtonTitle;
+
+                                const statusCell = document.createElement("td");
+                                const statusDiv = document.createElement("div");
+                                statusDiv.textContent = values.Status;
+                                if (values.Status.toLowerCase() == "active".toLowerCase()) {
+                                    statusDiv.className = "Status-Green";
+                                    deleteButtonColor = "Button-Red-Icon";
+                                    deleteIcon = "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' style='pointer-events: none;'><path d='M12 2C17.5 2 22 6.5 22 12S17.5 22 12 22 2 17.5 2 12 6.5 2 12 2M12 4C10.1 4 8.4 4.6 7.1 5.7L18.3 16.9C19.3 15.5 20 13.8 20 12C20 7.6 16.4 4 12 4M16.9 18.3L5.7 7.1C4.6 8.4 4 10.1 4 12C4 16.4 7.6 20 12 20C13.9 20 15.6 19.4 16.9 18.3Z' /></svg>";
+                                    deleteButtonTitle = "Disable";
+                                }
+                                else if (values.Status.toLowerCase() == "disabled".toLowerCase()) {
+                                    statusDiv.className = "Status-Red";
+                                    deleteButtonColor = "Button-Green-Icon";
+                                    deleteIcon = "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' style='pointer-events: none;'><path d='M9,20.42L2.79,14.21L5.62,11.38L9,14.77L18.88,4.88L21.71,7.71L9,20.42Z' /></svg>"
+                                    deleteButtonTitle = "Active";
+
+                                } else if (values.Status.toLowerCase() == "archived".toLowerCase()) {
+                                    statusDiv.className = "Status-Yellow";
+                                    deleteButtonColor = "Button-Green-Icon";
+                                    deleteIcon = "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' style='pointer-events: none;'><path d='M20.54,5.23C20.83,5.57 21,6 21,6.5V19A2,2 0 0,1 19,21H5A2,2 0 0,1 3,19V6.5C3,6 3.17,5.57 3.46,5.23L4.84,3.55C5.12,3.21 5.53,3 6,3H18C18.47,3 18.88,3.21 19.15,3.55L20.54,5.23M5.12,5H18.87L17.93,4H5.93L5.12,5M12,9.5L6.5,15H10V17H14V15H17.5L12,9.5Z' /></svg>"
+                                    deleteButtonTitle = "Unarchive";
+                                }
+                                else {
+                                    statusDiv.className = "Status-Red";
+                                    deleteButtonColor = "Button-Green-Icon";
+                                    deleteIcon = "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' style='pointer-events: none;'><path d='M9,20.42L2.79,14.21L5.62,11.38L9,14.77L18.88,4.88L21.71,7.71L9,20.42Z' /></svg>"
+                                    deleteButtonTitle = "Active";
+
+                                }
 
                                 const gradeCell = document.createElement("td");
                                 const gradeDiv = document.createElement("div");
@@ -647,11 +697,10 @@ async function StudentAccount() {
                                 });
 
                                 const deleteButton = document.createElement("button");
-                                deleteButton.className = "Button-Red-Icon";
-                                deleteButton.title = "Delete";
-                                deleteButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="pointer-events: none;"><path d="M9,3V4H4V6H5V19A2,2 0 0,0 7,21H17A2,2 0 0,0 19,19V6H20V4H15V3H9M7,6H17V19H7V6M9,8V17H11V8H9M13,8V17H15V8H13Z" /></svg>';
+                                deleteButton.className = deleteButtonColor;
+                                deleteButton.title = deleteButtonTitle;
+                                deleteButton.innerHTML = deleteIcon;
                                 deleteButton.style.marginLeft = "5px";
-
 
                                 actionsCell.appendChild(viewButton);
                                 actionsCell.appendChild(editButton);
@@ -659,13 +708,14 @@ async function StudentAccount() {
 
                                 gradeCell.appendChild(gradeDiv)
                                 genderCell.appendChild(genderDiv)
+                                statusCell.appendChild(statusDiv);
 
                                 row.appendChild(hiddenInput);
                                 row.appendChild(studentNumberCell);
                                 row.appendChild(nameCell);
                                 row.appendChild(gradeCell);
                                 row.appendChild(genderCell);
-                                row.appendChild(teacherCell);
+                                row.appendChild(statusCell);
                                 row.appendChild(actionsCell);
 
                                 tableBody.appendChild(row);
@@ -685,7 +735,7 @@ async function StudentAccount() {
     }
 }
 
-async function StudentQuiz() {
+async function StudentQuiz(search = null) {
     try {
         const parsedData = JSON.parse(localStorage.getItem('userData'));
         await get(child(ref(Database), 'teachers/' + parsedData.uid + '/Quiz')).then(async (quizSnapshot) => {
@@ -694,6 +744,11 @@ async function StudentQuiz() {
                 if (quizzes) {
                     const tableBody = document.getElementById("table-body");
                     for (const [key, values] of Object.entries(quizzes)) {
+                        if (!IsNullOrEmpty(search)) {
+                            if (!(values.Title.toLowerCase().includes(search.toLowerCase()))) {
+                                continue;
+                            }
+                        }
                         let numberOfStudents = 0;
                         let numberOfStudentsAnswered = 0;
 
@@ -782,7 +837,7 @@ async function StudentQuiz() {
     }
 }
 
-async function StudentLesson() {
+async function StudentLesson(search = null) {
     try {
         const parsedData = JSON.parse(localStorage.getItem('userData'));
         await get(child(ref(Database), 'teachers/' + parsedData.uid + '/Lesson')).then(async (quizSnapshot) => {
@@ -791,18 +846,42 @@ async function StudentLesson() {
                 if (quizzes) {
                     const tableBody = document.getElementById("table-body");
                     for (const [key, values] of Object.entries(quizzes)) {
+                        if (!IsNullOrEmpty(search)) {
+                            if (!(values.title.toLowerCase().includes(search.toLowerCase()))) {
+                                continue;
+                            }
+                        }
                         const row = document.createElement("tr");
                         const hiddenInput = document.createElement("input");
                         hiddenInput.type = "hidden";
                         hiddenInput.value = key;
 
                         const titleCell = document.createElement("td");
-                        titleCell.style.maxWidth = "350px";
+                        titleCell.style.maxWidth = "150px";
+                        titleCell.style.overflow = 'hidden';
+                        titleCell.style.whiteSpace = 'nowrap';
+                        titleCell.style.cursor = 'context-menu';
+                        titleCell.style.textOverflow = 'ellipsis';
                         titleCell.textContent = values.title;
+
+                        const titleContainer = document.createElement("div");
+                        titleContainer.className = "hover-container";
+                        titleContainer.textContent = values.title;
+                        titleCell.appendChild(titleContainer);
+
 
                         const descriptionCell = document.createElement("td");
                         descriptionCell.style.maxWidth = "350px";
+                        descriptionCell.style.overflow = 'hidden';
+                        descriptionCell.style.whiteSpace = 'nowrap';
+                        descriptionCell.style.textOverflow = 'ellipsis';
+                        descriptionCell.style.cursor = 'context-menu';
                         descriptionCell.textContent = values.description;
+
+                        const descriptionContainer = document.createElement("div");
+                        descriptionContainer.className = "hover-container";
+                        descriptionContainer.textContent = values.description;
+                        descriptionCell.appendChild(descriptionContainer);
 
                         const createdCell = document.createElement("td");
                         createdCell.textContent = values.created;
@@ -848,7 +927,7 @@ async function StudentLesson() {
     }
 }
 
-async function ArchiveStudents() {
+async function ArchiveStudents(search = null) {
     try {
         const parsedData = JSON.parse(localStorage.getItem('userData'));
         await get(child(ref(Database), 'teachers')).then(async (teacherSnapshot) => {
@@ -860,7 +939,12 @@ async function ArchiveStudents() {
                         if (data) {
                             const tableBody = document.getElementById("table-body");
                             for (const [key, values] of Object.entries(data)) {
-                                if (parsedData.uid != values.Teacher || values.Status.toLowerCase() != "archived") {
+                                if (!IsNullOrEmpty(search)) {
+                                    if (!(key.toLowerCase().includes(search.toLowerCase()) || values.FirstName.toLowerCase().includes(search.toLowerCase()) || values.LastName.toLowerCase().includes(search.toLowerCase()))) {
+                                        continue;
+                                    }
+                                }
+                                if (parsedData.uid != values.Teacher || (values.Status.toLowerCase() != "archived")) {
                                     continue;
                                 }
                                 const teacher = teachers[values.Teacher];
@@ -875,8 +959,38 @@ async function ArchiveStudents() {
                                 const nameCell = document.createElement("td");
                                 nameCell.textContent = values.LastName + ", " + values.FirstName;
 
-                                const teacherCell = document.createElement("td");
-                                teacherCell.textContent = teacher.LastName + ", " + teacher.FirstName;
+                                let deleteIcon;
+                                let deleteButtonColor;
+                                let deleteButtonTitle;
+
+                                const statusCell = document.createElement("td");
+                                const statusDiv = document.createElement("div");
+                                statusDiv.textContent = values.Status;
+                                if (values.Status.toLowerCase() == "active".toLowerCase()) {
+                                    statusDiv.className = "Status-Green";
+                                    deleteButtonColor = "Button-Red-Icon";
+                                    deleteIcon = "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' style='pointer-events: none;'><path d='M12 2C17.5 2 22 6.5 22 12S17.5 22 12 22 2 17.5 2 12 6.5 2 12 2M12 4C10.1 4 8.4 4.6 7.1 5.7L18.3 16.9C19.3 15.5 20 13.8 20 12C20 7.6 16.4 4 12 4M16.9 18.3L5.7 7.1C4.6 8.4 4 10.1 4 12C4 16.4 7.6 20 12 20C13.9 20 15.6 19.4 16.9 18.3Z' /></svg>";
+                                    deleteButtonTitle = "Disable";
+                                }
+                                else if (values.Status.toLowerCase() == "disabled".toLowerCase()) {
+                                    statusDiv.className = "Status-Red";
+                                    deleteButtonColor = "Button-Green-Icon";
+                                    deleteIcon = "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' style='pointer-events: none;'><path d='M9,20.42L2.79,14.21L5.62,11.38L9,14.77L18.88,4.88L21.71,7.71L9,20.42Z' /></svg>"
+                                    deleteButtonTitle = "Active";
+
+                                } else if (values.Status.toLowerCase() == "archived".toLowerCase()) {
+                                    statusDiv.className = "Status-Yellow";
+                                    deleteButtonColor = "Button-Green-Icon";
+                                    deleteIcon = "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' style='pointer-events: none;'><path d='M20.54,5.23C20.83,5.57 21,6 21,6.5V19A2,2 0 0,1 19,21H5A2,2 0 0,1 3,19V6.5C3,6 3.17,5.57 3.46,5.23L4.84,3.55C5.12,3.21 5.53,3 6,3H18C18.47,3 18.88,3.21 19.15,3.55L20.54,5.23M5.12,5H18.87L17.93,4H5.93L5.12,5M12,9.5L6.5,15H10V17H14V15H17.5L12,9.5Z' /></svg>"
+                                    deleteButtonTitle = "Unarchive";
+                                }
+                                else {
+                                    statusDiv.className = "Status-Red";
+                                    deleteButtonColor = "Button-Green-Icon";
+                                    deleteIcon = "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' style='pointer-events: none;'><path d='M9,20.42L2.79,14.21L5.62,11.38L9,14.77L18.88,4.88L21.71,7.71L9,20.42Z' /></svg>"
+                                    deleteButtonTitle = "Active";
+
+                                }
 
                                 const gradeCell = document.createElement("td");
                                 const gradeDiv = document.createElement("div");
@@ -904,7 +1018,7 @@ async function ArchiveStudents() {
                                 const actionsCell = document.createElement("td");
                                 const viewButton = document.createElement("button");
                                 viewButton.classList.add('Button-Blue-Icon', 'modal-trigger');
-                                viewButton.title = "Edit";
+                                viewButton.title = "View";
                                 viewButton.setAttribute('data-target', 'View-Modal');
                                 viewButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="pointer-events: none;"><path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z" /></svg></svg>';
 
@@ -916,7 +1030,6 @@ async function ArchiveStudents() {
                                     var closeBtn = modal.querySelector('.modal-close');
                                     closeBtn.addEventListener('click', function () {
                                         modal.style.display = 'none';
-                                        document.getElementById("student-view").reset();
                                     });
                                 });
 
@@ -940,11 +1053,10 @@ async function ArchiveStudents() {
                                 });
 
                                 const deleteButton = document.createElement("button");
-                                deleteButton.className = "Button-Red-Icon";
-                                deleteButton.title = "Delete";
-                                deleteButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="pointer-events: none;"><path d="M9,3V4H4V6H5V19A2,2 0 0,0 7,21H17A2,2 0 0,0 19,19V6H20V4H15V3H9M7,6H17V19H7V6M9,8V17H11V8H9M13,8V17H15V8H13Z" /></svg>';
+                                deleteButton.className = deleteButtonColor;
+                                deleteButton.title = deleteButtonTitle;
+                                deleteButton.innerHTML = deleteIcon;
                                 deleteButton.style.marginLeft = "5px";
-
 
                                 actionsCell.appendChild(viewButton);
                                 actionsCell.appendChild(editButton);
@@ -952,13 +1064,14 @@ async function ArchiveStudents() {
 
                                 gradeCell.appendChild(gradeDiv)
                                 genderCell.appendChild(genderDiv)
+                                statusCell.appendChild(statusDiv);
 
                                 row.appendChild(hiddenInput);
                                 row.appendChild(studentNumberCell);
                                 row.appendChild(nameCell);
                                 row.appendChild(gradeCell);
                                 row.appendChild(genderCell);
-                                row.appendChild(teacherCell);
+                                row.appendChild(statusCell);
                                 row.appendChild(actionsCell);
 
                                 tableBody.appendChild(row);

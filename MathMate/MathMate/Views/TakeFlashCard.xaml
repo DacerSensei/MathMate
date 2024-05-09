@@ -2,58 +2,66 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="MathMate.Views.TakeFlashCard"
-             xmlns:local="http://xamarin.com/schemas/2020/toolkit" 
+             xmlns:xct="http://xamarin.com/schemas/2020/toolkit" 
              xmlns:converter="clr-namespace:MathMate.Services" 
              xmlns:ViewModel="clr-namespace:MathMate.ViewModels" 
              xmlns:behaviors="clr-namespace:MathMate.Behaviors"
-             Background="White"
+             Background="#0a092d"
              NavigationPage.HasNavigationBar="False">
     <ContentPage.Behaviors>
-        <local:EventToCommandBehavior EventName="Appearing" Command="{Binding LoadedCommand}" />
+        <xct:EventToCommandBehavior EventName="Appearing" Command="{Binding LoadedCommand}" />
     </ContentPage.Behaviors>
     <ContentPage.Content>
         <Grid RowDefinitions="*,Auto">
-            <StackLayout BindableLayout.ItemsSource="{Binding FlashCards}" x:Name="MyList">
-                <BindableLayout.ItemTemplate>
+            <xct:TabView Margin="0,10,0,0" IsTabStripVisible="False" IsSwipeEnabled="False" TabItemsSource="{Binding FlashCards}" SelectedIndex="{Binding SelectedTab}" x:Name="MyList">
+                <xct:TabView.TabViewItemDataTemplate>
                     <DataTemplate>
-                        <StackLayout IsVisible="{Binding IsCurrentQuestion}">
+                        <Label Text="{Binding Key}" HorizontalOptions="Center" VerticalOptions="Center" TextColor="White" Margin="12, 0"/>
+                    </DataTemplate>
+                </xct:TabView.TabViewItemDataTemplate>
+                <xct:TabView.TabContentDataTemplate>
+                    <DataTemplate>
+                        <StackLayout Margin="4" VerticalOptions="Center" HeightRequest="400" IsVisible="{Binding IsCurrentQuestion}">
                             <StackLayout.Behaviors>
                                 <behaviors:FadeAnimationBehavior/>
                             </StackLayout.Behaviors>
-                            <Frame  VerticalOptions="EndAndExpand" Margin="10,0" CornerRadius="10">
-                                <StackLayout>
-                                    <Label Text="Problem:" TextColor="Black" FontSize="Title" FontFamily="PoppinsRegular" HorizontalTextAlignment="Center"/>
-                                    <Label Text="{Binding problem}" TextColor="Black" FontSize="20" FontFamily="PoppinsRegular" HorizontalTextAlignment="Center"/>
-                                    <Frame Padding="20,0" BackgroundColor="#f6f7f9" CornerRadius="10" Margin="5,0,5,5">
-                                        <Entry FontFamily="PoppinsRegular" Text="{Binding Source={x:Reference MyList}, Path=BindingContext.TextAnswer}" Placeholder="Enter your answer as text" TextColor="Black" PlaceholderColor="#999"/>
-                                    </Frame>
-                                    <StackLayout Orientation="Horizontal" HorizontalOptions="End" Margin="12,10">
-                                        <Frame CornerRadius="25" BackgroundColor="#168aad"  Padding="26,14">
-                                            <Frame.GestureRecognizers>
-                                                <TapGestureRecognizer Command="{Binding Source={x:Reference MyList}, Path=BindingContext.AnswerTextCommand}" CommandParameter="{Binding .}" />
-                                            </Frame.GestureRecognizers>
-                                            <StackLayout Orientation="Horizontal">
-                                                <Image Source="Submit.png" WidthRequest="25" HeightRequest="25"/>
-                                                <Label Text="Submit" TextColor="White" VerticalTextAlignment="Center"/>
-                                            </StackLayout>
-                                        </Frame>
-                                        <Frame CornerRadius="25" BackgroundColor="#560bad" Padding="26,14" HorizontalOptions="End">
-                                            <Frame.GestureRecognizers>
-                                                <TapGestureRecognizer Command="{Binding Source={x:Reference MyList}, Path=BindingContext.AnswerMicCommand}" CommandParameter="{Binding .}" />
-                                            </Frame.GestureRecognizers>
-                                            <StackLayout Orientation="Horizontal">
-                                                <Image Source="Microphone.png" WidthRequest="25" HeightRequest="25"/>
-                                                <Label Text="Microphone" TextColor="White" VerticalTextAlignment="Center"/>
-                                            </StackLayout>
-                                        </Frame>
-                                    </StackLayout>
-                                </StackLayout>
+                            <Grid>
+                                <Frame Margin="10,0" Padding="0,50" CornerRadius="10" BackgroundColor="#2e3856" AbsoluteLayout.LayoutBounds="1,1,1,1" AbsoluteLayout.LayoutFlags="All">
+                                    <ScrollView VerticalScrollBarVisibility="Always" Margin="40,0">
+                                        <Label Text="{Binding problem}" TextColor="White" FontSize="20" FontFamily="PoppinsRegular" VerticalTextAlignment="Center" HorizontalTextAlignment="Center"/>
+                                    </ScrollView>
+                                </Frame>
+                                <Image Source="Frame.png" Aspect="Fill" Margin="10"/>
+                            </Grid>
+                            <Frame Padding="20,0" BackgroundColor="#f6f7f9" CornerRadius="5" Margin="40,20,40,5">
+                                <Entry FontFamily="PoppinsRegular" Text="{Binding Source={x:Reference MyList}, Path=BindingContext.TextAnswer}" Placeholder="Enter your answer as text" TextColor="Black" PlaceholderColor="#999"/>
                             </Frame>
+                            <StackLayout Orientation="Horizontal" HorizontalOptions="Center" Margin="12,10">
+                                <Frame CornerRadius="25" BackgroundColor="#168aad" xct:TouchEffect.NativeAnimation="True">
+                                    <Frame.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding Source={x:Reference MyList}, Path=BindingContext.AnswerTextCommand}" CommandParameter="{Binding .}" />
+                                    </Frame.GestureRecognizers>
+                                    <StackLayout Orientation="Horizontal">
+                                        <Image Source="Submit.png" WidthRequest="25" HeightRequest="25"/>
+                                        <Label Text="Submit" TextColor="White" VerticalTextAlignment="Center"/>
+                                    </StackLayout>
+                                </Frame>
+                                
+                                <Frame CornerRadius="25" BackgroundColor="#560bad" xct:TouchEffect.NativeAnimation="True">
+                                    <Frame.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding Source={x:Reference MyList}, Path=BindingContext.AnswerMicCommand}" CommandParameter="{Binding .}" />
+                                    </Frame.GestureRecognizers>
+                                    <StackLayout Orientation="Horizontal">
+                                        <Image Source="Microphone.png" WidthRequest="25" HeightRequest="25"/>
+                                        <Label Text="Microphone" TextColor="White" VerticalTextAlignment="Center"/>
+                                    </StackLayout>
+                                </Frame>
+                            </StackLayout>
                         </StackLayout>
                     </DataTemplate>
-                </BindableLayout.ItemTemplate>
-            </StackLayout>
-            <Label Grid.Row="1" Margin="20" HorizontalTextAlignment="Center" Text="{Binding OverItems}" TextColor="DarkGreen" FontSize="Title"/>
+                </xct:TabView.TabContentDataTemplate>
+            </xct:TabView>
+            <Label Grid.Row="1" Margin="20" HorizontalTextAlignment="Center" Text="{Binding OverItems}" TextColor="White" FontSize="Title"/>
         </Grid>
     </ContentPage.Content>
 </ContentPage>

@@ -21,13 +21,13 @@ namespace MathMate.Views
         protected override void OnAppearing()
         {
             base.OnAppearing();
-            DependencyService.Get<IOrientationService>().SetLandscapeOrientation();
+            //DependencyService.Get<IOrientationService>().SetLandscapeOrientation();
         }
 
         protected override void OnDisappearing()
         {
             base.OnDisappearing();
-            DependencyService.Get<IOrientationService>().SetPortraitOrientation();
+            //DependencyService.Get<IOrientationService>().SetPortraitOrientation();
         }
     }
 }

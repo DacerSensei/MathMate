@@ -72,51 +72,89 @@ namespace MathMate.ViewModels
                         if (int.TryParse(answer, out int numericConversion))
                         {
                             // Successfully converted the word to an integer
-                            if (currentQuestion.solution.ToLower() == numericConversion.ToString().ToLower())
+                            if (CurrentItem < FlashCards.Count)
+                            {
+                                CurrentItem++;
+                            }
+                            UpdateOverItems();
+                            if (flashCard.solution.ToLower() == numericConversion.ToString().ToLower())
                             {
                                 Score++;
                             }
-                            currentQuestion.IsCurrentQuestion = false;
-                            int nextIndex = (currentIndex + 1) % FlashCards.Count;
-                            if (nextIndex != 0 || currentIndex != FlashCards.Count - 1)
+
+                            if (SelectedTab + 1 < FlashCards.Count)
                             {
-                                FlashCards[nextIndex].IsCurrentQuestion = true;
+                                SelectedTab++;
                             }
                             else
                             {
                                 var dateNow = DateTime.Now;
-                                await Database.FirebaseClient.Child($"users/{UserManager.User.Uid}/Quiz/{CurrentQuiz.Key}").PutAsync(JsonConvert.SerializeObject(new { Score = Score, Date = dateNow.ToShortDateString(), Total = FlashCards.Count, Title = "Flashcard", Description = CurrentQuiz.Description }));
+                                var attempt = CurrentQuiz.Attempts == 0 ? 1 : CurrentQuiz.Attempts + 1;
+                                if (CurrentQuiz.Attempts == 0)
+                                {
+                                    await Database.FirebaseClient.Child($"users/{UserManager.User.Uid}/Quiz/{CurrentQuiz.Key}").PutAsync(JsonConvert.SerializeObject(new { Score = Score, Date = dateNow.ToShortDateString(), Total = FlashCards.Count, Title = "Flashcard", Description = CurrentQuiz.Description, Attempts = attempt }));
+
+                                }
+                                else if (Score > CurrentQuiz.HighestScore)
+                                {
+                                    await Database.FirebaseClient.Child($"users/{UserManager.User.Uid}/Quiz/{CurrentQuiz.Key}").PutAsync(JsonConvert.SerializeObject(new { Score = Score, Date = dateNow.ToShortDateString(), Total = FlashCards.Count, Title = "Flashcard", Description = CurrentQuiz.Description, Attempts = attempt }));
+
+                                }
+                                else
+                                {
+                                    await Database.FirebaseClient.Child($"users/{UserManager.User.Uid}/Quiz/{CurrentQuiz.Key}").PutAsync(JsonConvert.SerializeObject(new { Score = CurrentQuiz.HighestScore, Date = dateNow.ToShortDateString(), Total = FlashCards.Count, Title = "Flashcard", Description = CurrentQuiz.Description, Attempts = attempt }));
+                                }
                                 await Application.Current.MainPage.Navigation.PopModalAsync();
                                 await Application.Current.MainPage.Navigation.PushModalAsync(new FlashcardScore() { BindingContext = new FlashcardScoreViewModel(Score, FlashCards.Count, dateNow) });
                             }
+                            TextAnswer = string.Empty;
                         }
                         else
                         {
                             if (WordToNumberMap.TryGetValue(answer, out int numericValue))
                             {
                                 // Successfully converted the word to an integer
-                                if (currentQuestion.solution.ToLower() == numericValue.ToString().ToLower())
+                                if (CurrentItem < FlashCards.Count)
+                                {
+                                    CurrentItem++;
+                                }
+                                UpdateOverItems();
+                                if (flashCard.solution.ToLower() == numericValue.ToString().ToLower())
                                 {
                                     Score++;
                                 }
-                                currentQuestion.IsCurrentQuestion = false;
-                                int nextIndex = (currentIndex + 1) % FlashCards.Count;
-                                if (nextIndex != 0 || currentIndex != FlashCards.Count - 1)
+
+                                if (SelectedTab + 1 < FlashCards.Count)
                                 {
-                                    FlashCards[nextIndex].IsCurrentQuestion = true;
+                                    SelectedTab++;
                                 }
                                 else
                                 {
                                     var dateNow = DateTime.Now;
-                                    await Database.FirebaseClient.Child($"users/{UserManager.User.Uid}/Quiz/{CurrentQuiz.Key}").PutAsync(JsonConvert.SerializeObject(new { Score = Score, Date = dateNow.ToShortDateString(), Total = FlashCards.Count, Title = "Flashcard", Description = CurrentQuiz.Description }));
+                                    var attempt = CurrentQuiz.Attempts == 0 ? 1 : CurrentQuiz.Attempts + 1;
+                                    if (CurrentQuiz.Attempts == 0)
+                                    {
+                                        await Database.FirebaseClient.Child($"users/{UserManager.User.Uid}/Quiz/{CurrentQuiz.Key}").PutAsync(JsonConvert.SerializeObject(new { Score = Score, Date = dateNow.ToShortDateString(), Total = FlashCards.Count, Title = "Flashcard", Description = CurrentQuiz.Description, Attempts = attempt }));
+
+                                    }
+                                    else if (Score > CurrentQuiz.HighestScore)
+                                    {
+                                        await Database.FirebaseClient.Child($"users/{UserManager.User.Uid}/Quiz/{CurrentQuiz.Key}").PutAsync(JsonConvert.SerializeObject(new { Score = Score, Date = dateNow.ToShortDateString(), Total = FlashCards.Count, Title = "Flashcard", Description = CurrentQuiz.Description, Attempts = attempt }));
+
+                                    }
+                                    else
+                                    {
+                                        await Database.FirebaseClient.Child($"users/{UserManager.User.Uid}/Quiz/{CurrentQuiz.Key}").PutAsync(JsonConvert.SerializeObject(new { Score = CurrentQuiz.HighestScore, Date = dateNow.ToShortDateString(), Total = FlashCards.Count, Title = "Flashcard", Description = CurrentQuiz.Description, Attempts = attempt }));
+                                    }
                                     await Application.Current.MainPage.Navigation.PopModalAsync();
                                     await Application.Current.MainPage.Navigation.PushModalAsync(new FlashcardScore() { BindingContext = new FlashcardScoreViewModel(Score, FlashCards.Count, dateNow) });
                                 }
+                                TextAnswer = string.Empty;
                             }
                             else
                             {
                                 // Handle the case where the word is not a valid representation of a number
-                                Console.WriteLine("Invalid word representation of a number");
+                                await ToastManager.ShowToast("Invalid Answer. Try again.", Color.FromHex("#FF605C"));
                             }
                         }
                     }
@@ -133,37 +171,52 @@ namespace MathMate.ViewModels
             {
                 if (!string.IsNullOrEmpty(TextAnswer))
                 {
-                    FlashCard currentQuestion = FlashCards.FirstOrDefault(card => card.IsCurrentQuestion == true);
-                    int currentIndex = FlashCards.IndexOf(currentQuestion);
-                    if (currentQuestion != null)
+                    if (int.TryParse(TextAnswer, out int numericConversion))
                     {
-                        if (int.TryParse(TextAnswer, out int numericConversion))
+                        // Successfully converted the word to an integer
+                        if (CurrentItem < FlashCards.Count)
                         {
-                            // Successfully converted the word to an integer
-                            if(CurrentItem < FlashCards.Count)
+                            CurrentItem++;
+                        }
+                        UpdateOverItems();
+                        if (flashCard.solution.ToLower() == numericConversion.ToString().ToLower())
+                        {
+                            Score++;
+                        }
+
+                        FlashCards[CurrentItem - 2].IsCurrentQuestion = false;
+                        FlashCards[CurrentItem - 1].IsCurrentQuestion = true;
+
+                        if (SelectedTab + 1 < FlashCards.Count)
+                        {
+                            SelectedTab++;
+                        }
+                        else
+                        {
+                            var dateNow = DateTime.Now;
+                            var attempt = CurrentQuiz.Attempts == 0 ? 1 : CurrentQuiz.Attempts + 1;
+                            if (CurrentQuiz.Attempts == 0)
                             {
-                                CurrentItem++;
+                                await Database.FirebaseClient.Child($"users/{UserManager.User.Uid}/Quiz/{CurrentQuiz.Key}").PutAsync(JsonConvert.SerializeObject(new { Score = Score, Date = dateNow.ToShortDateString(), Total = FlashCards.Count, Title = "Flashcard", Description = CurrentQuiz.Description, Attempts = attempt }));
+
                             }
-                            UpdateOverItems();
-                            if (currentQuestion.solution.ToLower() == numericConversion.ToString().ToLower())
+                            else if (Score > CurrentQuiz.HighestScore)
                             {
-                                Score++;
-                            }
-                            currentQuestion.IsCurrentQuestion = false;
-                            int nextIndex = (currentIndex + 1) % FlashCards.Count;
-                            if (nextIndex != 0 || currentIndex != FlashCards.Count - 1)
-                            {
-                                FlashCards[nextIndex].IsCurrentQuestion = true;
+                                await Database.FirebaseClient.Child($"users/{UserManager.User.Uid}/Quiz/{CurrentQuiz.Key}").PutAsync(JsonConvert.SerializeObject(new { Score = Score, Date = dateNow.ToShortDateString(), Total = FlashCards.Count, Title = "Flashcard", Description = CurrentQuiz.Description, Attempts = attempt }));
+
                             }
                             else
                             {
-                                var dateNow = DateTime.Now;
-                                await Database.FirebaseClient.Child($"users/{UserManager.User.Uid}/Quiz/{CurrentQuiz.Key}").PutAsync(JsonConvert.SerializeObject(new { Score = Score, Date = dateNow.ToShortDateString(), Total = FlashCards.Count, Title = "Flashcard", Description = CurrentQuiz.Description }));
-                                await Application.Current.MainPage.Navigation.PopModalAsync();
-                                await Application.Current.MainPage.Navigation.PushModalAsync(new FlashcardScore() { BindingContext = new FlashcardScoreViewModel(Score, FlashCards.Count, dateNow) });
+                                await Database.FirebaseClient.Child($"users/{UserManager.User.Uid}/Quiz/{CurrentQuiz.Key}").PutAsync(JsonConvert.SerializeObject(new { Score = CurrentQuiz.HighestScore, Date = dateNow.ToShortDateString(), Total = FlashCards.Count, Title = "Flashcard", Description = CurrentQuiz.Description, Attempts = attempt }));
                             }
-                            TextAnswer = string.Empty;
+                            await Application.Current.MainPage.Navigation.PopModalAsync();
+                            await Application.Current.MainPage.Navigation.PushModalAsync(new FlashcardScore() { BindingContext = new FlashcardScoreViewModel(Score, FlashCards.Count, dateNow) });
                         }
+                        TextAnswer = string.Empty;
+                    }
+                    else
+                    {
+                        await ToastManager.ShowToast("Invalid Answer. Try again.", Color.FromHex("#FF605C"));
                     }
                 }
             }
@@ -193,6 +246,14 @@ namespace MathMate.ViewModels
         {
             get => textAnswer;
             set => SetProperty(ref textAnswer, value);
+        }
+
+        private int _selectedTab;
+
+        public int SelectedTab
+        {
+            get => _selectedTab;
+            set => SetProperty(ref _selectedTab, value);
         }
 
 

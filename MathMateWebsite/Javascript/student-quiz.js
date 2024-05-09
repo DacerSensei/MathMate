@@ -68,7 +68,12 @@ document.getElementById("quiz-form").addEventListener("submit", async (e) => {
     document.getElementById("quiz-form").reset();
     document.querySelector('.modal-close').click();
 
-    ShowPopup("You just created a new quiz");
+    if (isUpdating == false) {
+        ShowPopup("You just created a new quiz");
+    } else if (isUpdating == true) {
+        ShowPopup("You just updated a quiz");
+    }
+    
     for (let i = firstIndex + 1; i < lastIndex; i++) {
         sectionElement.children[6].remove();
     }
@@ -200,3 +205,11 @@ function ClearQuestions() {
         sectionElement.children[6].remove();
     }
 }
+
+document.getElementById("SearchButton").addEventListener("click", async (e) => {
+    e.preventDefault();
+    ShowLoading();
+    document.getElementById("table-body").innerHTML = "";
+    await StudentQuiz(document.getElementById("ContentSearch").value);
+    HideLoading();
+});

@@ -53,7 +53,7 @@
             </StackLayout>
             <lottie:AnimationView Grid.RowSpan="2" Grid.ColumnSpan="2" HeightRequest="175" WidthRequest="175" AnimationSource="AssetOrBundle" Animation="Confetti.json" RepeatMode="Restart" AutoPlay="True" />
 
-            <Button Grid.Row="2" Grid.ColumnSpan="2" Margin="40,20" Text="Okay" BackgroundColor="#4361ee" Command="{Binding BackCommand}" xct:TouchEffect.NativeAnimation="True"/>
+            <Button Grid.Row="2" Grid.ColumnSpan="2" Margin="40,20" Text="Okay" TextColor="White" BackgroundColor="#4361ee" Command="{Binding BackCommand}" xct:TouchEffect.NativeAnimation="True"/>
 
         </Grid>
     </ContentPage.Content>

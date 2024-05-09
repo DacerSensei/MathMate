@@ -116,14 +116,21 @@ document.getElementById("lesson-form").addEventListener("submit", async (e) => {
                 lessonData["videoName"] = lessonVideo.name;
 
                 await push(databaseRef(Database, "teachers/" + parsedData.uid + '/Lesson/'), lessonData);
-                
+
                 document.querySelector('.modal-close').click();
                 ShowPopup("You just created a new lesson");
                 document.getElementById("table-body").innerHTML = "";
                 await StudentLesson();
             }
         );
+    } else {
+        await push(databaseRef(Database, "teachers/" + parsedData.uid + '/Lesson/'), lessonData);
+        document.querySelector('.modal-close').click();
+        ShowPopup("You just created a new lesson");
+        document.getElementById("table-body").innerHTML = "";
+        await StudentLesson();
     }
+
     document.getElementById("lesson-form").reset();
     document.getElementById("lesson-video").value = "";
     HideLoading();
@@ -194,6 +201,14 @@ function CreateQuestion() {
 
     sectionElement.appendChild(quizProblemDiv);
 }
+
+document.getElementById("SearchButton").addEventListener("click", async (e) => {
+    e.preventDefault();
+    ShowLoading();
+    document.getElementById("table-body").innerHTML = "";
+    await StudentLesson(document.getElementById("ContentSearch").value);
+    HideLoading();
+});
 
 const ScheduleEnums = {
     INSTANT: "instant",
