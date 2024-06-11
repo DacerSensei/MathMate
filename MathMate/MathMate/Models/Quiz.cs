@@ -10,6 +10,7 @@ namespace MathMate.Models
         public string Description { get; set; }
         public string Created { get; set; }
         public DateTime DueDate { get; set; }
+        public string QuestionMode { get; set; }
         public string Title { get; set; }
         public Dictionary<string, FlashCard> Flashcards { get; set; }
         public string status { get; set; }

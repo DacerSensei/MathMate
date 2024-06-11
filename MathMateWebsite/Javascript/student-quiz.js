@@ -19,8 +19,21 @@ document.getElementById("AddProblem").addEventListener("click", async (e) => {
 document.getElementById("CreateData").addEventListener("click", () => {
     isUpdating = false;
     document.getElementById("CreateQuiz").innerHTML = "Create Quiz";
+    questionModeRadios.forEach(radio => {
+        radio.disabled = false;
+    });
     ClearQuestions();
 });
+
+const questionModeRadios = document.querySelectorAll("#question-mode input[name='q-mode']");
+questionModeRadios.forEach(function (radio) {
+    radio.addEventListener("change", handleQuestionModeChanged);
+});
+
+function handleQuestionModeChanged() {
+    ClearQuestions(0);
+    CreateQuestion();
+}
 
 let isUpdating = false;
 let hiddenKey = null;
@@ -28,18 +41,22 @@ let hiddenKey = null;
 document.getElementById("quiz-form").addEventListener("submit", async (e) => {
     e.preventDefault();
     const parsedData = JSON.parse(localStorage.getItem('userData'));
-    const sectionElement = document.getElementById("quiz-form").querySelector("section");
+    const questionContainer = document.getElementById("question-container");
     const title = document.getElementById("quiz-form").querySelector("section").children[2].querySelector("input").value;
     const description = document.getElementById("quiz-form").querySelector("section").children[3].querySelector("input").value;
     const dueDate = document.getElementById("quiz-form").querySelector("section").children[4].querySelector("input").value;
-
-    const firstIndex = 5;
-    const lastIndex = sectionElement.children.length - 2;
+    let questionMode;
+    questionModeRadios.forEach(radio => {
+        if (radio.checked) {
+            questionMode = radio.value;
+        }
+    });
 
     let quizData = {
         Title: title, // replace with your actual title
         Description: description, // replace with your actual description
         Duedate: dueDate, // replace with your actual due date
+        QuestionMode: questionMode,
         Created: new Date().toLocaleDateString('en-US', {
             month: 'short',
             day: 'numeric',
@@ -47,14 +64,56 @@ document.getElementById("quiz-form").addEventListener("submit", async (e) => {
         }),
         Flashcards: {}
     };
-    for (let i = firstIndex; i < lastIndex; i++) {
-        const questionAndSolution = sectionElement.children[i].querySelectorAll("input");
-        const questionParagraph = sectionElement.children[i].querySelector("p").textContent;
 
-        quizData.Flashcards[questionParagraph] = {
-            problem: questionAndSolution[0].value,
-            solution: questionAndSolution[1].value
-        };
+    if (questionMode == QuestionModeEnums.IDENTIFY) {
+        for (let i = 0; i < questionContainer.children.length; i++) {
+            const questionAndSolution = questionContainer.children[i].querySelectorAll("input");
+            const questionParagraph = questionContainer.children[i].querySelector("p").textContent;
+
+            quizData.Flashcards[questionParagraph] = {
+                problem: questionAndSolution[0].value,
+                solution: questionAndSolution[1].value
+            };
+        }
+    } else if (questionMode == QuestionModeEnums.MULTIPLE) {
+        for (let i = 0; i < questionContainer.children.length; i++) {
+            const questionAndSolution = questionContainer.children[i].querySelectorAll("input");
+            const questionParagraph = questionContainer.children[i].querySelector("p").textContent;
+
+            const separator = "|^|";
+            let problem = "";
+
+            for (let j = 0; j <= 4; j++) {
+                if (j > 0) {
+                    problem += separator;
+                }
+                problem += questionAndSolution[j].value;
+            }
+
+            let solution = questionAndSolution[5].value.toLowerCase();
+            let numericSolution;
+            switch (solution) {
+                case 'a':
+                    numericSolution = 1;
+                    break;
+                case 'b':
+                    numericSolution = 2;
+                    break;
+                case 'c':
+                    numericSolution = 3;
+                    break;
+                case 'd':
+                    numericSolution = 4;
+                    break;
+                default:
+                    numericSolution = 0;
+            }
+
+            quizData.Flashcards[questionParagraph] = {
+                problem: problem,
+                solution: numericSolution
+            };
+        }
     }
     ShowLoading();
     if (isUpdating == false) {
@@ -73,10 +132,8 @@ document.getElementById("quiz-form").addEventListener("submit", async (e) => {
     } else if (isUpdating == true) {
         ShowPopup("You just updated a quiz");
     }
-    
-    for (let i = firstIndex + 1; i < lastIndex; i++) {
-        sectionElement.children[6].remove();
-    }
+
+    ClearQuestions();
     document.getElementById("table-body").innerHTML = "";
 
     await StudentQuiz();
@@ -89,14 +146,8 @@ table.addEventListener("click", async (event) => {
         isUpdating = true;
 
         document.getElementById("CreateQuiz").innerHTML = "Update Quiz";
-        const sectionElement = document.getElementById("quiz-form").querySelector("section");
 
-        const firstIndex = 5;
-        const lastIndex = sectionElement.children.length - 2;
-
-        for (let i = firstIndex + 1; i < lastIndex; i++) {
-            sectionElement.children[6].remove();
-        }
+        ClearQuestions();
 
         const row = event.target.closest("tr");
         const hiddenInput = row.querySelector("input[type='hidden']");
@@ -107,20 +158,56 @@ table.addEventListener("click", async (event) => {
             await get(child(ref(Database), 'teachers/' + parsedData.uid + '/Quiz/' + id)).then(async (quizSnapshot) => {
                 const data = quizSnapshot.val();
 
+                ClearQuestions(0);
+
                 document.getElementById("quiz-form").querySelector("section").children[2].querySelector("input").value = data.Title;
                 document.getElementById("quiz-form").querySelector("section").children[3].querySelector("input").value = data.Description;
                 document.getElementById("quiz-form").querySelector("section").children[4].querySelector("input").value = data.Duedate;
+                questionModeRadios.forEach(radio => {
+                    radio.disabled = true;
+                    if (radio.value === data.QuestionMode) {
+                        radio.checked = true;
+                    }
+                });
 
                 if (data.Flashcards) {
-                    for (let i = 0; i < Object.keys(data.Flashcards).length - 1; i++) {
-                        CreateQuestion();
+                    for (let i = 0; i < Object.keys(data.Flashcards).length; i++) {
+                        CreateQuestion(data.QuestionMode);
                     }
-                    const sectionElement = document.getElementById("quiz-form").querySelector("section");
-                    let firstIndex = 5;
+
+                    const questionContainer = document.getElementById("question-container");
+                    let firstIndex = 0;
                     for (const [key, values] of Object.entries(data.Flashcards)) {
-                        const questionAndSolution = sectionElement.children[firstIndex].querySelectorAll("input");
-                        questionAndSolution[0].value = values.problem;
-                        questionAndSolution[1].value = values.solution;
+                        const questionAndSolution = questionContainer.children[firstIndex].querySelectorAll("input");
+                        if (data.QuestionMode == QuestionModeEnums.IDENTIFY) {
+                            questionAndSolution[0].value = values.problem;
+                            questionAndSolution[1].value = values.solution;
+                        } else if (data.QuestionMode == QuestionModeEnums.MULTIPLE) {
+                            const separator = "|^|";
+                            let problem = values.problem.split(separator);
+                            for (let j = 0; j < problem.length; j++) {
+                                questionAndSolution[j].value = problem[j];
+                            }
+
+                            let solution;
+                            switch (values.solution) {
+                                case 1:
+                                    solution = 'A';
+                                    break;
+                                case 2:
+                                    solution = 'B';
+                                    break;
+                                case 3:
+                                    solution = 'C';
+                                    break;
+                                case 4:
+                                    solution = 'D';
+                                    break;
+                                default:
+                                    solution = 'Invalid';
+                            }
+                            questionAndSolution[5].value = solution;
+                        }
                         firstIndex++;
                     }
                 }
@@ -147,62 +234,121 @@ table.addEventListener("click", async (event) => {
     }
 });
 
-function CreateQuestion() {
-    const sectionElement = document.getElementById("quiz-form").querySelector("section");
-    const previousTitle = sectionElement.children[sectionElement.children.length - 3].querySelector("p").textContent;
-    const previousInt = parseInt(previousTitle.charAt(previousTitle.length - 1))
+function CreateQuestion(questionMode = null) {
+    if (questionMode == null) {
+        questionModeRadios.forEach(radio => {
+            if (radio.checked) {
+                questionMode = radio.value;
+            }
+        });;
+    }
+    if (questionMode == QuestionModeEnums.IDENTIFY) {
+        const questionContainer = document.getElementById("question-container");
+        let previousTitle;
+        if (questionContainer.children.length > 0) {
+            previousTitle = questionContainer.children[questionContainer.children.length - 1].querySelector("p").textContent;
+        } else {
+            previousTitle = "Question 0";
 
-    const quizProblemDiv = document.createElement("div");
-    quizProblemDiv.classList.add("quiz-problem");
+        }
+        const previousInt = parseInt(previousTitle.charAt(previousTitle.length - 1))
 
-    const questionParagraph = document.createElement("p");
-    questionParagraph.textContent = "Question " + (previousInt + 1).toString();
+        const quizProblemDiv = document.createElement("div");
+        quizProblemDiv.classList.add("quiz-problem");
 
-    const firstInputDiv = document.createElement("div");
-    firstInputDiv.classList.add("Solid-Textbox-Red");
+        const questionParagraph = document.createElement("p");
+        questionParagraph.textContent = "Question " + (previousInt + 1).toString();
 
-    const firstIcon = document.createElement("i");
-    firstIcon.classList.add("fa-solid", "fa-q");
+        const firstInputDiv = document.createElement("div");
+        firstInputDiv.classList.add("Solid-Textbox-Red");
 
-    const firstInput = document.createElement("input");
-    firstInput.type = "text";
-    firstInput.id = "quiz-title";
-    firstInput.placeholder = "Enter your problem";
-    firstInput.required = true;
+        const firstIcon = document.createElement("i");
+        firstIcon.classList.add("fa-solid", "fa-q");
 
-    firstInputDiv.appendChild(firstIcon);
-    firstInputDiv.appendChild(firstInput);
+        const firstInput = document.createElement("input");
+        firstInput.type = "text";
+        firstInput.id = "quiz-title";
+        firstInput.placeholder = "Enter your problem";
+        firstInput.required = true;
 
-    const secondInputDiv = document.createElement("div");
-    secondInputDiv.classList.add("Solid-Textbox-Red");
+        firstInputDiv.appendChild(firstIcon);
+        firstInputDiv.appendChild(firstInput);
 
-    const secondIcon = document.createElement("i");
-    secondIcon.classList.add("fa-solid", "fa-a");
+        const secondInputDiv = document.createElement("div");
+        secondInputDiv.classList.add("Solid-Textbox-Red");
 
-    const secondInput = document.createElement("input");
-    secondInput.type = "text";
-    secondInput.id = "quiz-title";
-    secondInput.placeholder = "Enter your solution";
-    secondInput.required = true;
+        const secondIcon = document.createElement("i");
+        secondIcon.classList.add("fa-solid", "fa-a");
 
-    secondInputDiv.appendChild(secondIcon);
-    secondInputDiv.appendChild(secondInput);
+        const secondInput = document.createElement("input");
+        secondInput.type = "text";
+        secondInput.id = "quiz-title";
+        secondInput.placeholder = "Enter your solution";
+        secondInput.required = true;
 
-    quizProblemDiv.appendChild(questionParagraph);
-    quizProblemDiv.appendChild(firstInputDiv);
-    quizProblemDiv.appendChild(secondInputDiv);
+        secondInputDiv.appendChild(secondIcon);
+        secondInputDiv.appendChild(secondInput);
 
-    sectionElement.insertBefore(quizProblemDiv, sectionElement.children[sectionElement.children.length - 2]);
+        quizProblemDiv.appendChild(questionParagraph);
+        quizProblemDiv.appendChild(firstInputDiv);
+        quizProblemDiv.appendChild(secondInputDiv);
+
+        questionContainer.appendChild(quizProblemDiv);
+    }
+    else if (questionMode == QuestionModeEnums.MULTIPLE) {
+        const questionContainer = document.getElementById("question-container");
+        let previousTitle;
+        if (questionContainer.children.length > 0) {
+            previousTitle = questionContainer.children[questionContainer.children.length - 1].querySelector("p").textContent;
+        } else {
+            previousTitle = "Question 0";
+        }
+        const previousInt = parseInt(previousTitle.charAt(previousTitle.length - 1))
+
+        const quizProblemDiv = document.createElement("div");
+        quizProblemDiv.classList.add("quiz-problem");
+
+        const questionParagraph = document.createElement("p");
+        questionParagraph.textContent = "Question " + (previousInt + 1).toString();
+
+        quizProblemDiv.appendChild(questionParagraph);
+        const elements = [
+            { icon: 'fa-p', placeholder: 'Enter your question' },
+            { icon: 'fa-a', placeholder: 'Choice A' },
+            { icon: 'fa-b', placeholder: 'Choice B' },
+            { icon: 'fa-c', placeholder: 'Choice C' },
+            { icon: 'fa-d', placeholder: 'Choice D' },
+            { icon: 'fa-s', placeholder: 'Answer must be (A, B, C, D)' }
+        ];
+
+        elements.forEach(element => {
+            const div = document.createElement('div');
+            div.classList.add('Solid-Textbox-Red');
+
+            const icon = document.createElement('i');
+            icon.classList.add('fa-solid', element.icon);
+
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.placeholder = element.placeholder;
+            input.required = true;
+
+            div.appendChild(icon);
+            div.appendChild(input);
+            quizProblemDiv.appendChild(div);
+        });
+
+        questionContainer.appendChild(quizProblemDiv);
+    }
 }
 
-function ClearQuestions() {
-    const sectionElement = document.getElementById("quiz-form").querySelector("section");
+function ClearQuestions(childToRemove = 1) {
+    const questionContainer = document.getElementById("question-container");
 
-    const firstIndex = 5;
-    const lastIndex = sectionElement.children.length - 2;
+    const lastIndex = questionContainer.children.length - childToRemove;
 
-    for (let i = firstIndex + 1; i < lastIndex; i++) {
-        sectionElement.children[6].remove();
+    for (let i = 0; i < lastIndex; i++) {
+        questionContainer.children[childToRemove].remove();
     }
 }
 
@@ -213,3 +359,8 @@ document.getElementById("SearchButton").addEventListener("click", async (e) => {
     await StudentQuiz(document.getElementById("ContentSearch").value);
     HideLoading();
 });
+
+const QuestionModeEnums = {
+    IDENTIFY: "identify",
+    MULTIPLE: "multiple",
+}

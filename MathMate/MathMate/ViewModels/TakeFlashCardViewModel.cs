@@ -9,12 +9,15 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.CommunityToolkit.ObjectModel;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 
 namespace MathMate.ViewModels
@@ -22,9 +25,19 @@ namespace MathMate.ViewModels
     public class TakeFlashCardViewModel : ObservableObject
     {
         private Quiz CurrentQuiz;
+        private IEnumerable<Locale> locales;
+        private CancellationTokenSource _cancellationTokenSource;
+        private CancellationTokenSource speakCancelSource;
+
         public TakeFlashCardViewModel(Quiz quiz)
         {
+            RemainingTime = 10;
+            LoadedCommand = new AsyncCommand(LoadedExecute);
             CurrentQuiz = quiz;
+            if (quiz.Object.QuestionMode.ToLower() == "multiple")
+            {
+                quiz.Object
+            }
             var quizzes = quiz.Flashcards.Values.ToList();
             quizzes.Shuffle();
             FlashCards = new ObservableCollection<FlashCard>(quizzes);
@@ -32,6 +45,23 @@ namespace MathMate.ViewModels
             AnswerMicCommand = new Command(AnswerMicExecute);
             AnswerTextCommand = new Command(AnswerTextExecute);
             UpdateOverItems();
+        }
+
+        private async Task ReadQuestion(string Question)
+        {
+            speakCancelSource = new CancellationTokenSource();
+            await TextToSpeech.SpeakAsync(Question, new SpeechOptions
+            {
+                Locale = locales.Single(l => l.Language == "fil" && l.Country == "PH"),
+                Volume = 1.0f
+            });
+            StartTimer();
+        }
+
+        private async Task LoadedExecute()
+        {
+            locales = await TextToSpeech.GetLocalesAsync();
+            await ReadQuestion(FlashCards.FirstOrDefault().problem);
         }
 
         Dictionary<string, int> WordToNumberMap = new Dictionary<string, int>
@@ -56,72 +86,31 @@ namespace MathMate.ViewModels
         public ICommand AnswerTextCommand { get; set; }
 
 
-
         private async void AnswerMicExecute(object parameter)
         {
-            FlashCard flashCard = parameter as FlashCard;
-            if (flashCard != null)
+            if (IsTimerRunning)
             {
-                var answer = await WaitForSpeechToText();
-                if (!string.IsNullOrEmpty(answer))
+                FlashCard flashCard = parameter as FlashCard;
+                if (flashCard != null)
                 {
-                    FlashCard currentQuestion = FlashCards.FirstOrDefault(card => card.IsCurrentQuestion == true);
-                    int currentIndex = FlashCards.IndexOf(currentQuestion);
-                    if (currentQuestion != null)
+                    var answer = await WaitForSpeechToText();
+                    if (!string.IsNullOrEmpty(answer))
                     {
-                        if (int.TryParse(answer, out int numericConversion))
+                        FlashCard currentQuestion = FlashCards.FirstOrDefault(card => card.IsCurrentQuestion == true);
+                        int currentIndex = FlashCards.IndexOf(currentQuestion);
+                        if (currentQuestion != null)
                         {
-                            // Successfully converted the word to an integer
-                            if (CurrentItem < FlashCards.Count)
-                            {
-                                CurrentItem++;
-                            }
-                            UpdateOverItems();
-                            if (flashCard.solution.ToLower() == numericConversion.ToString().ToLower())
-                            {
-                                Score++;
-                            }
-
-                            if (SelectedTab + 1 < FlashCards.Count)
-                            {
-                                FlashCards[CurrentItem - 2].IsCurrentQuestion = false;
-                                FlashCards[CurrentItem - 1].IsCurrentQuestion = true;
-                                SelectedTab++;
-                            }
-                            else
-                            {
-                                var dateNow = DateTime.Now;
-                                var attempt = CurrentQuiz.Attempts == 0 ? 1 : CurrentQuiz.Attempts + 1;
-                                if (CurrentQuiz.Attempts == 0)
-                                {
-                                    await Database.FirebaseClient.Child($"users/{UserManager.User.Uid}/Quiz/{CurrentQuiz.Key}").PutAsync(JsonConvert.SerializeObject(new { Score = Score, Date = dateNow.ToShortDateString(), Total = FlashCards.Count, Title = "Flashcard", Description = CurrentQuiz.Description, Attempts = attempt }));
-
-                                }
-                                else if (Score > CurrentQuiz.HighestScore)
-                                {
-                                    await Database.FirebaseClient.Child($"users/{UserManager.User.Uid}/Quiz/{CurrentQuiz.Key}").PutAsync(JsonConvert.SerializeObject(new { Score = Score, Date = dateNow.ToShortDateString(), Total = FlashCards.Count, Title = "Flashcard", Description = CurrentQuiz.Description, Attempts = attempt }));
-
-                                }
-                                else
-                                {
-                                    await Database.FirebaseClient.Child($"users/{UserManager.User.Uid}/Quiz/{CurrentQuiz.Key}").PutAsync(JsonConvert.SerializeObject(new { Score = CurrentQuiz.HighestScore, Date = dateNow.ToShortDateString(), Total = FlashCards.Count, Title = "Flashcard", Description = CurrentQuiz.Description, Attempts = attempt }));
-                                }
-                                await Application.Current.MainPage.Navigation.PopModalAsync();
-                                await Application.Current.MainPage.Navigation.PushModalAsync(new FlashcardScore() { BindingContext = new FlashcardScoreViewModel(Score, FlashCards.Count, dateNow) });
-                            }
-                            TextAnswer = string.Empty;
-                        }
-                        else
-                        {
-                            if (WordToNumberMap.TryGetValue(answer, out int numericValue))
+                            if (int.TryParse(answer, NumberStyles.AllowThousands, CultureInfo.InvariantCulture, out int numericConversion))
                             {
                                 // Successfully converted the word to an integer
+                                StopTimer();
+
                                 if (CurrentItem < FlashCards.Count)
                                 {
                                     CurrentItem++;
                                 }
                                 UpdateOverItems();
-                                if (flashCard.solution.ToLower() == numericValue.ToString().ToLower())
+                                if (flashCard.solution.ToLower() == numericConversion.ToString().ToLower())
                                 {
                                     Score++;
                                 }
@@ -131,6 +120,8 @@ namespace MathMate.ViewModels
                                     FlashCards[CurrentItem - 2].IsCurrentQuestion = false;
                                     FlashCards[CurrentItem - 1].IsCurrentQuestion = true;
                                     SelectedTab++;
+                                    TextAnswer = string.Empty;
+                                    await ReadQuestion(FlashCards[CurrentItem - 1].problem);
                                 }
                                 else
                                 {
@@ -153,77 +144,136 @@ namespace MathMate.ViewModels
                                     await Application.Current.MainPage.Navigation.PopModalAsync();
                                     await Application.Current.MainPage.Navigation.PushModalAsync(new FlashcardScore() { BindingContext = new FlashcardScoreViewModel(Score, FlashCards.Count, dateNow) });
                                 }
-                                TextAnswer = string.Empty;
                             }
                             else
                             {
-                                // Handle the case where the word is not a valid representation of a number
-                                await ToastManager.ShowToast("Invalid Answer. Try again.", Color.FromHex("#FF605C"));
+                                if (WordToNumberMap.TryGetValue(answer, out int numericValue))
+                                {
+                                    // Successfully converted the word to an integer
+                                    if (CurrentItem < FlashCards.Count)
+                                    {
+                                        CurrentItem++;
+                                    }
+                                    UpdateOverItems();
+                                    if (flashCard.solution.ToLower() == numericValue.ToString().ToLower())
+                                    {
+                                        Score++;
+                                    }
+
+                                    if (SelectedTab + 1 < FlashCards.Count)
+                                    {
+                                        FlashCards[CurrentItem - 2].IsCurrentQuestion = false;
+                                        FlashCards[CurrentItem - 1].IsCurrentQuestion = true;
+                                        SelectedTab++;
+                                        TextAnswer = string.Empty;
+                                        await ReadQuestion(FlashCards[CurrentItem - 1].problem);
+                                    }
+                                    else
+                                    {
+                                        var dateNow = DateTime.Now;
+                                        var attempt = CurrentQuiz.Attempts == 0 ? 1 : CurrentQuiz.Attempts + 1;
+                                        if (CurrentQuiz.Attempts == 0)
+                                        {
+                                            await Database.FirebaseClient.Child($"users/{UserManager.User.Uid}/Quiz/{CurrentQuiz.Key}").PutAsync(JsonConvert.SerializeObject(new { Score = Score, Date = dateNow.ToShortDateString(), Total = FlashCards.Count, Title = "Flashcard", Description = CurrentQuiz.Description, Attempts = attempt }));
+
+                                        }
+                                        else if (Score > CurrentQuiz.HighestScore)
+                                        {
+                                            await Database.FirebaseClient.Child($"users/{UserManager.User.Uid}/Quiz/{CurrentQuiz.Key}").PutAsync(JsonConvert.SerializeObject(new { Score = Score, Date = dateNow.ToShortDateString(), Total = FlashCards.Count, Title = "Flashcard", Description = CurrentQuiz.Description, Attempts = attempt }));
+
+                                        }
+                                        else
+                                        {
+                                            await Database.FirebaseClient.Child($"users/{UserManager.User.Uid}/Quiz/{CurrentQuiz.Key}").PutAsync(JsonConvert.SerializeObject(new { Score = CurrentQuiz.HighestScore, Date = dateNow.ToShortDateString(), Total = FlashCards.Count, Title = "Flashcard", Description = CurrentQuiz.Description, Attempts = attempt }));
+                                        }
+                                        await Application.Current.MainPage.Navigation.PopModalAsync();
+                                        await Application.Current.MainPage.Navigation.PushModalAsync(new FlashcardScore() { BindingContext = new FlashcardScoreViewModel(Score, FlashCards.Count, dateNow) });
+                                    }
+                                }
+                                else
+                                {
+                                    // Handle the case where the word is not a valid representation of a number
+                                    await ToastManager.ShowToast("Invalid Answer. Try again.", Color.FromHex("#FF605C"));
+                                }
                             }
                         }
-                    }
 
+                    }
                 }
+            }
+            else
+            {
+                await ToastManager.ShowToast("Finish the question before answering", Color.FromHex("#FF605C"));
             }
         }
 
         private async void AnswerTextExecute(object parameter)
         {
             TapButton.TapSound();
-            FlashCard flashCard = parameter as FlashCard;
-            if (flashCard != null)
+            if (IsTimerRunning)
             {
-                if (!string.IsNullOrEmpty(TextAnswer))
+                FlashCard flashCard = parameter as FlashCard;
+                if (flashCard != null)
                 {
-                    if (int.TryParse(TextAnswer, out int numericConversion))
+                    if (!string.IsNullOrEmpty(TextAnswer))
                     {
-                        // Successfully converted the word to an integer
-                        if (CurrentItem < FlashCards.Count)
+                        if (int.TryParse(TextAnswer, NumberStyles.AllowThousands, CultureInfo.InvariantCulture, out int numericConversion))
                         {
-                            CurrentItem++;
-                        }
-                        UpdateOverItems();
-                        if (flashCard.solution.ToLower() == numericConversion.ToString().ToLower())
-                        {
-                            Score++;
-                        }
-
-                        if (SelectedTab + 1 < FlashCards.Count)
-                        {
-                            FlashCards[CurrentItem - 2].IsCurrentQuestion = false;
-                            FlashCards[CurrentItem - 1].IsCurrentQuestion = true;
-                            SelectedTab++;
-                        }
-                        else
-                        {
-                            var dateNow = DateTime.Now;
-                            var attempt = CurrentQuiz.Attempts == 0 ? 1 : CurrentQuiz.Attempts + 1;
-                            if (CurrentQuiz.Attempts == 0)
+                            // Successfully converted the word to an integer
+                            StopTimer();
+                            if (CurrentItem < FlashCards.Count)
                             {
-                                await Database.FirebaseClient.Child($"users/{UserManager.User.Uid}/Quiz/{CurrentQuiz.Key}").PutAsync(JsonConvert.SerializeObject(new { Score = Score, Date = dateNow.ToShortDateString(), Total = FlashCards.Count, Title = "Flashcard", Description = CurrentQuiz.Description, Attempts = attempt }));
-
+                                CurrentItem++;
                             }
-                            else if (Score > CurrentQuiz.HighestScore)
+                            UpdateOverItems();
+                            if (flashCard.solution.ToLower() == numericConversion.ToString().ToLower())
                             {
-                                await Database.FirebaseClient.Child($"users/{UserManager.User.Uid}/Quiz/{CurrentQuiz.Key}").PutAsync(JsonConvert.SerializeObject(new { Score = Score, Date = dateNow.ToShortDateString(), Total = FlashCards.Count, Title = "Flashcard", Description = CurrentQuiz.Description, Attempts = attempt }));
+                                Score++;
+                            }
 
+                            if (SelectedTab + 1 < FlashCards.Count)
+                            {
+                                FlashCards[CurrentItem - 2].IsCurrentQuestion = false;
+                                FlashCards[CurrentItem - 1].IsCurrentQuestion = true;
+                                SelectedTab++;
+                                TextAnswer = string.Empty;
+                                await ReadQuestion(FlashCards[CurrentItem - 1].problem);
                             }
                             else
                             {
-                                await Database.FirebaseClient.Child($"users/{UserManager.User.Uid}/Quiz/{CurrentQuiz.Key}").PutAsync(JsonConvert.SerializeObject(new { Score = CurrentQuiz.HighestScore, Date = dateNow.ToShortDateString(), Total = FlashCards.Count, Title = "Flashcard", Description = CurrentQuiz.Description, Attempts = attempt }));
+                                var dateNow = DateTime.Now;
+                                var attempt = CurrentQuiz.Attempts == 0 ? 1 : CurrentQuiz.Attempts + 1;
+                                if (CurrentQuiz.Attempts == 0)
+                                {
+                                    await Database.FirebaseClient.Child($"users/{UserManager.User.Uid}/Quiz/{CurrentQuiz.Key}").PutAsync(JsonConvert.SerializeObject(new { Score = Score, Date = dateNow.ToShortDateString(), Total = FlashCards.Count, Title = "Flashcard", Description = CurrentQuiz.Description, Attempts = attempt }));
+                                }
+                                else if (Score > CurrentQuiz.HighestScore)
+                                {
+                                    await Database.FirebaseClient.Child($"users/{UserManager.User.Uid}/Quiz/{CurrentQuiz.Key}").PutAsync(JsonConvert.SerializeObject(new { Score = Score, Date = dateNow.ToShortDateString(), Total = FlashCards.Count, Title = "Flashcard", Description = CurrentQuiz.Description, Attempts = attempt }));
+
+                                }
+                                else
+                                {
+                                    await Database.FirebaseClient.Child($"users/{UserManager.User.Uid}/Quiz/{CurrentQuiz.Key}").PutAsync(JsonConvert.SerializeObject(new { Score = CurrentQuiz.HighestScore, Date = dateNow.ToShortDateString(), Total = FlashCards.Count, Title = "Flashcard", Description = CurrentQuiz.Description, Attempts = attempt }));
+                                }
+                                await Application.Current.MainPage.Navigation.PopModalAsync();
+                                await Application.Current.MainPage.Navigation.PushModalAsync(new FlashcardScore() { BindingContext = new FlashcardScoreViewModel(Score, FlashCards.Count, dateNow) });
                             }
-                            await Application.Current.MainPage.Navigation.PopModalAsync();
-                            await Application.Current.MainPage.Navigation.PushModalAsync(new FlashcardScore() { BindingContext = new FlashcardScoreViewModel(Score, FlashCards.Count, dateNow) });
                         }
-                        TextAnswer = string.Empty;
-                    }
-                    else
-                    {
-                        await ToastManager.ShowToast("Invalid Answer. Try again.", Color.FromHex("#FF605C"));
+                        else
+                        {
+                            await ToastManager.ShowToast("Invalid Answer. Try again.", Color.FromHex("#FF605C"));
+                        }
                     }
                 }
             }
+            else
+            {
+                await ToastManager.ShowToast("Finish the question before answering", Color.FromHex("#FF605C"));
+            }
         }
+
+        public ICommand LoadedCommand { get; set; }
 
         private string overItems;
         public string OverItems
@@ -256,9 +306,111 @@ namespace MathMate.ViewModels
         public int SelectedTab
         {
             get => _selectedTab;
-            set => SetProperty(ref _selectedTab, value);
+            set
+            {
+                SetProperty(ref _selectedTab, value);
+            }
         }
 
+        private async void HandleTimerFinished()
+        {
+            StopTimer();
+            if (CurrentItem < FlashCards.Count)
+            {
+                CurrentItem++;
+            }
+            UpdateOverItems();
+            if (SelectedTab + 1 < FlashCards.Count)
+            {
+                FlashCards[CurrentItem - 2].IsCurrentQuestion = false;
+                FlashCards[CurrentItem - 1].IsCurrentQuestion = true;
+                SelectedTab++;
+                TextAnswer = string.Empty;
+                await ReadQuestion(FlashCards[CurrentItem - 1].problem);
+            }
+            else
+            {
+                var dateNow = DateTime.Now;
+                var attempt = CurrentQuiz.Attempts == 0 ? 1 : CurrentQuiz.Attempts + 1;
+                if (CurrentQuiz.Attempts == 0)
+                {
+                    await Database.FirebaseClient.Child($"users/{UserManager.User.Uid}/Quiz/{CurrentQuiz.Key}").PutAsync(JsonConvert.SerializeObject(new { Score = Score, Date = dateNow.ToShortDateString(), Total = FlashCards.Count, Title = "Flashcard", Description = CurrentQuiz.Description, Attempts = attempt }));
+                }
+                else if (Score > CurrentQuiz.HighestScore)
+                {
+                    await Database.FirebaseClient.Child($"users/{UserManager.User.Uid}/Quiz/{CurrentQuiz.Key}").PutAsync(JsonConvert.SerializeObject(new { Score = Score, Date = dateNow.ToShortDateString(), Total = FlashCards.Count, Title = "Flashcard", Description = CurrentQuiz.Description, Attempts = attempt }));
 
+                }
+                else
+                {
+                    await Database.FirebaseClient.Child($"users/{UserManager.User.Uid}/Quiz/{CurrentQuiz.Key}").PutAsync(JsonConvert.SerializeObject(new { Score = CurrentQuiz.HighestScore, Date = dateNow.ToShortDateString(), Total = FlashCards.Count, Title = "Flashcard", Description = CurrentQuiz.Description, Attempts = attempt }));
+                }
+                Device.BeginInvokeOnMainThread(async () =>
+                {
+                    await Application.Current.MainPage.Navigation.PopModalAsync();
+                    await Application.Current.MainPage.Navigation.PushModalAsync(new FlashcardScore() { BindingContext = new FlashcardScoreViewModel(Score, FlashCards.Count, dateNow) });
+                });
+            }
+        }
+
+        private int _remainingTime;
+        private bool _isTimerRunning;
+        private Task _timerTask;
+
+        public int RemainingTime
+        {
+            get => _remainingTime;
+            set
+            {
+                if (_remainingTime != value)
+                {
+                    _remainingTime = value;
+                    OnPropertyChanged(nameof(RemainingTime));
+
+                    if (_remainingTime == 0)
+                    {
+                        HandleTimerFinished();
+                    }
+                }
+            }
+        }
+
+        public bool IsTimerRunning
+        {
+            get => _isTimerRunning;
+            set
+            {
+                SetProperty(ref _isTimerRunning, value);
+            }
+        }
+
+        private void StartTimer()
+        {
+            if (IsTimerRunning)
+                return;
+
+            _cancellationTokenSource = new CancellationTokenSource();
+            IsTimerRunning = true;
+
+            _timerTask = Task.Run(async () =>
+            {
+                while (RemainingTime > 0)
+                {
+                    await Task.Delay(1000, _cancellationTokenSource.Token);
+                    RemainingTime--;
+                }
+                IsTimerRunning = false;
+            });
+        }
+
+        private void StopTimer()
+        {
+            if (!IsTimerRunning)
+                return;
+
+            _cancellationTokenSource.Cancel();
+            IsTimerRunning = false;
+            RemainingTime = 10;
+        }
     }
 }

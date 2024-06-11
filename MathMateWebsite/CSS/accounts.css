@@ -153,7 +153,13 @@ main>section>.table-section>table th {
 
 /* /////////////////////////////////////////////////////////////// */
 
-#quiz-form section>.quiz-problem {
+#question-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+#question-container> .quiz-problem {
     width: 40rem;
     padding: 1rem;
     background-color: #feaf39;
@@ -163,6 +169,11 @@ main>section>.table-section>table th {
     box-shadow: 0 0 48px rgba(0, 0, 0, .08);
     border-radius: 4px;
     box-sizing: border-box;
+}
+
+#quiz-form section>#question-mode>div {
+    display: flex;
+    gap: 1rem;
 }
 
 #pre-post-container {

@@ -18,6 +18,11 @@ namespace MathMate.Views
 			InitializeComponent ();
 		}
 
+        protected override bool OnBackButtonPressed()
+        {
+            return true;
+        }
+
         protected override void OnAppearing()
         {
             base.OnAppearing();

@@ -33,21 +33,40 @@
                         </div>
                         <div class="Solid-Textbox-Red">
                             <i class="fa-solid fa-d"></i>
-                            <input id="quiz-description" type="text" placeholder="Enter your instruction or description" required>
+                            <input id="quiz-description" type="text" placeholder="Enter your instruction or description"
+                                required>
                         </div>
                         <div class="Solid-Textbox-Red">
                             <i class="fa-solid fa-calendar"></i>
                             <input id="quiz-due" type="date" required title="Due Date">
                         </div>
-                        <div class="quiz-problem">
-                            <p>Question 1</p>
-                            <div class="Solid-Textbox-Red">
-                                <i class="fa-solid fa-q"></i>
-                                <input type="text" placeholder="Enter your question" required>
+                        <div id="question-mode">
+                            <h3>Choose Question mode</h3>
+                            <div>
+                                <div class="radio">
+                                    <input type="radio" id="for-identify" name="q-mode" value="identify" checked>
+                                    <label for="for-identify"></label>
+                                    <span>Identify Problem</span>
+                                </div>
+                                <div class="radio">
+                                    <input type="radio" id="for-multiple" name="q-mode" value="multiple">
+                                    <label for="for-multiple"></label>
+                                    <span>Multiple Choices</span>
+                                </div>
                             </div>
-                            <div class="Solid-Textbox-Red">
-                                <i class="fa-solid fa-a"></i>
-                                <input type="text" placeholder="Enter your answer" required>
+                        </div>
+                        <div id="question-container">
+                            <div class="quiz-problem">
+                                <p>Question 1</p>
+
+                                <div class="Solid-Textbox-Red">
+                                    <i class="fa-solid fa-q"></i>
+                                    <input type="text" placeholder="Enter your question" required>
+                                </div>
+                                <div class="Solid-Textbox-Red">
+                                    <i class="fa-solid fa-a"></i>
+                                    <input type="text" placeholder="Enter your answer" required>
+                                </div>
                             </div>
                         </div>
                         <button type="button" class="Solid-Button-Red" style="font-size: 1.125rem" id="AddProblem">Add
@@ -75,7 +94,8 @@
                     </div>
                 </form>
                 <div>
-                    <button id="CreateData" class="Button-Green modal-trigger" data-target="Add-Modal" style="max-width: 400px;">Create
+                    <button id="CreateData" class="Button-Green modal-trigger" data-target="Add-Modal"
+                        style="max-width: 400px;">Create
                         Student Quizzes</button>
                 </div>
             </div>

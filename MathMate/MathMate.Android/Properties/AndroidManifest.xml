@@ -4,4 +4,9 @@
 	<application android:label="Math Mate" android:usesCleartextTraffic="true" android:theme="@style/MainTheme" android:icon="@mipmap/ic_launcher"></application>
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 	<uses-permission android:name="android.permission.RECORD_AUDIO" />
+	<queries>
+		<intent>
+			<action android:name="android.intent.action.TTS_SERVICE" />
+		</intent>
+	</queries>
 </manifest>

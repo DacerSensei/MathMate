@@ -12,6 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.CommunityToolkit.ObjectModel;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 
 namespace MathMate.ViewModels
@@ -36,20 +37,21 @@ namespace MathMate.ViewModels
         private async Task LoginExecute()
         { 
             TapButton.TapSound();
-            if (string.IsNullOrWhiteSpace(StudentNumber))
-            {
-                await ToastManager.ShowToast("Student Number cannot be empty", Color.FromHex("#FF605C"));
-                return;
-            }
-            if (string.IsNullOrWhiteSpace(Password))
-            {
-                await ToastManager.ShowToast("Password cannot be empty", Color.FromHex("#FF605C"));
-                return;
-            }
+            //if (string.IsNullOrWhiteSpace(StudentNumber))
+            //{
+            //    await ToastManager.ShowToast("Student Number cannot be empty", Color.FromHex("#FF605C"));
+            //    return;
+            //}
+            //if (string.IsNullOrWhiteSpace(Password))
+            //{
+            //    await ToastManager.ShowToast("Password cannot be empty", Color.FromHex("#FF605C"));
+            //    return;
+            //}
+
             try
             {
-                //StudentNumber = "123";
-                //Password = "123";
+                StudentNumber = "123";
+                Password = "123";
                 Models.User user = await Database.FirebaseClient.Child($"users/{StudentNumber}").OnceSingleAsync<Models.User>();
 
                 if (user != null)

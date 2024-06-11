@@ -15,7 +15,7 @@ namespace MathMate
             App.Current.On<Xamarin.Forms.PlatformConfiguration.Android>().UseWindowSoftInputModeAdjust(WindowSoftInputModeAdjust.Resize);
             InitializeComponent();
             DependencyService.Get<IEnvironment>().SetStatusBarColor(Color.FromHex("#85182a"), false);
-            MainPage = new NavigationPage(new GetStarted());
+            MainPage = new NavigationPage(new Login());
         }
 
         protected override void OnStart()
